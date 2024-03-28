@@ -1,0 +1,17 @@
+.text-black {
+    color: black !important;
+    text-transform: none !important;
+}
+
+.big-checkbox {
+    width: 30px;
+    height: 30px;
+}
+
+i {
+    font-size: larger;
+}
+
+a {
+    color: cyan;
+}

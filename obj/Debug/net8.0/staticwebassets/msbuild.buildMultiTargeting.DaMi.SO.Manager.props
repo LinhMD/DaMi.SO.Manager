@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\DaMi.SO.Manager.props" />
+</Project>

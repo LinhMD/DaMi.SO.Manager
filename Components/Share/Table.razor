@@ -1,0 +1,80 @@
+﻿@using System.Reflection
+@using System.ComponentModel
+@using Microsoft.AspNetCore.Mvc
+@typeparam TItem
+
+<table class="table table-hover table-bordered table-responsive text-black">
+    <thead class="thead-primary">
+        <tr>
+            @if (NavLabel is not null)
+            {
+                <th>@NavLabel</th>
+            }
+            @foreach (var fieldInfo in propertyInfos)
+            {
+                if (Attribute.GetCustomAttribute(fieldInfo, typeof(HiddenInputAttribute)) is null)
+                {
+                    var displayName = (Attribute.GetCustomAttribute(fieldInfo, typeof(DisplayNameAttribute)) as
+                    DisplayNameAttribute)?.DisplayName ?? fieldInfo.Name;
+                    <th>@displayName</th>
+                }
+            }
+            @if (ActionLabel is not null)
+            {
+                <th>@ActionLabel</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var model in Models)
+        {
+            <tr>
+                @if (NavKey is not null)
+                {
+                    <th>@NavKey(model)</th>
+                }
+                @foreach (var fieldInfo in propertyInfos)
+                {
+                    if (Attribute.GetCustomAttribute(fieldInfo, typeof(HiddenInputAttribute)) is null)
+                    {
+                        var value = fieldInfo.GetValue(model);
+                        try
+                        {
+                            var boolValue = (bool)value!;
+                            if (boolValue)
+                            {
+                                <th>
+                                    <input type="checkbox" checked />
+                                </th>
+                            }
+                            else
+                            {
+                                <th>
+                                    <input type="checkbox" />
+                                </th>
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            <th>@value</th>
+                        }
+                    }
+                }
+                @if (Action is not null)
+                {
+                    <th>@Action(model)</th>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter]
+    public IEnumerable<TItem> Models { get; set; }
+    public PropertyInfo[] propertyInfos { get; init; } = typeof(TItem).GetProperties();
+    [Parameter] public RenderFragment<TItem>? NavKey { get; set; }
+    [Parameter] public RenderFragment? NavLabel { get; set; }
+    [Parameter] public RenderFragment<TItem>? Action { get; set; }
+    [Parameter] public RenderFragment? ActionLabel { get; set; }
+}

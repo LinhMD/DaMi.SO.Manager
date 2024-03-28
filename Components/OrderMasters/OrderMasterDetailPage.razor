@@ -1,0 +1,224 @@
+﻿@using System.ComponentModel
+@inherits XComponent<OrderMasterDetailModel>
+@layout _Layout
+<div class="row page-titles mx-0">
+    <div class="col-sm-6 p-md-0 justify-content-sm-start mt-2 mt-sm-0 d-flex">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/OrderMaster">Đơn Hàng</a></li>
+            <li class="breadcrumb-item"><a
+                    href="/OrderMaster/Details/@Model.OrderMaster.RowUniqueId">@Model.OrderMaster.OrderNo</a></li>
+        </ol>
+    </div>
+    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+        <a href="/MasterOrder/Edit/@Model.OrderMaster.RowUniqueId" class="btn btn-round btn-warning mx-2">Chỉnh sửa</a>
+        <a href="MasterOrder" class="btn btn-round btn-primary mx-2">Danh sách đơn hàng</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-6 col-xxl-12">
+        <div class="card">
+            <h4 class="card-header text-bold">Thông tin đơn hàng</h4>
+            <hr />
+            <div class="card-body">
+                <div class="basic-form">
+                    <div class="form-group row">
+                        <label for="OrderForm" class="col-form-label col-2">Kiểu đơn hàng: </label>
+                        <div class="col-sm-10">
+                            <div id="OrderForm" class="form-control">@Model.OrderMaster.OrderFormId</div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="OrderType" class="col-form-label col-2">Loại đơn hàng: </label>
+                        <div class="col-sm-10">
+                            <div id="OrderType" class="form-control">@Model.OrderMaster.OrderTypeId</div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="Guid" class="col-form-label col-2">Số đơn hàng: </label>
+                        <div class="col-sm-10">
+                            <div id="Guid" class="form-control">@Model.OrderMaster.OrderNo</div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="CreateDate" class="col-form-label col-2">Ngày tạo: </label>
+                        <div class="col-sm-10">
+                            <div id="CreateDate" class="form-control">@Model.OrderMaster.CreatedDate</div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="OrderStatus" class="col-form-label col-2">Trạng thái ĐH: </label>
+                        <div class="col-sm-10">
+                            <div id="OrderStatus" class="form-control">@Model.OrderMaster.OrderStatusId</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-xxl-12">
+        <div class="card">
+            <h4 class="card-header text-bold">Thông tin khác</h4>
+            <hr />
+            <div class="card-body">
+                <div class="basic-form">
+                    <div class="form-group row">
+                        <label for="ExecutorId" class="col-form-label col-3">Nhân viên triển khai: </label>
+                        <div class="col-sm-9">
+                            <div id="ExecutorId" class="form-control">@Model.OrderMaster.ExecutorId</div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="OrderType" class="col-form-label col-3">Ngày BĐ triển khai: </label>
+                        <div class="col-sm-9">
+                            <div id="OrderType" class="form-control">@Model.OrderMaster.BeginExecDate</div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="OrderNo" class="col-form-label col-3">Ngày KT triển khai: </label>
+                        <div class="col-sm-9">
+                            <div id="OrderNo" class="form-control">@Model.OrderMaster.OrderNo</div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="SalesManId" class="col-form-label col-3">Nhân viên bán hàng: </label>
+                        <div class="col-sm-9">
+                            <div id="SalesManId" class="form-control">@Model.OrderMaster.SalesManId</div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="SalesManId" class="col-form-label col-3"></label>
+                        <div class="col-sm-9">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-6 col-xxl-12">
+        <div class="card">
+            <div class="card-header text-bold">Thông tin hợp đồng</div>
+            <hr>
+            <div class="card-body">
+                <div class="basic-form">
+                    <div class="form-group row">
+                        <label for="CustomerId" class="col-form-label col-2">Tên KH:</label>
+                        <div class="col-sm-10">
+                            <div id="CustomerId" class="form-control">@Model.OrderMaster.CustomerId</div>
+                        </div>
+                    </div>
+                    <div class="form-group row"><label for="CustomerTax" class="col-form-label col-2">MST/CCCD:</label>
+                        <div class="col-sm-10">
+                            <div id="CustomerTax" class="form-control">@Model.OrderMaster.CustomerId</div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="CustomerPhone" class="col-form-label col-2">
+                            Điện thoại:
+                        </label>
+                        <div class="col-sm-10">
+                            <div id="CustomerPhone" class="form-control">@Model.OrderMaster.CustomerId</div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="RefPerson" class="col-form-label col-2">
+                            Người đại điện:
+                        </label>
+                        <div class="col-sm-10">
+                            <div id="RefPerson" class="form-control">@Model.OrderMaster.RefPerson</div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="RefPos" class="col-form-label col-2">
+                            Chức vụ:
+                        </label>
+                        <div class="col-sm-10">
+                            <div id="RefPos" class="form-control">@Model.OrderMaster.RefPos</div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="ContractNo" class="col-form-label col-2">
+                            Số hợp đồng:
+                        </label>
+                        <div class="col-sm-10">
+                            <div id="ContractNo" class="form-control">@Model.OrderMaster.ContractNo</div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="ContractDate" class="col-form-label col-2">
+                            Ngày hợp đồng:
+                        </label>
+                        <div class="col-sm-10">
+                            <div id="ContractDate" class="form-control">@Model.OrderMaster.ContractDate</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-xxl-12">
+        <div class="card">
+            <div class="card-header text-bold">Thông tin thanh toán</div>
+            <hr>
+            <div class="card-body">
+                <div class="basic-form">
+                    <div class="form-group row">
+                        <label for="" class="col-form-label col-3">Loại tiền</label>
+                        <div class="col-sm-9">
+                            <div class="form-control"></div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="" class="col-form-label col-3">Tỉ giá</label>
+                        <div class="col-sm-9">
+                            <div class="form-control"></div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="" class="col-form-label col-3">Cộng thành tiền</label>
+                        <div class="col-sm-9">
+                            <div class="form-control"></div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="" class="col-form-label col-3">Tiền chiết khấu</label>
+                        <div class="col-sm-9">
+                            <div class="form-control"></div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="" class="col-form-label col-3">Tổng tiền thanh toán</label>
+                        <div class="col-sm-9">
+                            <div class="form-control"></div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="" class="col-form-label col-3">Hạn thanh toán</label>
+                        <div class="col-sm-9">
+                            <div class="form-control"></div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="" class="col-form-label col-3">Có xuất hóa đơn</label>
+                        <div class="col-sm-9">
+                            <div class="form-control"></div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="" class="col-form-label col-3">Hình thức thanh toán</label>
+                        <div class="col-sm-9">
+                            <div class="form-control"></div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="" class="col-form-label col-3">Điều khoản thanh toán</label>
+                        <div class="col-sm-9">
+                            <div class="form-control"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

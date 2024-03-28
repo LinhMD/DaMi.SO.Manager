@@ -1,0 +1,6 @@
+@DaMi.SO.Manager_HostAddress = http://localhost:5051
+
+GET {{DaMi.SO.Manager_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
