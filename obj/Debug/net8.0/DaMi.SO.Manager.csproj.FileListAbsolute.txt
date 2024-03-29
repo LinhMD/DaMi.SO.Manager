@@ -156,3 +156,7 @@ d:\Project\DaMi.SO.Manager\obj\Debug\net8.0\refint\DaMi.SO.Manager.dll
 d:\Project\DaMi.SO.Manager\obj\Debug\net8.0\DaMi.SO.Manager.pdb
 D:\Project\DaMi.SO.Manager\obj\Debug\net8.0\DaMi.SO.Manager.genruntimeconfig.cache
 D:\Project\DaMi.SO.Manager\obj\Debug\net8.0\ref\DaMi.SO.Manager.dll
+d:\Project\DaMi.SO.Manager\bin\Debug\net8.0\Microsoft.Extensions.Localization.dll
+d:\Project\DaMi.SO.Manager\bin\Debug\net8.0\Microsoft.Extensions.Localization.Abstractions.dll
+d:\Project\DaMi.SO.Manager\obj\Debug\net8.0\DaMi.SO.Manager.csproj.GenerateResource.cache
+D:\Project\DaMi.SO.Manager\obj\Debug\net8.0\DaMi.SO.Manager.Resources.ShareResource.resources

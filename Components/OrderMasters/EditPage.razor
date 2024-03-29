@@ -1,0 +1,244 @@
+@inherits XComponent<OrderMasterEditModel>
+@layout _Layout
+@inject IStringLocalizer<ShareResource> L
+
+
+<div class="row page-titles mx-0">
+    <div class="col-sm-6 p-md-0 justify-content-sm-start mt-2 mt-sm-0 d-flex">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/OrderMaster">@L["Đơn Hàng"] </a></li>
+            <li class="breadcrumb-item"><a
+                    href="/OrderMaster/Details/@Model.OrderMaster.RowUniqueId">@Model.OrderMaster.OrderNo</a></li>
+        </ol>
+    </div>
+    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+        <input class="btn btn-round btn-warning mx-2" type="submit" form="Edit-form" name="Edit" value="@L["Chỉnh sửa"]">
+        <a href="MasterOrder" class="btn btn-round btn-primary mx-2"> @L["Danh sách đơn hàng"]</a>
+    </div>
+</div>
+<form action="/OrderMaster/Edit/@Model.OrderMaster.RowUniqueId" id="Edit-form" method="post">
+<div class="row">
+    <div class="col-xl-6 col-xxl-12">
+        <div class="card">
+            <h4 class="card-header text-bold">@L["Thông tin đơn hàng"]</h4>
+            <hr />
+            <div class="card-body">
+                <div action="/OrderMaster/Edit/@Model.OrderMaster.RowUniqueId" method="post" class="basic-form">
+                    <div class="form-group row">
+                        <label for="OrderForm" class="col-form-label col-2">@L["Kiểu đơn hàng"]</label>
+                        <div class="col-sm-10">
+                            <input id="OrderForm" name="OrderForm" class="form-control" value="@Model.OrderMaster.OrderFormId"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="OrderTypeId" class="col-form-label col-2">@L["Loại đơn hàng"]</label>
+                        <div class="col-sm-10">
+                            <input id="OrderTypeId" name="OrderTypeId" class="form-control" value="@Model.OrderMaster.OrderTypeId"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="Guid" class="col-form-label col-2">@L["Số đơn hàng"]</label>
+                        <div class="col-sm-10">
+                            <input id="Guid" name="OrderNo" class="form-control" disabled value="@Model.OrderMaster.OrderNo">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="CreateDate" class="col-form-label col-2">@L["Ngày tạo"]</label>
+                        <div class="col-sm-10">
+                            <input id="CreateDate" data-provide="datepicker" type="date" name="CreateDate" class="form-control" value="@Model.OrderMaster.OrderDate"> 
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="OrderStatusId" class="col-form-label col-2">@L["Trạng thái ĐH"]</label>
+                        <div class="col-sm-10">
+                            <input id="OrderStatusId" name="OrderStatusId" type="text" class="form-control" value="@Model.OrderMaster.OrderStatusId">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-xxl-12">
+        <div class="card">
+            <h4 class="card-header text-bold">@L["Thông tin khác"]</h4>
+            <hr />
+            <div class="card-body">
+                <div class="basic-form">
+                    <div class="form-group row">
+                        <label for="ExecutorId" class="col-form-label col-3">@L["Nhân viên triển khai"]</label>
+                        <div class="col-sm-9">
+                            <input id="ExecutorId" type="text"  name="ExecutorId" class="form-control" value="@Model.OrderMaster.ExecutorId">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="BeginExecDate" class="col-form-label col-3">@L["Ngày BĐ triển khai"]</label>
+                        <div class="col-sm-9">
+                            <input id="BeginExecDate"  class="form-control" data-provide="datepicker" name="BeginExecDate" type="date" value="@Model.OrderMaster.BeginExecDate">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="EndExecDate" class="col-form-label col-3">@L["Ngày KT triển khai"]</label>
+                        <div class="col-sm-9">
+                            <input id="EndExecDate" name="EndExecDate" class="form-control" data-provide="datepicker" type="date" value="@Model.OrderMaster.EndExecDate">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="SalesManId" class="col-form-label col-3">@L["Nhân viên bán hàng"]</label>
+                        <div class="col-sm-9">
+                            <input id="SalesManId" class="form-control" name="SalesManId" value="@Model.OrderMaster.SalesManId">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="SalesManId" class="col-form-label col-3"></label>
+                        <div class="col-sm-9">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-6 col-xxl-12">
+        <div class="card">
+            <h4 class="card-header">@L["Thông tin hợp đồng"]</h4>
+            <hr>
+            <div class="card-body">
+                <div class="basic-form">
+                    <div class="form-group row">
+                        <label for="CustomerId" class="col-form-label col-2"> @L["Tên KH"]</label>
+                        <div class="col-sm-10">
+                            <input id="CustomerId" class="form-control" type="text" name="CustomerId" value="@Model.OrderMaster.CustomerId">
+                        </div>
+                    </div>
+                    <div class="form-group row"><label for="CustomerTax" class="col-form-label col-2">
+                            @L["MST/CCCD"]</label>
+                        <div class="col-sm-10">
+                            <input id="CustomerTax" class="form-control" value="@Model.OrderMaster.">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="CustomerPhone" class="col-form-label col-2">
+                            @L["Điện thoại"]
+                        </label>
+                        <div class="col-sm-10">
+                            <input id="CustomerPhone" name="CustomerPhone" class="form-control" value="@Model.OrderMaster.CustomerId">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="RefPerson" class="col-form-label col-2">
+                            @L["Người đại điện"]
+                        </label>
+                        <div class="col-sm-10">
+                            <input id="RefPerson" name="RefPerson" class="form-control" value="@Model.OrderMaster.RefPerson">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="RefPos" class="col-form-label col-2">
+                            @L["Chức vụ"]
+                        </label>
+                        <div class="col-sm-10">
+                            <input id="RefPos" name="RefPos" class="form-control" value="@Model.OrderMaster.RefPos">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="ContractNo" class="col-form-label col-2">
+                            @L["Số hợp đồng"]
+                        </label>
+                        <div class="col-sm-10">
+                            <input id="ContractNo" name="ContractNo" class="form-control" value="@Model.OrderMaster.ContractNo">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="ContractDate" class="col-form-label col-2">
+                            @L["Ngày hợp đồng"]
+                        </label>
+                        <div class="col-sm-10">
+                            <input id="ContractDate" name="ContractDate" data-provide="datepicker" type="date" class="form-control" value="@Model.OrderMaster.ContractDate">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-xxl-12">
+        <div class="card">
+            <h4 class="card-header text-bold"> @L["Thông tin thanh toán"]</h4>
+            <hr>
+            <div class="card-body">
+                <div class="basic-form">
+                    <div class="form-group row">
+                        <label for="CurrencyId" class="col-form-label col-3"> @L["Loại tiền"]</label>
+                        <div class="col-sm-9">
+                            <input id="CurrencyId" name="CurrencyId" class="form-control" value="@Model.OrderMaster.CurrencyId">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="ExchangeRate" class="col-form-label col-3"> @L["Tỉ giá"]</label>
+                        <div class="col-sm-9"> 
+                            <input id="ExchangeRate" name="ExchangeRate" class="form-control" value="@Model.OrderMaster.ExchangeRate"> 
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="OriginalTotalAmount" class="col-form-label col-3"> @L["Cộng thành tiền"]</label>
+                        <div class="col-sm-9"> 
+                            <input id="OriginalTotalAmount" name="OriginalTotalAmount" class="form-control" value="@Model.OrderMaster.ConvertTotalAmount"> 
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="ConvertDiscAmount" class="col-form-label col-3"> @L["Cộng tiền CK"]</label>
+                        <div class="col-sm-9"> 
+                            <input id="ConvertDiscAmount" name="ConvertDiscAmount" class="form-control" value="@Model.OrderMaster.ConvertDiscAmount"> 
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="TotalAmount" class="col-form-label col-3"> @L["Tổng tiền thanh toán"]</label>
+                        <div class="col-sm-9">
+                            <input id="TotalAmount" name="TotalAmount" class="form-control" value="@Model.OrderMaster.TotalAmount"> 
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="OverDate" class="col-form-label col-3"> @L["Hạn thanh toán"]</label>
+                        <div class="col-sm-9"> 
+                            <input id="OverDate" name="OverDate" data-provide="datepicker" type="date" class="form-control" value="@Model.OrderMaster.OverDate">  
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="PublishedInvoice" class="col-form-label col-3"> @L["Có xuất hóa đơn"]</label>
+                        <div class="col-sm-9">
+                            @if(Model.OrderMaster.HasInvoiceVat){
+                                <input type="checkbox" id="HasInvoiceVat" name="HasInvoiceVat" class="form-control" checked>  
+                            }else{
+                                <input type="checkbox" id="HasInvoiceVat" name="HasInvoiceVat" class="form-control">  
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="PaymentMethodId" class="col-form-label col-3"> @L["Hình thức thanh toán"]</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="PaymentMethodId" name="PaymentMethodId" class="form-control" value="@Model.OrderMaster.PaymentMethodId">  
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="PaymentTerms" class="col-form-label col-3"> @L["Điều khoản thanh toán"]</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="PaymentTerms" name="PaymentTerms" class="form-control" value="@Model.OrderMaster.PaymentTerms">  
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <h4 class="card-header">Điễn giãi</h4>
+            <hr>
+            <div class="card-body">
+                <textarea type="text" class="card-body" id="Description" name="Description"  rows="4" cols="255">@Model.OrderMaster.Description</textarea>
+            </div>
+        </div>
+    </div>
+</div>
+</form>

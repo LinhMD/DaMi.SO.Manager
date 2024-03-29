@@ -26,13 +26,13 @@ public class OrderMasterDetailView : IView<OrderMaster>
     /// Số thứ tự trong năm
     /// </summary>
     [DisplayName("Số thứ tự trong năm")]
-    public long SeqInYear { get; set; }
+    public long? SeqInYear { get; set; }
 
     /// <summary>
     /// Ngày đặt hàng
     /// </summary>
     [DisplayName("Ngày đặt hàng")]
-    public DateTime OrderDate { get; set; }
+    public DateTime? OrderDate { get; set; }
 
     public DateTime? BeginExecDate { get; set; }
 
@@ -48,13 +48,13 @@ public class OrderMasterDetailView : IView<OrderMaster>
     /// Loại đơn hàng
     /// </summary>
     [DisplayName("Loại đơn hàng")]
-    public string OrderTypeId { get; set; } = null!;
+    public string? OrderTypeId { get; set; } = null!;
 
     /// <summary>
     /// Mã Form nhập
     /// </summary>
     [DisplayName("Mã Form nhập")]
-    public string OrderFormId { get; set; } = null!;
+    public string? OrderFormId { get; set; } = null!;
 
     /// <summary>
     /// Diễn giải
@@ -246,7 +246,7 @@ public class OrderMasterDetailView : IView<OrderMaster>
     [DisplayName("Đã hoàn thành")]
     public bool FinishOk { get; set; }
 
-    public string SubCompanyId { get; set; } = null!;
+    public string? SubCompanyId { get; set; } = null!;
 
     public int? TranYear { get; set; }
 
@@ -256,13 +256,13 @@ public class OrderMasterDetailView : IView<OrderMaster>
     /// Ngày tạo
     /// </summary>
     [DisplayName("Ngày tạo")]
-    public DateTime CreatedDate { get; set; }
+    public DateTime CreatedDate { get; set; } = DateTime.Now;
 
     /// <summary>
     /// Mã người tạo
     /// </summary>
     [DisplayName("Mã người tạo")]
-    public string CreatedUserId { get; set; } = null!;
+    public string? CreatedUserId { get; set; } = null!;
 
     /// <summary>
     /// Ngày giờ hiệu chỉnh cuối cùng
@@ -274,7 +274,10 @@ public class OrderMasterDetailView : IView<OrderMaster>
     /// người hiệu chỉnh cuối cùng
     /// </summary>
     [DisplayName("người hiệu chỉnh cuối cùng")]
-    public string LastModifiedUserId { get; set; } = null!;
+    public string? LastModifiedUserId { get; set; } = null!;
+
+    [DisplayName("Đã xuất Hóa đơn")]
+    public bool PublishedInvoice { get; set; }
 
     public byte[]? RowVersionId { get; set; }
 
@@ -292,12 +295,8 @@ public class OrderMasterDetailView : IView<OrderMaster>
 
     // public virtual EmployeeSimpleView? SalesMan { get; set; }
 
-    // public virtual ICollection<OrderDetailSimpleView> OrderDetails { get; set; } = new List<OrderDetailSimpleView>();
+    public virtual IEnumerable<OrderDetailSimpleView> OrderDetails { get; set; } = new List<OrderDetailSimpleView>();
 
-}
-
-public class OrderDetailSimpleView
-{
 }
 
 public class PaymentMethodSimpleView

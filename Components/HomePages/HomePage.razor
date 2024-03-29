@@ -1,5 +1,6 @@
-﻿@inherits XComponent<HomeModel>
+﻿@using Microsoft.Extensions.Localization
+@inherits XComponent<HomeModel>
 @layout _Layout
+@inject IStringLocalizer<ShareResource> L
 
-
-<h3>Hello @Model.Hello times</h3>
+<h3>Hello @Model.Hello times, with localization: @L[Model.Hello.ToString()]</h3>

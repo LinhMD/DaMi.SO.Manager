@@ -22,12 +22,24 @@ build_property._RazorSourceGeneratorDebug =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xIb21lUGFnZXNcSG9tZVBhZ2UucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Project/DaMi.SO.Manager/Components/OrderMasters/OrderMasterDetailPage.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xPcmRlck1hc3RlcnNcT3JkZXJNYXN0ZXJEZXRhaWxQYWdlLnJhem9y
+[D:/Project/DaMi.SO.Manager/Components/OrderDetails/OrderDetailRow.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xPcmRlckRldGFpbHNcT3JkZXJEZXRhaWxSb3cucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Project/DaMi.SO.Manager/Components/OrderMasters/OrderMasterTablePage.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xPcmRlck1hc3RlcnNcT3JkZXJNYXN0ZXJUYWJsZVBhZ2UucmF6b3I=
+[D:/Project/DaMi.SO.Manager/Components/OrderMasters/CreatePage.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xPcmRlck1hc3RlcnNcQ3JlYXRlUGFnZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Project/DaMi.SO.Manager/Components/OrderMasters/DetailPage.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xPcmRlck1hc3RlcnNcRGV0YWlsUGFnZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Project/DaMi.SO.Manager/Components/OrderMasters/EditPage.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xPcmRlck1hc3RlcnNcRWRpdFBhZ2UucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Project/DaMi.SO.Manager/Components/OrderMasters/IndexPage.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xPcmRlck1hc3RlcnNcSW5kZXhQYWdlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Project/DaMi.SO.Manager/Components/Share/Table.razor]

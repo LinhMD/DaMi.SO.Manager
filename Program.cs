@@ -1,8 +1,12 @@
+using System.Globalization;
 using BlazorMinimalApis.Lib.Session;
 using CrudApiTemplate.Repository;
 using DaMi.SO.Manager.Data.Models;
 using DaMi.SO.Manager.Services;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +16,17 @@ builder.Services.AddDbContext<DaMiSoManagerContext>(o => o.UseSqlServer(builder.
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork<DaMiSoManagerContext>>();
 builder.Services.AddControllers();
 builder.Services.ConfigMapping();
+builder.Services.AddLocalization(o => o.ResourcesPath = "Resources");
 
+const string defaultCulture = "vi-VN";
+List<CultureInfo> supportedCultures = [new CultureInfo(defaultCulture)];
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    options.DefaultRequestCulture = new RequestCulture(defaultCulture);
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+});
 builder.Services.AddRazorComponents();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDistributedMemoryCache();
@@ -47,5 +61,7 @@ app.UseAntiforgery();
 app.UseAuthorization();
 
 app.MapControllers();
+app.UseRequestLocalization();
+
 
 app.Run();

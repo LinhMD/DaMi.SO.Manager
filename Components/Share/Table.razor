@@ -2,13 +2,16 @@
 @using System.ComponentModel
 @using Microsoft.AspNetCore.Mvc
 @typeparam TItem
+@inject IStringLocalizer<ShareResource> L
 
 <table class="table table-hover table-bordered table-responsive text-black">
-    <thead class="thead-primary">
-        <tr>
+    <thead>
+        <tr class="text-black">
             @if (NavLabel is not null)
             {
-                <th>@NavLabel</th>
+                <th style="text-transform: none;">
+                    <h6>@NavLabel</h6>
+                </th>
             }
             @foreach (var fieldInfo in propertyInfos)
             {
@@ -16,12 +19,16 @@
                 {
                     var displayName = (Attribute.GetCustomAttribute(fieldInfo, typeof(DisplayNameAttribute)) as
                     DisplayNameAttribute)?.DisplayName ?? fieldInfo.Name;
-                    <th>@displayName</th>
+                    <th style="text-transform: none;">
+                        <h6>@L[displayName]</h6>
+                    </th>
                 }
             }
             @if (ActionLabel is not null)
             {
-                <th>@ActionLabel</th>
+                <th style="text-transform: none;">
+                    <h6>@ActionLabel</h6>
+                </th>
             }
         </tr>
     </thead>
@@ -71,7 +78,7 @@
 
 @code {
     [Parameter]
-    public IEnumerable<TItem> Models { get; set; }
+    public IEnumerable<TItem> Models { get; set; } = [];
     public PropertyInfo[] propertyInfos { get; init; } = typeof(TItem).GetProperties();
     [Parameter] public RenderFragment<TItem>? NavKey { get; set; }
     [Parameter] public RenderFragment? NavLabel { get; set; }

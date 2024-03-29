@@ -9,9 +9,9 @@ namespace DaMi.SO.Manager.Components.HomePages;
 public class HomeController : ControllerBase
 {
     [HttpGet]
-    public async Task<IResult> GetResultAsync()
+    public IResult Get()
     {
-        return this.Page<HomePage>(new ValidationResponse(), await Task.FromResult(new HomeModel { Hello = 2 }));
+        return this.Page<HomePage, HomeModel>(new() { Hello = 2 });
     }
 }
 
