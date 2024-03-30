@@ -14,35 +14,20 @@ public class OrderMasterSimpleView : IView<OrderMaster>, IDto
 	[HiddenInput]
 	public Guid RowUniqueId { get; set; }
 
-	/// <summary>
-	/// Số đơn đặt hàng
-	/// </summary>
 	[HiddenInput]
 	[DisplayName("Số đơn hàng")]
 	public string? OrderNo { get; set; }
 
 
-	/// <summary>
-	/// Ngày đặt hàng
-	/// </summary>
 	[DisplayName("Ngày đặt hàng")]
 	public DateTime OrderDate { get; set; }
 
-	/// <summary>
-	/// Mã khách hàng
-	/// </summary>
 	[DisplayName("Khách hàng")]
 	public string CustomerId { get; set; } = null!;
 
-	/// <summary>
-	/// Số hợp đồng
-	/// </summary>
 	[DisplayName("Số hợp đồng")]
 	public string? ContractNo { get; set; }
 
-	/// <summary>
-	/// Trạng thái đơn đặt hàng
-	/// </summary>
 	[DisplayName("Trạng thái ĐH")]
 	public string OrderStatus { get; set; } = null!;
 
@@ -64,20 +49,12 @@ public class OrderMasterSimpleView : IView<OrderMaster>, IDto
 	[DisplayName("Số iCloudData")]
 	public int NoICloudData { get; set; }
 
-	/// <summary>
-	/// Tổng số tiền
-	/// </summary>
 	[DisplayName("Tổng số tiền")]
 	public decimal OriginalTotalAmount { get; set; }
 
-	/// <summary>
-	/// Tổng số tiền
-	/// </summary>
 	[DisplayName("Số tiền đã thu")]
 	public decimal CollectAmount { get; set; }
-	/// <summary>
-	/// Có hóa đơn GTGT
-	/// </summary>
+
 	[DisplayName("Có hóa đơn GTGT")]
 	public bool HasInvoiceVat { get; set; }
 

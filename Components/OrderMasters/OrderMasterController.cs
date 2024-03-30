@@ -43,7 +43,7 @@ public class OrderMasterController(IUnitOfWork work) : ControllerBase
     [HttpGet("Edit/{guid}")]
     public async Task<IResult> GetEditAsync(Guid guid)
     {
-        var orderMaster = await work.Get<OrderMaster>().GetAsync<OrderMasterUpdate>(guid);
+        var orderMaster = await work.Get<OrderMaster>().GetAsync<OrderMasterDetailView>(guid);
 
         if (orderMaster is null)
             return new RazorComponentResult(typeof(_404));
@@ -65,7 +65,7 @@ public class OrderMasterDetailModel
 }
 public class OrderMasterEditModel
 {
-    public OrderMasterUpdate OrderMaster { get; set; }
+    public OrderMasterDetailView OrderMaster { get; set; }
 }
 
 
