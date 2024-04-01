@@ -1,0 +1,32 @@
+﻿@using DaMi.SO.Manager.Endpoints.OrderMasters
+@inherits XComponent<OrderMasterEditModel>
+@layout _Layout
+@inject IStringLocalizer<ShareResource> L
+@using System.Text.Json
+
+<div class="row page-titles mx-0">
+    <div class="col-sm-6 p-md-0 justify-content-sm-start mt-2 mt-sm-0 d-flex">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/OrderMaster">@L["Đơn Hàng"] </a></li>
+        </ol>
+    </div>
+    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+        <input class="btn btn-round btn-success mx-2" type="submit" form="create-form" name="New" value="@L["Tạo mới"]">
+        <a href="MasterOrder" class="btn btn-round btn-primary mx-2"> @L["Danh sách đơn hàng"]</a>
+    </div>
+</div>
+<form action="/OrderMaster/New" id="create-form" method="post">
+    <ModifyTemplate Model="@Model">
+    </ModifyTemplate>
+</form>
+<div class="row page-titles mx-0">
+    <div class="col-sm-6 p-md-0 justify-content-sm-start mt-2 mt-sm-0 d-flex">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/OrderMaster">@L["Đơn Hàng"] </a></li>
+        </ol>
+    </div>
+    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+        <input class="btn btn-round btn-success mx-2" type="submit" form="create-form" name="New" value="@L["Tạo mới"]">
+        <a href="MasterOrder" class="btn btn-round btn-primary mx-2"> @L["Danh sách đơn hàng"]</a>
+    </div>
+</div>

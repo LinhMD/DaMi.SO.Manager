@@ -18,50 +18,50 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = D:\Project\DaMi.SO.Manager
 build_property._RazorSourceGeneratorDebug = 
 
-[D:/Project/DaMi.SO.Manager/Components/HomePages/HomePage.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xIb21lUGFnZXNcSG9tZVBhZ2UucmF6b3I=
+[D:/Project/DaMi.SO.Manager/Endpoints/HomePages/HomePage.razor]
+build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXEhvbWVQYWdlc1xIb21lUGFnZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Project/DaMi.SO.Manager/Components/OrderDetails/OrderDetailRow.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xPcmRlckRldGFpbHNcT3JkZXJEZXRhaWxSb3cucmF6b3I=
+[D:/Project/DaMi.SO.Manager/Endpoints/OrderDetails/OrderDetailRow.razor]
+build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXE9yZGVyRGV0YWlsc1xPcmRlckRldGFpbFJvdy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Project/DaMi.SO.Manager/Components/OrderMasters/CreatePage.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xPcmRlck1hc3RlcnNcQ3JlYXRlUGFnZS5yYXpvcg==
+[D:/Project/DaMi.SO.Manager/Endpoints/OrderMasters/Pages/CreatePage.razor]
+build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXE9yZGVyTWFzdGVyc1xQYWdlc1xDcmVhdGVQYWdlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Project/DaMi.SO.Manager/Components/OrderMasters/DetailPage.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xPcmRlck1hc3RlcnNcRGV0YWlsUGFnZS5yYXpvcg==
+[D:/Project/DaMi.SO.Manager/Endpoints/OrderMasters/Pages/DetailPage.razor]
+build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXE9yZGVyTWFzdGVyc1xQYWdlc1xEZXRhaWxQYWdlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Project/DaMi.SO.Manager/Components/OrderMasters/EditPage.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xPcmRlck1hc3RlcnNcRWRpdFBhZ2UucmF6b3I=
+[D:/Project/DaMi.SO.Manager/Endpoints/OrderMasters/Pages/EditPage.razor]
+build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXE9yZGVyTWFzdGVyc1xQYWdlc1xFZGl0UGFnZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Project/DaMi.SO.Manager/Components/OrderMasters/IndexPage.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xPcmRlck1hc3RlcnNcSW5kZXhQYWdlLnJhem9y
+[D:/Project/DaMi.SO.Manager/Endpoints/OrderMasters/Pages/IndexPage.razor]
+build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXE9yZGVyTWFzdGVyc1xQYWdlc1xJbmRleFBhZ2UucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Project/DaMi.SO.Manager/Components/OrderMasters/ModifyTemplate.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xPcmRlck1hc3RlcnNcTW9kaWZ5VGVtcGxhdGUucmF6b3I=
+[D:/Project/DaMi.SO.Manager/Endpoints/OrderMasters/Pages/ModifyTemplate.razor]
+build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXE9yZGVyTWFzdGVyc1xQYWdlc1xNb2RpZnlUZW1wbGF0ZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Project/DaMi.SO.Manager/Components/OrderMasters/OOBCustomerInfo.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xPcmRlck1hc3RlcnNcT09CQ3VzdG9tZXJJbmZvLnJhem9y
+[D:/Project/DaMi.SO.Manager/Endpoints/OrderMasters/Pages/OOBCustomerInfo.razor]
+build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXE9yZGVyTWFzdGVyc1xQYWdlc1xPT0JDdXN0b21lckluZm8ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Project/DaMi.SO.Manager/Components/Share/Table.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZVxUYWJsZS5yYXpvcg==
+[D:/Project/DaMi.SO.Manager/Endpoints/Share/Table.razor]
+build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXFNoYXJlXFRhYmxlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Project/DaMi.SO.Manager/Components/Share/_404.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZVxfNDA0LnJhem9y
+[D:/Project/DaMi.SO.Manager/Endpoints/Share/_404.razor]
+build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXFNoYXJlXF80MDQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Project/DaMi.SO.Manager/Components/Share/_Layout.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZVxfTGF5b3V0LnJhem9y
+[D:/Project/DaMi.SO.Manager/Endpoints/Share/_Layout.razor]
+build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXFNoYXJlXF9MYXlvdXQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Project/DaMi.SO.Manager/Components/_Imports.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xfSW1wb3J0cy5yYXpvcg==
+[D:/Project/DaMi.SO.Manager/Endpoints/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXF9JbXBvcnRzLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 

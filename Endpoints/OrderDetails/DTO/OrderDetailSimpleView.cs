@@ -1,14 +1,13 @@
 ﻿using System.ComponentModel;
 using CrudApiTemplate.Model;
 using CrudApiTemplate.View;
-using DaMi.SO.Manager.Data.Models;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DaMi.SO.Manager;
+namespace DaMi.SO.Manager.Endpoints.OrderDetails.DTO;
 
 
-public class OrderDetailSimpleView : IView<OrderDetail>, IDto
+public class OrderDetailSimpleView : IDto
 {
 
     [HiddenInput]
@@ -207,6 +206,6 @@ public class OrderDetailSimpleView : IView<OrderDetail>, IDto
 
     public static void InitMapper()
     {
-        TypeAdapterConfig<OrderDetail, OrderDetailSimpleView>.NewConfig();
+        //TypeAdapterConfig<OrderDetail, OrderDetailSimpleView>.NewConfig();
     }
 }

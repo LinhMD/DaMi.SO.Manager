@@ -1,25 +1,16 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
-using Azure;
-using BlazorMinimalApis.Lib.Helpers;
-using BlazorMinimalApis.Lib.Validation;
 using CrudApiTemplate.Repository;
-using CrudApiTemplate.Utilities;
-using CrudApiTemplate.View;
-using DaMi.SO.Manager.Components.Share;
-using DaMi.SO.Manager.Data.Models;
-using DaMi.SO.Manager.Services.OrderMasterDTO;
-using Mapster;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using DaMi.SO.Manager.Endpoints.Share;
+using DaMi.SO.Manager.Endpoints.OrderMasters.DTO;
+using DaMi.SO.Manager.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
+using BlazorMinimalApis.Lib.Helpers;
+using DaMi.SO.Manager.Endpoints.OrderMasters.Pages;
+using Mapster;
+using CrudApiTemplate.Utilities;
 
-namespace DaMi.SO.Manager.Components.OrderMasters;
+namespace DaMi.SO.Manager.Endpoints.OrderMasters;
 [ApiController]
 [Route("[controller]")]
 public class OrderMasterController(IUnitOfWork work) : ControllerBase
@@ -94,6 +85,7 @@ public class OrderMasterController(IUnitOfWork work) : ControllerBase
         }
         catch (Exception e)
         {
+            e.Dump();
             var orderTypes = await work.Get<OrderType>().GetAll().ToListAsync();
             var orderForms = await work.Get<OrderForm>().GetAll().ToListAsync();
             var customers = await work.Get<ViwCustomer>().GetAll().ToListAsync();
@@ -152,27 +144,26 @@ public class OrderMasterController(IUnitOfWork work) : ControllerBase
     [HttpPost("Edit/{guid}")]
     public async Task<IResult> EditAsync(Guid guid, [FromForm] OrderMasterDetailView orderMaster)
     {
-        return new RazorComponentResult(typeof(_404));
+        return await Task.FromResult(new RazorComponentResult(typeof(_404)));
     }
 }
 
 public class OrderMasterDetailModel
 {
-    public OrderMasterDetailView OrderMaster { get; set; }
+    public OrderMasterDetailView OrderMaster { get; set; } = null!;
 }
 
 public class OrderMasterEditModel
 {
-    public OrderMasterDetailView OrderMaster { get; set; }
+    public OrderMasterDetailView OrderMaster { get; set; } = null!;
 
-    public IEnumerable<OrderType> OrderTypes { get; set; }
-    public IEnumerable<OrderForm> OrderForms { get; set; }
-    public IEnumerable<ViwCustomer> Customers { get; set; }
-    public IEnumerable<Employee> Employees { get; set; }
-    public IEnumerable<Currency> Currencies { get; set; }
-    public IEnumerable<OrderStatus> OrderStatuses { get; set; }
-
-    public IEnumerable<PaymentMethod> PaymentMethods { get; set; }
+    public IEnumerable<OrderType> OrderTypes { get; set; } = null!;
+    public IEnumerable<OrderForm> OrderForms { get; set; } = null!;
+    public IEnumerable<ViwCustomer> Customers { get; set; } = null!;
+    public IEnumerable<Employee> Employees { get; set; } = null!;
+    public IEnumerable<Currency> Currencies { get; set; } = null!;
+    public IEnumerable<OrderStatus> OrderStatuses { get; set; } = null!;
+    public IEnumerable<PaymentMethod> PaymentMethods { get; set; } = null!;
 }
 
 

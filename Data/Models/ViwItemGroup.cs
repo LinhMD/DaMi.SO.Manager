@@ -15,4 +15,20 @@ public partial class ViwItemGroup
     public bool AllowEditItemName { get; set; }
 
     public bool AllowEditItemAmount { get; set; }
+
+    public bool AllowEditNumOfTaxCode { get; set; }
+
+    public bool AllowEditNumOfData { get; set; }
+
+    public bool AllowEditNumOfInv { get; set; }
+
+    public bool AllowEditNumOfUser { get; set; }
+
+    public bool AllowEditNumOfPc { get; set; }
+
+    public bool AllowEditiCloudDataSize { get; set; }
+
+    public bool AllowEditNumOfMonth { get; set; }
+
+    public int SortOrder { get; set; }
 }

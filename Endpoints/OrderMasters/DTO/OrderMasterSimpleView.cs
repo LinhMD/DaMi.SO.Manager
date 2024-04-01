@@ -6,9 +6,9 @@ using DaMi.SO.Manager.Data.Models;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DaMi.SO.Manager;
+namespace DaMi.SO.Manager.Endpoints.OrderMasters.DTO;
 
-public class OrderMasterSimpleView : IView<OrderMaster>, IDto
+public class OrderMasterSimpleView : IView<OrderMaster>
 {
 
 	[HiddenInput]
@@ -35,7 +35,7 @@ public class OrderMasterSimpleView : IView<OrderMaster>, IDto
 	public DateTime? BeginExecDate { get; set; }
 
 	[DisplayName("Tên sản phẩm")]
-	public string ItemNames { get; set; }
+	public string ItemNames { get; set; } = null!;
 	[DisplayName("Số máy")]
 	public int NumOfPC { get; set; }
 	[DisplayName("Số hệ thống")]
@@ -61,14 +61,14 @@ public class OrderMasterSimpleView : IView<OrderMaster>, IDto
 	[DisplayName("Đã xuất Hóa đơn")]
 	public bool PublishedInvoice { get; set; }
 
-	public static void InitMapper()
-	{
-		TypeAdapterConfig<OrderMaster, OrderMasterSimpleView>.NewConfig()
-			.Map(view => view.OrderStatus, order => order.OrderStatus.OrderStatusName)
-			.Map(view => view.NumOfPC, order => order.OrderDetails.Sum(d => d.NumOfPc))
-			.Map(view => view.NumOfData, order => order.OrderDetails.Sum(d => d.NumOfData))
-			.Map(view => view.NumOfInv, order => order.OrderDetails.Sum(d => d.NumOfInv))
-			.Map(view => view.NumOfTaxCode, order => order.OrderDetails.Sum(d => d.NumOfTaxCode))
-			.Map(view => view.NumOfUser, order => order.OrderDetails.Sum(d => d.NumOfUser));
-	}
+	// public static void InitMapper()
+	// {
+	// 	TypeAdapterConfig<OrderMaster, OrderMasterSimpleView>.NewConfig()
+	// 		.Map(view => view.OrderStatus, order => order.OrderStatus.OrderStatusName)
+	// 		.Map(view => view.NumOfPC, order => order.OrderDetails.Sum(d => d.NumOfPc))
+	// 		.Map(view => view.NumOfData, order => order.OrderDetails.Sum(d => d.NumOfData))
+	// 		.Map(view => view.NumOfInv, order => order.OrderDetails.Sum(d => d.NumOfInv))
+	// 		.Map(view => view.NumOfTaxCode, order => order.OrderDetails.Sum(d => d.NumOfTaxCode))
+	// 		.Map(view => view.NumOfUser, order => order.OrderDetails.Sum(d => d.NumOfUser));
+	// }
 }

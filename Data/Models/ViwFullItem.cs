@@ -6,15 +6,13 @@ namespace DaMi.SO.Manager.Data.Models;
 
 public partial class ViwFullItem
 {
-    public Guid RowUniqueId { get; set; }
-
     public string ItemId { get; set; } = null!;
 
     public string ItemName { get; set; } = null!;
 
     public string? InvUnitOfMeasr { get; set; }
 
-    public string UnitName { get; set; } = null!;
+    public string? UnitName { get; set; }
 
     public string ItemGroupId { get; set; } = null!;
 
@@ -23,6 +21,20 @@ public partial class ViwFullItem
     public bool AllowEditItemName { get; set; }
 
     public bool AllowEditItemAmount { get; set; }
+
+    public bool AllowEditNumOfTaxCode { get; set; }
+
+    public bool AllowEditNumOfData { get; set; }
+
+    public bool AllowEditNumOfInv { get; set; }
+
+    public bool AllowEditNumOfUser { get; set; }
+
+    public bool AllowEditNumOfPc { get; set; }
+
+    public bool AllowEditiCloudDataSize { get; set; }
+
+    public bool AllowEditNumOfMonth { get; set; }
 
     public string ItemTypeId { get; set; } = null!;
 
@@ -35,6 +47,8 @@ public partial class ViwFullItem
     public bool HasByTime { get; set; }
 
     public bool HasByTaxCode { get; set; }
+
+    public bool HasByNumData { get; set; }
 
     public bool HasByQtyInvc { get; set; }
 
@@ -85,4 +99,6 @@ public partial class ViwFullItem
     public DateTime LastModifiedDate { get; set; }
 
     public string LastModifiedUserId { get; set; } = null!;
+
+    public Guid RowUniqueId { get; set; }
 }

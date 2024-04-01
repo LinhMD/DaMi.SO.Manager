@@ -11,4 +11,6 @@ public partial class ViwItemType
     public string ItemTypeName { get; set; } = null!;
 
     public string OrderFormId { get; set; } = null!;
+
+    public int SortOrder { get; set; }
 }

@@ -1,4 +1,5 @@
-﻿@inherits XComponent<OrderMasterDetailModel>
+﻿@using DaMi.SO.Manager.Endpoints.OrderDetails.DTO
+@inherits XComponent<OrderMasterDetailModel>
 @layout _Layout
 @inject IStringLocalizer<ShareResource> L
 
@@ -224,12 +225,30 @@
         </div>
     </div>
 </div>
+
 <div class="row">
-    <div class="col-12">
+    <div class="col-xl-6 col-xxl-12">
         <div class="card">
             <h4 class="card-header">Điễn giãi</h4>
             <hr>
-            <div class="card-body">@Model.OrderMaster.Notes</div>
+            <div class="card-body">
+                <div class="form-group">
+                    <textarea type="text" class="form-control" id="Description" name="Description"
+                        rows="6">@Model.OrderMaster.Description</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-xxl-12">
+        <div class="card">
+            <h4 class="card-header ">Ghi Chú</h4>
+            <hr>
+            <div class="card-body">
+                <div class="form-group">
+                    <textarea type="text" class="form-control" id="Notes" name="Notes"
+                        rows="6">@Model.OrderMaster.Notes</textarea>
+                </div>
+            </div>
         </div>
     </div>
 </div>

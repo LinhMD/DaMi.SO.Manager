@@ -1,10 +1,9 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using CrudApiTemplate.View;
-using DaMi.SO.Manager.Data.Models;
 
 namespace DaMi.SO.Manager.Services.EmployeeDTO;
-public class EmployeeSimpleView : IView<Employee>
+public class EmployeeSimpleView
 {
     public Guid RowUniqueId { get; set; }
 

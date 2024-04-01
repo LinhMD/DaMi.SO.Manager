@@ -19,11 +19,9 @@ public partial class DaMiSoManagerContext : DbContext
 
     public virtual DbSet<Computer> Computers { get; set; }
 
-    public virtual DbSet<CustomerLink> CustomerLinks { get; set; }
+    public virtual DbSet<Currency> Currencys { get; set; }
 
     public virtual DbSet<CustomerUser> CustomerUsers { get; set; }
-
-    public virtual DbSet<Currency> Currencies { get; set; }
 
     public virtual DbSet<Department> Departments { get; set; }
 
@@ -41,6 +39,8 @@ public partial class DaMiSoManagerContext : DbContext
 
     public virtual DbSet<PaymentMethod> PaymentMethods { get; set; }
 
+    public virtual DbSet<Permision> Permisions { get; set; }
+
     public virtual DbSet<TaxCode> TaxCodes { get; set; }
 
     public virtual DbSet<ViwCustomer> ViwCustomers { get; set; }
@@ -53,15 +53,9 @@ public partial class DaMiSoManagerContext : DbContext
 
     public virtual DbSet<ViwItemType> ViwItemTypes { get; set; }
 
+    public virtual DbSet<ViwOrderMasterDetail> ViwOrderMasterDetails { get; set; }
+
     public virtual DbSet<ViwUnitOfMeasr> ViwUnitOfMeasrs { get; set; }
-
-    public virtual DbSet<WhItemGroupLink> WhItemGroupLinks { get; set; }
-
-    public virtual DbSet<WhItemLink> WhItemLinks { get; set; }
-
-    public virtual DbSet<WhItemTypeLink> WhItemTypeLinks { get; set; }
-
-    public virtual DbSet<WhUnitOfMeasrLink> WhUnitOfMeasrLinks { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -76,14 +70,17 @@ public partial class DaMiSoManagerContext : DbContext
             entity.Property(e => e.RowUniqueId)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("RowUniqueID");
+            entity.Property(e => e.Actived).HasComment("Có hiệu lực");
             entity.Property(e => e.ComputerId)
                 .HasMaxLength(100)
                 .IsUnicode(false)
+                .HasComment("Mã máy tính")
                 .HasColumnName("ComputerID");
             entity.Property(e => e.CreatedUserId)
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("CreatedUserID");
+            entity.Property(e => e.EndDate).HasComment("Ngày kết thúc");
             entity.Property(e => e.ItemId)
                 .HasMaxLength(20)
                 .IsUnicode(false)
@@ -92,18 +89,15 @@ public partial class DaMiSoManagerContext : DbContext
             entity.Property(e => e.OrderDetailId)
                 .HasComment("Mã đơn đặt hàng chi tiết")
                 .HasColumnName("OrderDetailID");
+            entity.Property(e => e.StartDate).HasComment("Ngày bắt đầu");
             entity.Property(e => e.TaxCode)
                 .HasMaxLength(20)
-                .IsUnicode(false);
+                .IsUnicode(false)
+                .HasComment("Mã số thuế");
 
             entity.HasOne(d => d.Computer).WithMany(p => p.ComputerItemMaps)
                 .HasForeignKey(d => d.ComputerId)
                 .HasConstraintName("FK_tblComputerItemMap_tblComputerList");
-
-            entity.HasOne(d => d.Item).WithMany(p => p.ComputerItemMaps)
-                .HasPrincipalKey(p => p.ItemId)
-                .HasForeignKey(d => d.ItemId)
-                .HasConstraintName("FK_tblComputerItemMap_WH_tblItemList_Link");
 
             entity.HasOne(d => d.OrderDetail).WithMany(p => p.ComputerItemMaps)
                 .HasForeignKey(d => d.OrderDetailId)
@@ -123,96 +117,60 @@ public partial class DaMiSoManagerContext : DbContext
             entity.Property(e => e.ComputerId)
                 .HasMaxLength(100)
                 .IsUnicode(false)
+                .HasComment("Mã máy tính")
                 .HasColumnName("ComputerID");
-            entity.Property(e => e.ComputerName).HasMaxLength(60);
-            entity.Property(e => e.CustomerId)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("CustomerID");
-            entity.Property(e => e.HardwareInfo).HasMaxLength(200);
-            entity.Property(e => e.Ipaddr)
-                .HasMaxLength(40)
-                .IsUnicode(false)
-                .HasColumnName("IPAddr");
-            entity.Property(e => e.OperatingSystem).HasMaxLength(100);
-        });
-
-        modelBuilder.Entity<CustomerLink>(entity =>
-        {
-            entity.HasKey(e => e.CustomerId);
-
-            entity.ToTable("tblCustomerList_Link");
-
+            entity.Property(e => e.ComputerName)
+                .HasMaxLength(60)
+                .HasComment("Tên máy tính");
             entity.Property(e => e.CustomerId)
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasComment("Mã khách hàng")
                 .HasColumnName("CustomerID");
-            entity.Property(e => e.Address1)
-                .HasMaxLength(250)
-                .HasComment("Địa chỉ 1");
-            entity.Property(e => e.Address2)
+            entity.Property(e => e.HardwareInfo)
                 .HasMaxLength(200)
-                .HasComment("Địa chỉ 2");
-            entity.Property(e => e.ContactPerson)
-                .HasMaxLength(60)
-                .HasComment("Người liên hệ");
-            entity.Property(e => e.ContactPersonPos)
-                .HasMaxLength(60)
-                .HasComment("Chức vụ người liên hệ");
-            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
-            entity.Property(e => e.CreatedUserId)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("CreatedUserID");
-            entity.Property(e => e.CustomerGroupId)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasComment("Mã nhóm khách hàng")
-                .HasColumnName("CustomerGroupID");
-            entity.Property(e => e.CustomerName)
-                .HasMaxLength(250)
-                .HasComment("Tên khách hàng");
-            entity.Property(e => e.Email)
+                .HasComment("Thông tin phần cứng");
+            entity.Property(e => e.Ipaddr)
                 .HasMaxLength(40)
                 .IsUnicode(false)
-                .HasComment("Email");
-            entity.Property(e => e.Fax)
-                .HasMaxLength(20)
+                .HasComment("Địa chỉ IP máy tính")
+                .HasColumnName("IPAddr");
+            entity.Property(e => e.OperatingSystem)
+                .HasMaxLength(100)
+                .HasComment("Hệ điều hành");
+        });
+
+        modelBuilder.Entity<Currency>(entity =>
+        {
+            entity.HasKey(e => e.CurrencyId);
+
+            entity.ToTable("tblCurrencyList");
+
+            entity.Property(e => e.CurrencyId)
+                .HasMaxLength(3)
                 .IsUnicode(false)
-                .HasComment("Fax");
-            entity.Property(e => e.IsCustomer).HasComment("Là khách hàng");
-            entity.Property(e => e.IsPersonal).HasComment("Là cá nhân");
-            entity.Property(e => e.IsVendor).HasComment("Là người bán");
-            entity.Property(e => e.LastModifiedDate).HasColumnType("datetime");
-            entity.Property(e => e.LastModifiedUserId)
-                .HasMaxLength(20)
+                .HasDefaultValue("VND")
+                .HasComment("Loại tiền")
+                .HasColumnName("CurrencyID");
+            entity.Property(e => e.AmountDecimalPlaces).HasDefaultValue((byte)2);
+            entity.Property(e => e.AmountNumberFormat)
+                .HasMaxLength(15)
                 .IsUnicode(false)
-                .HasColumnName("LastModifiedUserID");
-            entity.Property(e => e.Mobile)
-                .HasMaxLength(40)
+                .HasDefaultValue("#,##0.00")
+                .HasComment("Mã định dạng số tiền");
+            entity.Property(e => e.CurrencyName)
+                .HasMaxLength(50)
+                .HasComment("Tên loại tiền");
+            entity.Property(e => e.CurrencyName2)
+                .HasMaxLength(50)
+                .HasComment("Tên loại tiền");
+            entity.Property(e => e.PriceDecimalPlaces).HasDefaultValue((byte)2);
+            entity.Property(e => e.PriceNumberFormat)
+                .HasMaxLength(15)
                 .IsUnicode(false)
-                .HasComment("Di động");
-            entity.Property(e => e.Phone)
-                .HasMaxLength(40)
-                .IsUnicode(false)
-                .HasComment("Số điện thoại");
-            entity.Property(e => e.SortOrder).HasComment("Thứ tự sắp xếp");
-            entity.Property(e => e.TaxCode)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasComment("Mã số thuế");
-            entity.Property(e => e.TradeAddress)
-                .HasMaxLength(250)
-                .HasComment("Địa chỉ rút gọn");
-            entity.Property(e => e.TradeName)
-                .HasMaxLength(40)
-                .HasComment("Tên rút gọn");
-            entity.Property(e => e.TranAddress).HasMaxLength(200);
-            entity.Property(e => e.Website)
-                .HasMaxLength(60)
-                .IsUnicode(false)
-                .HasComment("Website");
+                .HasDefaultValue("#,##0.00")
+                .HasComment("Mã định dạng đơn giá");
+            entity.Property(e => e.UnitName).HasMaxLength(30);
         });
 
         modelBuilder.Entity<CustomerUser>(entity =>
@@ -226,6 +184,7 @@ public partial class DaMiSoManagerContext : DbContext
             entity.Property(e => e.RowUniqueId)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("RowUniqueID");
+            entity.Property(e => e.Actived).HasComment("Có hiệu lực");
             entity.Property(e => e.CreatedDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasComment("Ngày cập nhật");
@@ -237,16 +196,23 @@ public partial class DaMiSoManagerContext : DbContext
             entity.Property(e => e.CustomerId)
                 .HasMaxLength(20)
                 .IsUnicode(false)
+                .HasComment("Mã khách hàng")
                 .HasColumnName("CustomerID");
             entity.Property(e => e.CustomerUserId)
                 .HasMaxLength(20)
                 .IsUnicode(false)
+                .HasComment("Mã User KH")
                 .HasColumnName("CustomerUserID");
-            entity.Property(e => e.CustomerUserName).HasMaxLength(100);
-            entity.Property(e => e.CustomerUserPassword).HasMaxLength(50);
+            entity.Property(e => e.CustomerUserName)
+                .HasMaxLength(100)
+                .HasComment("Tên User KH");
+            entity.Property(e => e.CustomerUserPassword)
+                .HasMaxLength(50)
+                .HasComment("Mật khẩu User KH");
             entity.Property(e => e.ItemTypeId)
                 .HasMaxLength(20)
                 .IsUnicode(false)
+                .HasComment("Mã loại sản phẩm")
                 .HasColumnName("ItemTypeID");
             entity.Property(e => e.LastModifiedDate).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.LastModifiedUserId)
@@ -257,10 +223,6 @@ public partial class DaMiSoManagerContext : DbContext
             entity.Property(e => e.OrderDetailId)
                 .HasComment("Mã đơn đặt hàng chi tiết")
                 .HasColumnName("OrderDetailID");
-
-            entity.HasOne(d => d.Customer).WithMany(p => p.CustomerUsers)
-                .HasForeignKey(d => d.CustomerId)
-                .HasConstraintName("FK_tblCustomerUserList_tblCustomerList_Link");
 
             entity.HasOne(d => d.OrderDetail).WithMany(p => p.CustomerUsers)
                 .HasForeignKey(d => d.OrderDetailId)
@@ -297,7 +259,7 @@ public partial class DaMiSoManagerContext : DbContext
                 .HasComment("Tên phòng ban");
             entity.Property(e => e.DepartmentName2)
                 .HasMaxLength(100)
-                .HasComment("Tên phòng ban");
+                .HasComment("Tên phòng ban 2");
             entity.Property(e => e.IsAccounting).HasComment("Phong Ke toan");
             entity.Property(e => e.IsDeveloper).HasComment("Phong Lap trinh");
             entity.Property(e => e.IsInstall).HasComment("Phong Trien khai");
@@ -401,6 +363,9 @@ public partial class DaMiSoManagerContext : DbContext
             entity.Property(e => e.RowUniqueId)
                 .HasDefaultValueSql("(newid())")
                 .HasColumnName("RowUniqueID");
+            entity.Property(e => e.CnvPaymentAmount)
+                .HasComment("Số tiền đã thanh toán")
+                .HasColumnType("money");
             entity.Property(e => e.ConvertAmount)
                 .HasComment("Số tiền VND")
                 .HasColumnType("money");
@@ -467,6 +432,9 @@ public partial class DaMiSoManagerContext : DbContext
             entity.Property(e => e.OrderId)
                 .HasComment("Mã đơn đặt hàng")
                 .HasColumnName("OrderID");
+            entity.Property(e => e.OrgPaymentAmount)
+                .HasComment("Số tiền đã thanh toán USD")
+                .HasColumnType("money");
             entity.Property(e => e.OriginalAmount)
                 .HasComment("Thành tiền nguyên tệ")
                 .HasColumnType("money");
@@ -478,21 +446,17 @@ public partial class DaMiSoManagerContext : DbContext
                 .HasComment("Tiền thuế nguyên tệ")
                 .HasColumnType("money");
             entity.Property(e => e.OriginalTotalAmount)
-                .HasComment("Tổng số tiền")
+                .HasComment("Tổng số tiền USD")
                 .HasColumnType("money");
             entity.Property(e => e.Quantity).HasComment("Số lượng");
             entity.Property(e => e.RowVersionId)
                 .IsRowVersion()
                 .IsConcurrencyToken()
                 .HasColumnName("RowVersionID");
+            entity.Property(e => e.StartDate).HasComment("Ngày bắt đầu sử dụng");
             entity.Property(e => e.TaxRate)
                 .HasComment("Thuế suất")
                 .HasColumnType("smallmoney");
-
-            entity.HasOne(d => d.Item).WithMany(p => p.OrderDetails)
-                .HasPrincipalKey(p => p.ItemId)
-                .HasForeignKey(d => d.ItemId)
-                .HasConstraintName("FK_tblOrderDetail_WH_tblItemList_Link");
 
             entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.OrderId)
@@ -508,9 +472,21 @@ public partial class DaMiSoManagerContext : DbContext
             entity.Property(e => e.OrderFormId)
                 .HasMaxLength(20)
                 .IsUnicode(false)
+                .HasComment("Mã kiểu đơn hàng")
                 .HasColumnName("OrderFormID");
-            entity.Property(e => e.HasByPc).HasColumnName("HasByPC");
-            entity.Property(e => e.OrderFormName).HasMaxLength(150);
+            entity.Property(e => e.HasByDiskSize).HasComment("Có tính theo dung lượng (GB)");
+            entity.Property(e => e.HasByNumData).HasComment("Có tính theo số Data");
+            entity.Property(e => e.HasByPc)
+                .HasComment("Có tính theo máy tính")
+                .HasColumnName("HasByPC");
+            entity.Property(e => e.HasByQtyInvc).HasComment("Có tính theo số lượng HĐ");
+            entity.Property(e => e.HasByTaxCode).HasComment("Có tính theo MST");
+            entity.Property(e => e.HasByTime).HasComment("Có tính theo thời gian");
+            entity.Property(e => e.HasByUser).HasComment("Có tính theo User");
+            entity.Property(e => e.OrderFormName)
+                .HasMaxLength(150)
+                .HasComment("Tên kiểu đơn hàng");
+            entity.Property(e => e.SortOrder).HasComment("Thứ tự sắp xếp");
         });
 
         modelBuilder.Entity<OrderMaster>(entity =>
@@ -526,12 +502,12 @@ public partial class DaMiSoManagerContext : DbContext
                 .HasColumnName("RowUniqueID");
             entity.Property(e => e.Accepted).HasComment("Đã duyệt");
             entity.Property(e => e.AcceptedDate).HasComment("Ngày duyệt");
-            entity.Property(e => e.PublishedInvoice).HasComment("Đã xuất Hóa đơn");
             entity.Property(e => e.AccepterId)
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasComment("Người duyệt")
                 .HasColumnName("AccepterID");
+            entity.Property(e => e.BeginExecDate).HasComment("Ngày bắt đầu triển khai");
             entity.Property(e => e.CancelOrderDate).HasComment("Ngày hủy đơn hàng");
             entity.Property(e => e.ContractDate).HasComment("Ngày hợp đồng");
             entity.Property(e => e.ContractNo)
@@ -571,6 +547,7 @@ public partial class DaMiSoManagerContext : DbContext
                 .HasMaxLength(400)
                 .HasComment("Diễn giải");
             entity.Property(e => e.DiscountPercent).HasComment("Phần trăm chiết khấu (hoặc đơn giá chiết khấu)");
+            entity.Property(e => e.EndExecDate).HasComment("Ngày kết thúc triển khai");
             entity.Property(e => e.ExchangeRate)
                 .HasDefaultValue(1m)
                 .HasComment("Tỷ giá")
@@ -578,11 +555,12 @@ public partial class DaMiSoManagerContext : DbContext
             entity.Property(e => e.ExecutorId)
                 .HasMaxLength(20)
                 .IsUnicode(false)
+                .HasComment("Mã nhân viên triển khai")
                 .HasColumnName("ExecutorID");
             entity.Property(e => e.FinishOk).HasComment("Đã hoàn thành");
             entity.Property(e => e.HasDiscount).HasComment("Có chiết khấu");
             entity.Property(e => e.HasInvoiceVat)
-                .HasComment("Có hóa đơn GTGT")
+                .HasComment("Có xuất đơn GTGT")
                 .HasColumnName("HasInvoiceVAT");
             entity.Property(e => e.IsCancel).HasComment("Đã bị hủy");
             entity.Property(e => e.IsExecuting).HasComment("Đang triển khai");
@@ -605,7 +583,7 @@ public partial class DaMiSoManagerContext : DbContext
             entity.Property(e => e.OrderFormId)
                 .HasMaxLength(20)
                 .IsUnicode(false)
-                .HasComment("Mã Form nhập")
+                .HasComment("Mã kiểu đơn hàng")
                 .HasColumnName("OrderFormID");
             entity.Property(e => e.OrderNo)
                 .HasMaxLength(20)
@@ -620,7 +598,7 @@ public partial class DaMiSoManagerContext : DbContext
             entity.Property(e => e.OrderTypeId)
                 .HasMaxLength(20)
                 .IsUnicode(false)
-                .HasComment("Loại đơn hàng")
+                .HasComment("Mã loại đơn hàng")
                 .HasColumnName("OrderTypeID");
             entity.Property(e => e.OriginalDiscAmount)
                 .HasComment("Chiết khấu nguyên tệ")
@@ -640,6 +618,8 @@ public partial class DaMiSoManagerContext : DbContext
             entity.Property(e => e.PaymentTerms)
                 .HasMaxLength(150)
                 .HasComment("Điều khoản thanh toán");
+            entity.Property(e => e.Paymented).HasComment("Đã thanh toán");
+            entity.Property(e => e.PublishedInvoice).HasComment("Đã xuất Hóa đơn");
             entity.Property(e => e.RefPerson)
                 .HasMaxLength(60)
                 .HasComment("Người đại diện");
@@ -667,10 +647,6 @@ public partial class DaMiSoManagerContext : DbContext
                 .HasColumnType("smallmoney");
             entity.Property(e => e.TranMonth).HasComputedColumnSql("(datepart(month,[OrderDate]))", false);
             entity.Property(e => e.TranYear).HasComputedColumnSql("(datepart(year,[OrderDate]))", false);
-
-            entity.HasOne(d => d.Customer).WithMany(p => p.OrderMasters)
-                .HasForeignKey(d => d.CustomerId)
-                .HasConstraintName("FK_tblOrderMaster_tblCustomerList_Link");
 
             entity.HasOne(d => d.Executor).WithMany(p => p.OrderMasterExecutors)
                 .HasPrincipalKey(p => p.EmployeeId)
@@ -712,6 +688,10 @@ public partial class DaMiSoManagerContext : DbContext
                 .IsUnicode(false)
                 .HasComment("Mã trạng thái đơn hàng")
                 .HasColumnName("OrderStatusID");
+            entity.Property(e => e.CanChangeStatus).HasComment("Là trạng thái có thể thay đổi bởi NV Sales");
+            entity.Property(e => e.IsAcceptStatus).HasComment("Là trạng thái Đã duyệt");
+            entity.Property(e => e.IsCancelStatus).HasComment("Là trạng thái Hủy");
+            entity.Property(e => e.IsSuspendStatus).HasComment("Là trạng thái treo");
             entity.Property(e => e.OrderStatusName)
                 .HasMaxLength(100)
                 .HasComment("Tên trạng thái đơn hàng");
@@ -755,6 +735,60 @@ public partial class DaMiSoManagerContext : DbContext
                 .HasComment("Tên hình thức thanh toán");
         });
 
+        modelBuilder.Entity<Permision>(entity =>
+        {
+            entity.HasKey(e => e.RowUniqueId);
+
+            entity.ToTable("tblPermisionList");
+
+            entity.HasIndex(e => e.DepartmentId, "UK_tblPermisionList").IsUnique();
+
+            entity.Property(e => e.RowUniqueId)
+                .HasDefaultValueSql("(newid())")
+                .HasColumnName("RowUniqueID");
+            entity.Property(e => e.AcceptOrder).HasComment("Quyền duyệt Đơn hàng");
+            entity.Property(e => e.AddNew).HasComment("Quyền thêm danh sách");
+            entity.Property(e => e.AddNewOrder).HasComment("Quyền thêm Đơn hàng");
+            entity.Property(e => e.CancelOrder).HasComment("Quyền hủy Đơn hàng");
+            entity.Property(e => e.ChangeStatusOrder).HasComment("Quyền thay đổi trạng thái khác Đơn hàng");
+            entity.Property(e => e.CreatedDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasComment("Ngày tạo");
+            entity.Property(e => e.CreatedUserId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasDefaultValue("DAMIADMIN")
+                .HasComment("Mã người tạo")
+                .HasColumnName("CreatedUserID");
+            entity.Property(e => e.Delete).HasComment("Quyền xóa danh sách");
+            entity.Property(e => e.DeleteOrder).HasComment("Quyền xóa Đơn hàng");
+            entity.Property(e => e.DepartmentId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasComment("Mã phòng ban")
+                .HasColumnName("DepartmentID");
+            entity.Property(e => e.LastModifiedDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasComment("Ngày chỉnh sửa cuối cùng");
+            entity.Property(e => e.LastModifiedUserId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasDefaultValue("DAMIADMIN")
+                .HasComment("Mã người chỉnh sửa cuối cùng")
+                .HasColumnName("LastModifiedUserID");
+            entity.Property(e => e.SuspendOrder).HasComment("Quyền treo Đơn hàng");
+            entity.Property(e => e.Update).HasComment("Quyền sửa danh sách");
+            entity.Property(e => e.UpdateOrder).HasComment("Quyền sửa Đơn hàng");
+            entity.Property(e => e.ViewFullOrder).HasComment("Quyền xem đầy đủ Đơn hàng");
+            entity.Property(e => e.ViewLimitOrder).HasComment("Quyền xem có giới hạn Đơn hàng");
+            entity.Property(e => e.View).HasComment("Quyền xem danh sách");
+
+            entity.HasOne(d => d.Department).WithOne(p => p.Permision)
+                .HasPrincipalKey<Department>(p => p.DepartmentId)
+                .HasForeignKey<Permision>(d => d.DepartmentId)
+                .HasConstraintName("FK_tblPermisionList_tblDepartmentList");
+        });
+
         modelBuilder.Entity<TaxCode>(entity =>
         {
             entity.HasKey(e => e.TaxCodeId);
@@ -764,7 +798,8 @@ public partial class DaMiSoManagerContext : DbContext
             entity.Property(e => e.TaxCodeId)
                 .HasMaxLength(20)
                 .IsUnicode(false)
-                .HasComment("MST");
+                .HasComment("MST")
+                .HasColumnName("TaxCode");
             entity.Property(e => e.CustomerId)
                 .HasMaxLength(20)
                 .IsUnicode(false)
@@ -776,10 +811,6 @@ public partial class DaMiSoManagerContext : DbContext
             entity.Property(e => e.TaxCodeName)
                 .HasMaxLength(400)
                 .HasComment("Tên công ty");
-
-            entity.HasOne(d => d.Customer).WithMany(p => p.TaxCodes)
-                .HasForeignKey(d => d.CustomerId)
-                .HasConstraintName("FK_tblTaxCodeList_tblCustomerList_Link");
         });
 
         modelBuilder.Entity<ViwCustomer>(entity =>
@@ -840,6 +871,7 @@ public partial class DaMiSoManagerContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("AccountID");
+            entity.Property(e => e.AllowEditNumOfPc).HasColumnName("AllowEditNumOfPC");
             entity.Property(e => e.CreatedUserId)
                 .HasMaxLength(20)
                 .IsUnicode(false)
@@ -888,6 +920,7 @@ public partial class DaMiSoManagerContext : DbContext
                 .HasNoKey()
                 .ToView("viwItemGroupList");
 
+            entity.Property(e => e.AllowEditNumOfPc).HasColumnName("AllowEditNumOfPC");
             entity.Property(e => e.ItemGroupId)
                 .HasMaxLength(20)
                 .IsUnicode(false)
@@ -971,6 +1004,86 @@ public partial class DaMiSoManagerContext : DbContext
                 .HasColumnName("OrderFormID");
         });
 
+        modelBuilder.Entity<ViwOrderMasterDetail>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("viwOrderMasterDetail");
+
+            entity.Property(e => e.AccepterId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("AccepterID");
+            entity.Property(e => e.Address1).HasMaxLength(250);
+            entity.Property(e => e.CnvPaymentAmount).HasColumnType("money");
+            entity.Property(e => e.ContractNo)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.ConvertAmount).HasColumnType("money");
+            entity.Property(e => e.ConvertDiscAmount).HasColumnType("money");
+            entity.Property(e => e.ConvertTaxAmount).HasColumnType("money");
+            entity.Property(e => e.ConvertTotalAmount).HasColumnType("money");
+            entity.Property(e => e.CurrencyId)
+                .HasMaxLength(3)
+                .IsUnicode(false)
+                .HasColumnName("CurrencyID");
+            entity.Property(e => e.CustomerId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("CustomerID");
+            entity.Property(e => e.CustomerName).HasMaxLength(250);
+            entity.Property(e => e.Description).HasMaxLength(400);
+            entity.Property(e => e.ExchangeRate).HasColumnType("smallmoney");
+            entity.Property(e => e.Executor).HasMaxLength(40);
+            entity.Property(e => e.HasInvoiceVat).HasColumnName("HasInvoiceVAT");
+            entity.Property(e => e.ICloudDataSize).HasColumnName("iCloudDataSize");
+            entity.Property(e => e.ItemId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("ItemID");
+            entity.Property(e => e.ItemName).HasMaxLength(250);
+            entity.Property(e => e.TaxCode)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+            entity.Property(e => e.Notes).HasMaxLength(250);
+            entity.Property(e => e.NumOfPc).HasColumnName("NumOfPC");
+            entity.Property(e => e.OrderDetailId).HasColumnName("OrderDetailID");
+            entity.Property(e => e.OrderFormId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("OrderFormID");
+            entity.Property(e => e.OrderId).HasColumnName("OrderID");
+            entity.Property(e => e.OrderNo)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.OrderStatusName).HasMaxLength(100);
+            entity.Property(e => e.OrderTypeId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("OrderTypeID");
+            entity.Property(e => e.OrderTypeName).HasMaxLength(100);
+            entity.Property(e => e.OrgPaymentAmount).HasColumnType("money");
+            entity.Property(e => e.OriginalAmount).HasColumnType("money");
+            entity.Property(e => e.OriginalDiscAmount).HasColumnType("money");
+            entity.Property(e => e.OriginalTaxAmount).HasColumnType("money");
+            entity.Property(e => e.OriginalTotalAmount).HasColumnType("money");
+            entity.Property(e => e.PaymentMethodName).HasMaxLength(100);
+            entity.Property(e => e.PaymentTerms).HasMaxLength(150);
+            entity.Property(e => e.RefPerson).HasMaxLength(60);
+            entity.Property(e => e.RefPos).HasMaxLength(40);
+            entity.Property(e => e.SalesManName).HasMaxLength(40);
+            entity.Property(e => e.SubCompanyId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("SubCompanyID");
+            entity.Property(e => e.TaxCode)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.TaxRate).HasColumnType("smallmoney");
+            entity.Property(e => e.TradeName).HasMaxLength(40);
+            entity.Property(e => e.UnitName).HasMaxLength(50);
+        });
+
         modelBuilder.Entity<ViwUnitOfMeasr>(entity =>
         {
             entity
@@ -982,259 +1095,6 @@ public partial class DaMiSoManagerContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("UnitID");
             entity.Property(e => e.UnitName).HasMaxLength(50);
-        });
-
-        modelBuilder.Entity<WhItemGroupLink>(entity =>
-        {
-            entity.HasKey(e => e.ItemGroupId).HasName("PK_WH_tblItemGroupList");
-
-            entity.ToTable("WH_tblItemGroupList_Link");
-
-            entity.Property(e => e.ItemGroupId)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasComment("Mã nhóm sản phẩm")
-                .HasColumnName("ItemGroupID");
-            entity.Property(e => e.AllowEditItemAmount).HasComment("Cho phép sửa lại thành tiền");
-            entity.Property(e => e.AllowEditItemName).HasComment("Cho phép sửa lại tên hàng");
-            entity.Property(e => e.ItemGroupName)
-                .HasMaxLength(150)
-                .HasComment("Tên nhóm sản phẩm");
-            entity.Property(e => e.ItemTypeId)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasComment("Mã loại sản phẩm")
-                .HasColumnName("ItemTypeID");
-
-            entity.HasOne(d => d.ItemType).WithMany(p => p.WhItemGroupLinks)
-                .HasForeignKey(d => d.ItemTypeId)
-                .HasConstraintName("FK_WH_tblItemGroupList_WH_tblItemTypeList");
-        });
-
-        modelBuilder.Entity<WhItemLink>(entity =>
-        {
-            entity.HasKey(e => e.RowUniqueId).HasName("PK_WH_tblItemList");
-
-            entity.ToTable("WH_tblItemList_Link");
-
-            entity.HasIndex(e => e.ItemId, "UK_WH_tblItemList").IsUnique();
-
-            entity.Property(e => e.RowUniqueId)
-                .ValueGeneratedNever()
-                .HasColumnName("RowUniqueID");
-            entity.Property(e => e.Account133Id)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasComment("TK133")
-                .HasColumnName("Account133ID");
-            entity.Property(e => e.Account3331Id)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasComment("TK3331")
-                .HasColumnName("Account3331ID");
-            entity.Property(e => e.Account511Id)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasComment("TK511")
-                .HasColumnName("Account511ID");
-            entity.Property(e => e.Account632Id)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasComment("TK632")
-                .HasColumnName("Account632ID");
-            entity.Property(e => e.AccountId)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasComment("Mã TK")
-                .HasColumnName("AccountID");
-            entity.Property(e => e.ConvertPrice).HasComment("Đơn giá VND");
-            entity.Property(e => e.CreatedUserId)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("CreatedUserID");
-            entity.Property(e => e.DefNumOfData).HasComment("Số lượng hệ thống (mặc định)");
-            entity.Property(e => e.DefNumOfInv).HasComment("Số lượng hóa đơn (mặc định)");
-            entity.Property(e => e.DefNumOfMonth).HasComment("Số lượng tháng (mặc định)");
-            entity.Property(e => e.DefNumOfPc)
-                .HasComment("Số lượng máy tính (mặc định)")
-                .HasColumnName("DefNumOfPC");
-            entity.Property(e => e.DefNumOfTaxCode).HasComment("Số lượng mã số thuế (mặc định)");
-            entity.Property(e => e.DefNumOfUser).HasComment("Số lượng User (mặc định)");
-            entity.Property(e => e.DefiCloudDataSize).HasComment("Dung lượng lưu trữ iCloud (GB) (mặc định)");
-            entity.Property(e => e.InActive).HasComment("Có hiệu lực");
-            entity.Property(e => e.InvUnitOfMeasr)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasComment("Mã đơn vị tính");
-            entity.Property(e => e.IsPayFull)
-                .HasComment("Là trả tiền 1 lần")
-                .HasColumnName("isPayFull");
-            entity.Property(e => e.IsPayYear)
-                .HasComment("Là trả tiền theo năm")
-                .HasColumnName("isPayYear");
-            entity.Property(e => e.ItemGroupId)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasComment("Mã nhóm sản phẩm")
-                .HasColumnName("ItemGroupID");
-            entity.Property(e => e.ItemId)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasComment("Mã sản phẩm")
-                .HasColumnName("ItemID");
-            entity.Property(e => e.ItemName)
-                .HasMaxLength(250)
-                .HasComment("Tên sản phẩm");
-            entity.Property(e => e.Language)
-                .HasMaxLength(40)
-                .HasComment("Ngôn ngữ");
-            entity.Property(e => e.LastModifiedUserId)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("LastModifiedUserID");
-            entity.Property(e => e.Notes)
-                .HasMaxLength(100)
-                .HasComment("Ghi chú");
-            entity.Property(e => e.OriginalPrice).HasComment("Đơn giá USD");
-            entity.Property(e => e.SortOrder).HasComment("Thứ tự sắp xếp");
-            entity.Property(e => e.TaxRate)
-                .HasComment("Thuế suất (%)")
-                .HasColumnType("smallmoney");
-
-            entity.HasOne(d => d.InvUnitOfMeasrNavigation).WithMany(p => p.WhItemLinks)
-                .HasForeignKey(d => d.InvUnitOfMeasr)
-                .HasConstraintName("FK_WH_tblItemList_WH_tblUnitOfMeasrList");
-
-            entity.HasOne(d => d.ItemGroup).WithMany(p => p.WhItemLinks)
-                .HasForeignKey(d => d.ItemGroupId)
-                .HasConstraintName("FK_WH_tblItemList_WH_tblItemGroupList");
-        });
-
-        modelBuilder.Entity<WhItemTypeLink>(entity =>
-        {
-            entity.HasKey(e => e.ItemTypeId).HasName("PK_WH_tblItemTypeList");
-
-            entity.ToTable("WH_tblItemTypeList_Link");
-
-            entity.Property(e => e.ItemTypeId)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasComment("Mã loại sản phẩm")
-                .HasColumnName("ItemTypeID");
-            entity.Property(e => e.ItemTypeName)
-                .HasMaxLength(150)
-                .HasComment("Tên loại sản phẩm");
-            entity.Property(e => e.OrderFormId)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasComment("Mã giao diện nhập liệu")
-                .HasColumnName("OrderFormID");
-
-            entity.HasOne(d => d.OrderForm).WithMany(p => p.WhItemTypeLinks)
-                .HasForeignKey(d => d.OrderFormId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_WH_tblItemTypeList_Link_tblOrderFormList");
-        });
-
-        modelBuilder.Entity<WhUnitOfMeasrLink>(entity =>
-        {
-            entity.HasKey(e => e.UnitId).HasName("PK_WH_tblUnitOfMeasrList");
-
-            entity.ToTable("WH_tblUnitOfMeasrList_Link");
-
-            entity.Property(e => e.UnitId)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasComment("Mã đơn vị tính")
-                .HasColumnName("UnitID");
-            entity.Property(e => e.UnitName)
-                .HasMaxLength(50)
-                .HasComment("Tên đơn vị tính");
-        });
-        modelBuilder.Entity<Permision>(entity =>
-        {
-            entity.HasKey(e => e.RowUniqueId);
-
-            entity.ToTable("tblPermisionList");
-
-            entity.HasIndex(e => e.DepartmentId, "UK_tblPermisionList").IsUnique();
-
-            entity.Property(e => e.RowUniqueId)
-                .HasDefaultValueSql("(newid())")
-                .HasColumnName("RowUniqueID");
-            entity.Property(e => e.AcceptOrder).HasComment("Quyền duyệt Đơn hàng");
-            entity.Property(e => e.AddNew).HasComment("Quyền thêm danh sách");
-            entity.Property(e => e.AddNewOrder).HasComment("Quyền thêm Đơn hàng");
-            entity.Property(e => e.CancelOrder).HasComment("Quyền hủy Đơn hàng");
-            entity.Property(e => e.ChangeStatusOrder).HasComment("Quyền thay đổi trạng thái khác Đơn hàng");
-            entity.Property(e => e.CreatedDate)
-                .HasDefaultValueSql("(getdate())")
-                .HasComment("Ngày tạo");
-            entity.Property(e => e.CreatedUserId)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasDefaultValue("DAMIADMIN")
-                .HasComment("Mã người tạo")
-                .HasColumnName("CreatedUserID");
-            entity.Property(e => e.Delete).HasComment("Quyền xóa danh sách");
-            entity.Property(e => e.DeleteOrder).HasComment("Quyền xóa Đơn hàng");
-            entity.Property(e => e.DepartmentId)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasComment("Mã phòng ban")
-                .HasColumnName("DepartmentID");
-            entity.Property(e => e.LastModifiedDate)
-                .HasDefaultValueSql("(getdate())")
-                .HasComment("Ngày chỉnh sửa cuối cùng");
-            entity.Property(e => e.LastModifiedUserId)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasDefaultValue("DAMIADMIN")
-                .HasComment("Mã người chỉnh sửa cuối cùng")
-                .HasColumnName("LastModifiedUserID");
-            entity.Property(e => e.SuspendOrder).HasComment("Quyền treo Đơn hàng");
-            entity.Property(e => e.Update).HasComment("Quyền sửa danh sách");
-            entity.Property(e => e.UpdateOrder).HasComment("Quyền sửa Đơn hàng");
-            entity.Property(e => e.ViewFullOrder).HasComment("Quyền xem đầy đủ Đơn hàng");
-            entity.Property(e => e.ViewLimitOrder).HasComment("Quyền xem có giới hạn Đơn hàng");
-            entity.Property(e => e.View).HasComment("Quyền xem danh sách");
-
-            entity.HasOne(d => d.Department).WithOne(p => p.Permision)
-                .HasPrincipalKey<Department>(p => p.DepartmentId)
-                .HasForeignKey<Permision>(d => d.DepartmentId)
-                .HasConstraintName("FK_tblPermisionList_tblDepartmentList");
-        });
-        modelBuilder.Entity<Currency>(entity =>
-        {
-            entity.HasKey(e => e.CurrencyId);
-
-            entity.ToTable("tblCurrencyList");
-
-            entity.Property(e => e.CurrencyId)
-                .HasMaxLength(3)
-                .IsUnicode(false)
-                .HasDefaultValue("VND")
-                .HasComment("Loại tiền")
-                .HasColumnName("CurrencyID");
-            entity.Property(e => e.AmountDecimalPlaces).HasDefaultValue((byte)2);
-            entity.Property(e => e.AmountNumberFormat)
-                .HasMaxLength(15)
-                .IsUnicode(false)
-                .HasDefaultValue("#,##0.00")
-                .HasComment("Mã định dạng số tiền");
-            entity.Property(e => e.CurrencyName)
-                .HasMaxLength(50)
-                .HasComment("Tên loại tiền");
-            entity.Property(e => e.CurrencyName2)
-                .HasMaxLength(50)
-                .HasComment("Tên loại tiền");
-            entity.Property(e => e.PriceDecimalPlaces).HasDefaultValue((byte)2);
-            entity.Property(e => e.PriceNumberFormat)
-                .HasMaxLength(15)
-                .IsUnicode(false)
-                .HasDefaultValue("#,##0.00")
-                .HasComment("Mã định dạng đơn giá");
-            entity.Property(e => e.UnitName).HasMaxLength(30);
         });
 
         OnModelCreatingPartial(modelBuilder);

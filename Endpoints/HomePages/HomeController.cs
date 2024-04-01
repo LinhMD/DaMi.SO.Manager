@@ -2,7 +2,7 @@
 using BlazorMinimalApis.Lib.Validation;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DaMi.SO.Manager.Components.HomePages;
+namespace DaMi.SO.Manager.Endpoints.HomePages;
 
 [ApiController]
 [Route("")]

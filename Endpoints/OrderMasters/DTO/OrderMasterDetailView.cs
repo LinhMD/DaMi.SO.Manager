@@ -7,10 +7,11 @@ using CrudApiTemplate.Model;
 using CrudApiTemplate.Request;
 using CrudApiTemplate.View;
 using DaMi.SO.Manager.Data.Models;
+using DaMi.SO.Manager.Endpoints.OrderDetails.DTO;
 
-namespace DaMi.SO.Manager.Services.OrderMasterDTO
+namespace DaMi.SO.Manager.Endpoints.OrderMasters.DTO
 {
-    public class OrderMasterDetailView : IUpdateRequest<OrderMaster>, IView<OrderMaster>
+    public class OrderMasterDetailView : IView<OrderMaster>
     {
         public Guid? RowUniqueId { get; set; }
 
@@ -68,10 +69,8 @@ namespace DaMi.SO.Manager.Services.OrderMasterDTO
         public long? TotalAmount { get; set; }
         [DisplayName("Hạn thanh toán")]
         public DateOnly? OverDate { get; set; }
-
         [DisplayName("Có hóa đơn GTGT")]
         public bool? HasInvoiceVat { get; set; }
-
         [DisplayName("Hình thức thanh toán")]
         public string? PaymentMethodId { get; set; }
         [DisplayName("Điều khoản thanh toán")]
@@ -81,5 +80,10 @@ namespace DaMi.SO.Manager.Services.OrderMasterDTO
         public string? Description { get; set; }
 
         public IEnumerable<OrderDetailSimpleView>? OrderDetails { get; set; }
+
+        public static void InitMapper()
+        {
+
+        }
     }
 }
