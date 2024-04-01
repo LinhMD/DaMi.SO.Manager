@@ -22,7 +22,7 @@
             </div>
             <div class="card-body">
                 <div class="overflow-auto">
-                    <Table Models="@Model.OrderMasters" TItem="OrderMasterSimpleView">
+                    <Table Models="@Model.OrderMasters" TItem="OrderMasterSimpleView" RowStyleClass="Color">
                         <NavLabel>
                             @L["Số đơn Hàng"]
                         </NavLabel>
@@ -42,3 +42,6 @@
         </div>
     </div>
 </div>
+@code {
+    public Func<OrderMasterSimpleView, string> Color = (o) => o.OrderStatus switch { "" => "", _ => "text-danger" };
+}

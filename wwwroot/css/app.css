@@ -23,3 +23,11 @@ input[type='checkbox']:checked:after {
 input[type='checkbox']::after {
     display: none !important;
 }
+
+.currency {
+    text-align: right;
+}
+
+.currency::after {
+    content: "₫";
+}

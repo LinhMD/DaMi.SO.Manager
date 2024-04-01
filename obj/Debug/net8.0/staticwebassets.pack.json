@@ -797,6 +797,10 @@
       "PackagePath": "staticwebassets\\images\\tab\\9.jpg"
     },
     {
+      "Id": "D:\\Project\\DaMi.SO.Manager\\wwwroot\\js\\app.js",
+      "PackagePath": "staticwebassets\\js\\app.js"
+    },
+    {
       "Id": "D:\\Project\\DaMi.SO.Manager\\wwwroot\\js\\custom.min.js",
       "PackagePath": "staticwebassets\\js\\custom.min.js"
     },

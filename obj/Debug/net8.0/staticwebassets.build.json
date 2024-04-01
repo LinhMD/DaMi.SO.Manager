@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "3PugnGOpmxz6ZoW+mp6kZkk+DxPnclFEuWeA7jMYHA4=",
+  "Hash": "ZMpubPpTwDivrcadfeQlkhXwN1SIWm9PznNnhn2I3fY=",
   "Source": "DaMi.SO.Manager",
   "BasePath": "_content/DaMi.SO.Manager",
   "Mode": "Default",
@@ -3853,6 +3853,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\tab\\9.jpg"
+    },
+    {
+      "Identity": "D:\\Project\\DaMi.SO.Manager\\wwwroot\\js\\app.js",
+      "SourceId": "DaMi.SO.Manager",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Project\\DaMi.SO.Manager\\wwwroot\\",
+      "BasePath": "_content/DaMi.SO.Manager",
+      "RelativePath": "js/app.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\app.js"
     },
     {
       "Identity": "D:\\Project\\DaMi.SO.Manager\\wwwroot\\js\\custom.min.js",

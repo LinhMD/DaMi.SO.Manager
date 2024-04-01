@@ -18,7 +18,7 @@ public class OrderMasterSimpleView : IView<OrderMaster>
     [DisplayName("Số đơn hàng")]
     public string? OrderNo { get; set; }
 
-
+    [DataType(DataType.Date)]
     [DisplayName("Ngày đặt hàng")]
     public DateTime OrderDate { get; set; }
 
@@ -31,6 +31,7 @@ public class OrderMasterSimpleView : IView<OrderMaster>
     [DisplayName("Trạng thái ĐH")]
     public string OrderStatus { get; set; } = null!;
 
+    [DataType(DataType.Date)]
     [DisplayName("Ngày triển khai")]
     public DateTime? BeginExecDate { get; set; }
 
@@ -50,10 +51,13 @@ public class OrderMasterSimpleView : IView<OrderMaster>
     public int NoICloudData { get; set; }
 
     [DisplayName("Tổng số tiền")]
+    [DataType(DataType.Currency)]
     public decimal OriginalTotalAmount { get; set; }
 
+    [DataType(DataType.Currency)]
     [DisplayName("Số tiền đã thu")]
     public decimal CollectAmount { get; set; }
+
 
     [DisplayName("Có hóa đơn GTGT")]
     public bool HasInvoiceVat { get; set; }

@@ -41,7 +41,6 @@ namespace DaMi.SO.Manager.Endpoints.OrderMasters.DTO
         [DisplayName("Ngày hợp đồng")]
         public DateOnly? ContractDate { get; set; }
 
-
         [DisplayName("Nhân viên triển khai")]
         public string? ExecutorId { get; set; }
         [DisplayName("Ngày BĐ triển khai")]
@@ -52,7 +51,6 @@ namespace DaMi.SO.Manager.Endpoints.OrderMasters.DTO
         public string? SalesManId { get; set; }
         [DisplayName("Ghi chú")]
         public string? Notes { get; set; }
-
 
         [DisplayName("Loại tiền")]
         public string? CurrencyId { get; set; } = null!;

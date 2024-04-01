@@ -1,6 +1,7 @@
 ﻿@using System.Reflection
 @using System.ComponentModel
 @using Microsoft.AspNetCore.Mvc
+@using System.ComponentModel.DataAnnotations
 @typeparam TItem
 @inject IStringLocalizer<ShareResource> L
 
@@ -35,7 +36,7 @@
     <tbody>
         @foreach (var model in Models)
         {
-            <tr>
+            <tr class="@(RowStyleClass is not null ? RowStyleClass(model) : "")">
                 @if (NavKey is not null)
                 {
                     <th>@NavKey(model)</th>
@@ -45,25 +46,53 @@
                     if (Attribute.GetCustomAttribute(fieldInfo, typeof(HiddenInputAttribute)) is null)
                     {
                         var value = fieldInfo.GetValue(model);
-                        try
+                        if (value is null)
                         {
-                            var boolValue = (bool)value!;
-                            if (boolValue)
+                            <th></th>
+                        }
+                        else
+                        {
+                            if (fieldInfo.GetType().IsAssignableFrom(typeof(bool)))
                             {
-                                <th>
-                                    <input type="checkbox" checked disabled />
-                                </th>
+                                if (((bool)value))
+                                {
+                                    <th>
+                                        <input type="checkbox" checked disabled />
+                                    </th>
+                                }
+                                else
+                                {
+                                    <th>
+                                        <input type="checkbox" disabled />
+                                    </th>
+                                }
                             }
                             else
                             {
-                                <th>
-                                    <input type="checkbox" disabled />
-                                </th>
+                                var dataType = (Attribute.GetCustomAttribute(fieldInfo, typeof(DataTypeAttribute)) as DataTypeAttribute);
+                                if (dataType is not null)
+                                {
+                                    switch (dataType.DataType)
+                                    {
+                                        case DataType.Currency:
+                                            <th class="currency">@value</th>
+                                            break;
+                                        case DataType.Date:
+                                            <th class="date">
+                                                <input id="OrderDate" data-provide="datepicker" disabled type="date" name="OrderDate"
+                                                    value="@(((DateTime)value).ToString("yyyy-MM-dd"))" class="form-control">
+                                            </th>
+                                            break;
+                                        default:
+                                            <th>@value</th>
+                                            break;
+                                    }
+                                }
+                                else
+                                {
+                                    <th>@value</th>
+                                }
                             }
-                        }
-                        catch (Exception)
-                        {
-                            <th>@value</th>
                         }
                     }
                 }
@@ -81,7 +110,7 @@
     [Parameter]
     public IEnumerable<TItem> Models { get; set; } = [];
     public PropertyInfo[] propertyInfos { get; init; } = typeof(TItem).GetProperties();
-
+    [Parameter] public Func<TItem, string>? RowStyleClass { get; set; }
     [Parameter] public RenderFragment<TItem>? NavKey { get; set; }
     [Parameter] public RenderFragment? NavLabel { get; set; }
     [Parameter] public RenderFragment<TItem>? Action { get; set; }

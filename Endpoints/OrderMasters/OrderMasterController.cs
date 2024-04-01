@@ -144,7 +144,7 @@ public class OrderMasterController(IUnitOfWork work) : ControllerBase
     [HttpPost("Edit/{guid}")]
     public async Task<IResult> EditAsync(Guid guid, [FromForm] OrderMasterDetailView orderMaster)
     {
-        return Results.Redirect($"/OrderMaster/Detail/{guid}");
+        return await Task.FromResult(Results.Redirect($"/OrderMaster/Detail/{guid}"));
     }
 }
 
