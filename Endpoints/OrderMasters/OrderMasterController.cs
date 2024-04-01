@@ -106,7 +106,7 @@ public class OrderMasterController(IUnitOfWork work) : ControllerBase
                 PaymentMethods = paymentMethods
             });
         }
-        return Results.Redirect("");
+        return Results.Redirect($"/OrderMaster/Edit/{orderMaster.RowUniqueId}");
     }
     [HttpGet("Edit/{guid}")]
     public async Task<IResult> GetEditAsync(Guid guid)
@@ -144,7 +144,7 @@ public class OrderMasterController(IUnitOfWork work) : ControllerBase
     [HttpPost("Edit/{guid}")]
     public async Task<IResult> EditAsync(Guid guid, [FromForm] OrderMasterDetailView orderMaster)
     {
-        return await Task.FromResult(new RazorComponentResult(typeof(_404)));
+        return Results.Redirect($"/OrderMaster/Detail/{guid}");
     }
 }
 

@@ -13,10 +13,10 @@
                         <div class="col-sm-10">
                             <select name="OrderFormId" class="form-control selectpicker" id="OrderFormId"
                                 value="@Model.OrderMaster.OrderFormId">
-                                @* @foreach (var orderFrom in Model.OrderForms)
+                                @foreach (var orderFrom in Model.OrderForms)
                                 {
-                                <option value="@orderFrom.OrderFormId">@orderFrom.OrderFormName</option>
-                                } *@
+                                    <option value="@orderFrom.OrderFormId">@orderFrom.OrderFormName</option>
+                                }
                             </select>
                         </div>
                     </div>
@@ -25,10 +25,10 @@
                         <div class="col-sm-10">
                             <select name="OrderTypeId" class="form-control selectpicker" id="OrderTypeId"
                                 value="@Model.OrderMaster.OrderTypeId">
-                                @* @foreach (var orderType in Model.OrderTypes)
+                                @foreach (var orderType in Model.OrderTypes)
                                 {
-                                <option value="@orderType.OrderTypeId">@orderType.OrderTypeName</option>
-                                } *@
+                                    <option value="@orderType.OrderTypeId">@orderType.OrderTypeName</option>
+                                }
                             </select>
                         </div>
                     </div>
@@ -52,18 +52,18 @@
                         <div class="col-sm-10">
                             <select name="OrderStatusId" class="form-control selectpicker" disabled id="OrderStatusId"
                                 value="@Model.OrderMaster.OrderStatusId">
-                                @* @foreach (var orderStatus in Model.OrderStatuses)
+                                @foreach (var orderStatus in Model.OrderStatuses)
                                 {
-                                if (orderStatus.OrderStatusId == Model.OrderMaster.OrderStatusId)
-                                {
-                                <option value="@orderStatus.OrderStatusId" selected>@orderStatus.OrderStatusName
-                                </option>
+                                    if (orderStatus.OrderStatusId == Model.OrderMaster.OrderStatusId)
+                                    {
+                                        <option value="@orderStatus.OrderStatusId" selected>@orderStatus.OrderStatusName
+                                        </option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@orderStatus.OrderStatusId">@orderStatus.OrderStatusName</option>
+                                    }
                                 }
-                                else
-                                {
-                                <option value="@orderStatus.OrderStatusId">@orderStatus.OrderStatusName</option>
-                                }
-                                } *@
                             </select>
                         </div>
                     </div>
@@ -82,17 +82,17 @@
                         <div class="col-sm-9">
                             <select class="form-control selectpicker" id="ExecutorId" name="ExecutorId"
                                 @bind="Model.OrderMaster.ExecutorId">
-                                @* @foreach (var employee in Model.Employees.Where(e => e.Department.IsInstall))
+                                @foreach (var employee in Model.Employees.Where(e => e.Department.IsInstall))
                                 {
-                                if (employee.EmployeeId == Model.OrderMaster.ExecutorId)
-                                {
-                                <option value="@employee.EmployeeId" selected> @employee.EmployeeName</option>
+                                    if (employee.EmployeeId == Model.OrderMaster.ExecutorId)
+                                    {
+                                        <option value="@employee.EmployeeId" selected> @employee.EmployeeName</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@employee.EmployeeId">@employee.EmployeeName</option>
+                                    }
                                 }
-                                else
-                                {
-                                <option value="@employee.EmployeeId">@employee.EmployeeName</option>
-                                }
-                                } *@
                             </select>
                         </div>
                     </div>
@@ -115,17 +115,17 @@
                         <div class="col-sm-9">
                             <select class="form-control selectpicker" id="SalesManId" disabled name="SalesManId"
                                 value="@Model.OrderMaster.SalesManId">
-                                @* @foreach (var employee in Model.Employees)
+                                @foreach (var employee in Model.Employees)
                                 {
-                                if (employee.EmployeeId == Model.OrderMaster.SalesManId)
-                                {
-                                <option value="@employee.EmployeeId" selected> @employee.EmployeeName</option>
+                                    if (employee.EmployeeId == Model.OrderMaster.SalesManId)
+                                    {
+                                        <option value="@employee.EmployeeId" selected> @employee.EmployeeName</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@employee.EmployeeId">@employee.EmployeeName</option>
+                                    }
                                 }
-                                else
-                                {
-                                <option value="@employee.EmployeeId">@employee.EmployeeName</option>
-                                }
-                                } *@
                             </select>
                         </div>
                     </div>
@@ -157,10 +157,10 @@
                                 hx-get="/OrderMaster/Edit/Customer" id="CustomerIdSelect" name="CustomerIdSelect"
                                 value="@Model.OrderMaster.CustomerId">
                                 <option></option>
-                                @* @foreach (var customer in Model.Customers)
+                                @foreach (var customer in Model.Customers)
                                 {
-                                <option value="@customer.CustomerId">@customer.CustomerName</option>
-                                } *@
+                                    <option value="@customer.CustomerId">@customer.CustomerName</option>
+                                }
                             </select>
                             <script>
                                 var select = new SlimSelect({
@@ -244,17 +244,17 @@
                         <div class="col-sm-9">
                             <select class="form-control selectpicker" id="CurrencyId" name="CurrencyId"
                                 value="@Model.OrderMaster.CurrencyId">
-                                @* @foreach (var currency in Model.Currencies)
+                                @foreach (var currency in Model.Currencies)
                                 {
-                                if (currency.CurrencyId == Model.OrderMaster.CurrencyId)
-                                {
-                                <option value="@currency.CurrencyId" selected>@currency.CurrencyName</option>
+                                    if (currency.CurrencyId == Model.OrderMaster.CurrencyId)
+                                    {
+                                        <option value="@currency.CurrencyId" selected>@currency.CurrencyName</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@currency.CurrencyId">@currency.CurrencyName</option>
+                                    }
                                 }
-                                else
-                                {
-                                <option value="@currency.CurrencyId">@currency.CurrencyName</option>
-                                }
-                                } *@
                             </select>
                         </div>
                     </div>
@@ -313,18 +313,18 @@
                         <div class="col-sm-9">
                             <select class="form-control selectpicker" id="PaymentMethodId" name="PaymentMethodId"
                                 value="@Model.OrderMaster.CurrencyId">
-                                @* @foreach (var paymentMethod in Model.PaymentMethods)
+                                @foreach (var paymentMethod in Model.PaymentMethods)
                                 {
-                                if (paymentMethod.PaymentMethodId == Model.OrderMaster.PaymentMethodId)
-                                {
-                                <option value="@paymentMethod.PaymentMethodId" selected>@paymentMethod.PaymentMethodName
-                                </option>
+                                    if (paymentMethod.PaymentMethodId == Model.OrderMaster.PaymentMethodId)
+                                    {
+                                        <option value="@paymentMethod.PaymentMethodId" selected>@paymentMethod.PaymentMethodName
+                                        </option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@paymentMethod.PaymentMethodId">@paymentMethod.PaymentMethodName</option>
+                                    }
                                 }
-                                else
-                                {
-                                <option value="@paymentMethod.PaymentMethodId">@paymentMethod.PaymentMethodName</option>
-                                }
-                                } *@
                             </select>
                         </div>
                     </div>

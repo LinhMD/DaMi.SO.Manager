@@ -1,15 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace DaMi.SO.Manager.Data.Models;
 
+[Keyless]
 public partial class ViwItemGroup
 {
+    [Column("ItemGroupID")]
+    [StringLength(20)]
+    [Unicode(false)]
     public string ItemGroupId { get; set; } = null!;
 
+    [StringLength(150)]
     public string ItemGroupName { get; set; } = null!;
 
+    [Column("ItemTypeID")]
+    [StringLength(20)]
+    [Unicode(false)]
     public string ItemTypeId { get; set; } = null!;
 
     public bool AllowEditItemName { get; set; }
@@ -24,6 +35,7 @@ public partial class ViwItemGroup
 
     public bool AllowEditNumOfUser { get; set; }
 
+    [Column("AllowEditNumOfPC")]
     public bool AllowEditNumOfPc { get; set; }
 
     public bool AllowEditiCloudDataSize { get; set; }

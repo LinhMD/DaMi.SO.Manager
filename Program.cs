@@ -1,12 +1,11 @@
 using System.Globalization;
 using BlazorMinimalApis.Lib.Session;
 using CrudApiTemplate.Repository;
-using DaMi.SO.Manager.Data.Models;
+using CrudApiTemplate.Services;
+using DaMi.SO.Manager.Data;
 using DaMi.SO.Manager.Services;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Localization;
-using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<DaMiSoManagerContext>(o => o.UseSqlServer(builder.Configuration["ConnectionStrings:main"]));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork<DaMiSoManagerContext>>();
+builder.Services.AddScoped(typeof(IServiceCrud<>), typeof(ServiceCrud<>));
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
 builder.Services.AddControllers();
 builder.Services.ConfigMapping();
 builder.Services.AddLocalization(o => o.ResourcesPath = "Resources");

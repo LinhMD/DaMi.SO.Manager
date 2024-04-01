@@ -1,15 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace DaMi.SO.Manager.Data.Models;
 
+[Table("tblPermisionList")]
+[Index("PermisionId", Name = "UK_tblPermisionList", IsUnique = true)]
 public partial class Permision
 {
+    [Key]
+    [Column("RowUniqueID")]
     public Guid RowUniqueId { get; set; }
 
-    [DisplayName("Mã phòng ban")]
-    public string DepartmentId { get; set; } = null!;
+    [Column("PermisionID")]
+    [StringLength(20)]
+    [Unicode(false)]
+    public string PermisionId { get; set; } = null!;
 
     [DisplayName("Quyền xem danh sách")]
     public bool View { get; set; }
@@ -54,13 +63,20 @@ public partial class Permision
     public DateTime CreatedDate { get; set; }
 
     [DisplayName("Mã người tạo")]
+    [Column("CreatedUserID")]
+    [StringLength(20)]
+    [Unicode(false)]
     public string CreatedUserId { get; set; } = null!;
 
     [DisplayName("Ngày chỉnh sửa cuối cùng")]
     public DateTime LastModifiedDate { get; set; }
 
     [DisplayName("Mã người chỉnh sửa cuối cùng")]
+    [Column("LastModifiedUserID")]
+    [StringLength(20)]
+    [Unicode(false)]
     public string LastModifiedUserId { get; set; } = null!;
 
-    public virtual Department Department { get; set; } = null!;
+    [InverseProperty("Permision")]
+    public virtual ICollection<Department> Departments { get; set; } = new List<Department>();
 }

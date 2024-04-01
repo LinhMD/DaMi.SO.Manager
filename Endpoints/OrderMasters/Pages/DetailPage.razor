@@ -6,219 +6,291 @@
 <div class="row page-titles mx-0">
     <div class="col-sm-6 p-md-0 justify-content-sm-start mt-2 mt-sm-0 d-flex">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/OrderMaster">@L["Đơn Hàng"] </a></li>
-            <li class="breadcrumb-item"><a
-                    href="/OrderMaster/Details/@Model.OrderMaster.RowUniqueId">@Model.OrderMaster.OrderNo</a></li>
+            <li class="breadcrumb-item">
+                <a href="/OrderMaster">
+                    @L["Đơn Hàng"]
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/OrderMaster/Details/@Model.OrderMaster.RowUniqueId">
+                    @Model.OrderMaster.OrderNo
+                </a>
+            </li>
         </ol>
     </div>
     <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
-        <a href="/MasterOrder/Edit/@Model.OrderMaster.RowUniqueId" class="btn btn-round btn-warning mx-2">@L["Chỉnh sửa"]</a>
-        <a href="MasterOrder" class="btn btn-round btn-primary mx-2"> @L["Danh sách đơn hàng"]</a>
+        <a href="/MasterOrder/Edit/@Model.OrderMaster.RowUniqueId" class="btn btn-round btn-warning mx-2">
+            <span class="mdi mdi-pencil"></span>
+            <b>@L["Chỉnh sửa"]</b>
+        </a>
+        <a href="MasterOrder" class="btn btn-round btn-primary mx-2">
+            <span class="mdi mdi-list-box-outline"></span>
+            <b>@L["Danh sách đơn hàng"]</b>
+        </a>
     </div>
 </div>
-<div class="row">
-    <div class="col-xl-6 col-xxl-12">
-        <div class="card">
-            <h4 class="card-header text-bold">@L["Thông tin đơn hàng"]</h4>
-            <hr />
-            <div class="card-body">
-                <div class="basic-form">
-                    <div class="form-group row">
-                        <label for="OrderForm" class="col-form-label col-2">@L["Kiểu đơn hàng"]</label>
-                        <div class="col-sm-10">
-                            <div id="OrderForm" class="form-control">@Model.OrderMaster.OrderFormId</div>
+
+<div>
+    <div class="row">
+        <div class="col-xl-6 col-xxl-12">
+            <div class="card">
+                <h4 class="card-header text-bold">@L["Thông tin đơn hàng"]</h4>
+                <hr />
+                <div class="card-body">
+                    <div class="basic-form">
+                        <div class="form-group row">
+                            <label for="OrderForm" class="col-form-label col-2">@L["Kiểu đơn hàng"]</label>
+                            <div class="col-sm-10">
+                                <div id="OrderForm" class="form-control">@Model.OrderMaster.OrderFormId</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="OrderType" class="col-form-label col-2">@L["Loại đơn hàng"]</label>
+                            <div class="col-sm-10">
+                                <div id="OrderType" class="form-control">@Model.OrderMaster.OrderTypeId</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="Guid" class="col-form-label col-2">@L["Số đơn hàng"]</label>
+                            <div class="col-sm-10">
+                                <div id="Guid" class="form-control">@Model.OrderMaster.OrderNo</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="CreateDate" class="col-form-label col-2">@L["Ngày tạo"]</label>
+                            <div class="col-sm-10">
+                                <div id="CreateDate" class="form-control">@Model.OrderMaster.OrderDate</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="OrderStatus" class="col-form-label col-2">@L["Trạng thái ĐH"]</label>
+                            <div class="col-sm-10">
+                                <div id="OrderStatus" class="form-control">@Model.OrderMaster.OrderStatusId</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label for="OrderType" class="col-form-label col-2">@L["Loại đơn hàng"]</label>
-                        <div class="col-sm-10">
-                            <div id="OrderType" class="form-control">@Model.OrderMaster.OrderTypeId</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-xxl-12">
+            <div class="card">
+                <h4 class="card-header text-bold">@L["Thông tin khác"]</h4>
+                <hr />
+                <div class="card-body">
+                    <div class="basic-form">
+                        <div class="form-group row">
+                            <label for="ExecutorId" class="col-form-label col-3">@L["Nhân viên triển khai"]</label>
+                            <div class="col-sm-9">
+                                <div id="ExecutorId" class="form-control">@Model.OrderMaster.ExecutorId</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="Guid" class="col-form-label col-2">@L["Số đơn hàng"]</label>
-                        <div class="col-sm-10">
-                            <div id="Guid" class="form-control">@Model.OrderMaster.OrderNo</div>
+                        <div class="form-group row">
+                            <label for="OrderType" class="col-form-label col-3">@L["Ngày BĐ triển khai"]</label>
+                            <div class="col-sm-9">
+                                <div id="OrderType" class="form-control">@Model.OrderMaster.BeginExecDate</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="CreateDate" class="col-form-label col-2">@L["Ngày tạo"]</label>
-                        <div class="col-sm-10">
-                            <div id="CreateDate" class="form-control">@Model.OrderMaster.OrderDate</div>
+                        <div class="form-group row">
+                            <label for="OrderNo" class="col-form-label col-3">@L["Ngày KT triển khai"]</label>
+                            <div class="col-sm-9">
+                                <div id="OrderNo" class="form-control">@Model.OrderMaster.OrderNo</div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="OrderStatus" class="col-form-label col-2">@L["Trạng thái ĐH"]</label>
-                        <div class="col-sm-10">
-                            <div id="OrderStatus" class="form-control">@Model.OrderMaster.OrderStatusId</div>
+                        <div class="form-group row">
+                            <label for="SalesManId" class="col-form-label col-3">@L["Nhân viên bán hàng"]</label>
+                            <div class="col-sm-9">
+                                <div id="SalesManId" class="form-control">@Model.OrderMaster.SalesManId</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="SalesManId" class="col-form-label col-3"></label>
+                            <div class="col-sm-9">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-xl-6 col-xxl-12">
-        <div class="card">
-            <h4 class="card-header text-bold">@L["Thông tin khác"]</h4>
-            <hr />
-            <div class="card-body">
-                <div class="basic-form">
-                    <div class="form-group row">
-                        <label for="ExecutorId" class="col-form-label col-3">@L["Nhân viên triển khai"]</label>
-                        <div class="col-sm-9">
-                            <div id="ExecutorId" class="form-control">@Model.OrderMaster.ExecutorId</div>
+    <div class="row">
+        <div class="col-xl-6 col-xxl-12">
+            <div class="card">
+                <h4 class="card-header">@L["Thông tin hợp đồng"]</h4>
+                <hr>
+                <div class="card-body">
+                    <div class="basic-form">
+                        <div class="form-group row">
+                            <label for="CustomerId" class="col-form-label col-2"> @L["Tên KH"]</label>
+                            <div class="col-sm-10">
+                                <div id="CustomerId" class="form-control">@Model.OrderMaster.CustomerId</div>
+                            </div>
+                        </div>
+                        <div class="form-group row"><label for="CustomerTax" class="col-form-label col-2">
+                                @L["MST/CCCD"]</label>
+                            <div class="col-sm-10">
+                                <div id="CustomerTax" class="form-control">@Model.OrderMaster.CustomerId</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="CustomerPhone" class="col-form-label col-2">
+                                @L["Điện thoại"]
+                            </label>
+                            <div class="col-sm-10">
+                                <div id="CustomerPhone" class="form-control">@Model.OrderMaster.CustomerId</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="RefPerson" class="col-form-label col-2">
+                                @L["Người đại điện"]
+                            </label>
+                            <div class="col-sm-10">
+                                <div id="RefPerson" class="form-control">@Model.OrderMaster.RefPerson</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="RefPos" class="col-form-label col-2">
+                                @L["Chức vụ"]
+                            </label>
+                            <div class="col-sm-10">
+                                <div id="RefPos" class="form-control">@Model.OrderMaster.RefPos</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="ContractNo" class="col-form-label col-2">
+                                @L["Số hợp đồng"]
+                            </label>
+                            <div class="col-sm-10">
+                                <div id="ContractNo" class="form-control">@Model.OrderMaster.ContractNo</div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="ContractDate" class="col-form-label col-2">
+                                @L["Ngày hợp đồng"]
+                            </label>
+                            <div class="col-sm-10">
+                                <div id="ContractDate" class="form-control">@Model.OrderMaster.ContractDate</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label for="OrderType" class="col-form-label col-3">@L["Ngày BĐ triển khai"]</label>
-                        <div class="col-sm-9">
-                            <div id="OrderType" class="form-control">@Model.OrderMaster.BeginExecDate</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-xxl-12">
+            <div class="card">
+                <h4 class="card-header text-bold"> @L["Thông tin thanh toán"]</h4>
+                <hr>
+                <div class="card-body">
+                    <div class="basic-form">
+                        <div class="form-group row">
+                            <label for="" class="col-form-label col-3"> @L["Loại tiền"]</label>
+                            <div class="col-sm-9">
+                                <div class="form-control"></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="OrderNo" class="col-form-label col-3">@L["Ngày KT triển khai"]</label>
-                        <div class="col-sm-9">
-                            <div id="OrderNo" class="form-control">@Model.OrderMaster.OrderNo</div>
+                        <div class="form-group row">
+                            <label for="" class="col-form-label col-3"> @L["Tỉ giá"]</label>
+                            <div class="col-sm-9">
+                                <div class="form-control"></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="SalesManId" class="col-form-label col-3">@L["Nhân viên bán hàng"]</label>
-                        <div class="col-sm-9">
-                            <div id="SalesManId" class="form-control">@Model.OrderMaster.SalesManId</div>
+                        <div class="form-group row">
+                            <label for="" class="col-form-label col-3"> @L["Cộng thành tiền"]</label>
+                            <div class="col-sm-9">
+                                <div class="form-control"></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="SalesManId" class="col-form-label col-3"></label>
-                        <div class="col-sm-9">
+                        <div class="form-group row">
+                            <label for="" class="col-form-label col-3"> @L["Tiền chiết khấu"]</label>
+                            <div class="col-sm-9">
+                                <div class="form-control"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="" class="col-form-label col-3"> @L["Tổng tiền thanh toán"]</label>
+                            <div class="col-sm-9">
+                                <div class="form-control"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="" class="col-form-label col-3"> @L["Hạn thanh toán"]</label>
+                            <div class="col-sm-9">
+                                <div class="form-control"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="" class="col-form-label col-3"> @L["Có xuất hóa đơn"]</label>
+                            <div class="col-sm-9">
+                                <div class="form-control"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="" class="col-form-label col-3"> @L["Hình thức thanh toán"]</label>
+                            <div class="col-sm-9">
+                                <div class="form-control"></div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="" class="col-form-label col-3"> @L["Điều khoản thanh toán"]</label>
+                            <div class="col-sm-9">
+                                <div class="form-control"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-xl-6 col-xxl-12">
-        <div class="card">
-            <h4 class="card-header">@L["Thông tin hợp đồng"]</h4>
-            <hr>
-            <div class="card-body">
-                <div class="basic-form">
-                    <div class="form-group row">
-                        <label for="CustomerId" class="col-form-label col-2"> @L["Tên KH"]</label>
-                        <div class="col-sm-10">
-                            <div id="CustomerId" class="form-control">@Model.OrderMaster.CustomerId</div>
-                        </div>
+
+    <div class="row">
+        <div class="col-xl-6 col-xxl-12">
+            <div class="card">
+                <h4 class="card-header">Điễn giãi</h4>
+                <hr>
+                <div class="card-body">
+                    <div class="form-group">
+                        <textarea type="text" class="form-control" id="Description" name="Description"
+                            rows="6">@Model.OrderMaster.Description</textarea>
                     </div>
-                    <div class="form-group row"><label for="CustomerTax" class="col-form-label col-2">
-                            @L["MST/CCCD"]</label>
-                        <div class="col-sm-10">
-                            <div id="CustomerTax" class="form-control">@Model.OrderMaster.CustomerId</div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="CustomerPhone" class="col-form-label col-2">
-                            @L["Điện thoại"]
-                        </label>
-                        <div class="col-sm-10">
-                            <div id="CustomerPhone" class="form-control">@Model.OrderMaster.CustomerId</div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="RefPerson" class="col-form-label col-2">
-                            @L["Người đại điện"]
-                        </label>
-                        <div class="col-sm-10">
-                            <div id="RefPerson" class="form-control">@Model.OrderMaster.RefPerson</div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="RefPos" class="col-form-label col-2">
-                            @L["Chức vụ"]
-                        </label>
-                        <div class="col-sm-10">
-                            <div id="RefPos" class="form-control">@Model.OrderMaster.RefPos</div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="ContractNo" class="col-form-label col-2">
-                            @L["Số hợp đồng"]
-                        </label>
-                        <div class="col-sm-10">
-                            <div id="ContractNo" class="form-control">@Model.OrderMaster.ContractNo</div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="ContractDate" class="col-form-label col-2">
-                            @L["Ngày hợp đồng"]
-                        </label>
-                        <div class="col-sm-10">
-                            <div id="ContractDate" class="form-control">@Model.OrderMaster.ContractDate</div>
-                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 col-xxl-12">
+            <div class="card">
+                <h4 class="card-header ">Ghi Chú</h4>
+                <hr>
+                <div class="card-body">
+                    <div class="form-group">
+                        <textarea type="text" class="form-control" id="Notes" name="Notes"
+                            rows="6">@Model.OrderMaster.Notes</textarea>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-xl-6 col-xxl-12">
-        <div class="card">
-            <h4 class="card-header text-bold"> @L["Thông tin thanh toán"]</h4>
-            <hr>
-            <div class="card-body">
-                <div class="basic-form">
-                    <div class="form-group row">
-                        <label for="" class="col-form-label col-3"> @L["Loại tiền"]</label>
-                        <div class="col-sm-9">
-                            <div class="form-control"></div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="" class="col-form-label col-3"> @L["Tỉ giá"]</label>
-                        <div class="col-sm-9">
-                            <div class="form-control"></div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="" class="col-form-label col-3"> @L["Cộng thành tiền"]</label>
-                        <div class="col-sm-9">
-                            <div class="form-control"></div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="" class="col-form-label col-3"> @L["Tiền chiết khấu"]</label>
-                        <div class="col-sm-9">
-                            <div class="form-control"></div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="" class="col-form-label col-3"> @L["Tổng tiền thanh toán"]</label>
-                        <div class="col-sm-9">
-                            <div class="form-control"></div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="" class="col-form-label col-3"> @L["Hạn thanh toán"]</label>
-                        <div class="col-sm-9">
-                            <div class="form-control"></div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="" class="col-form-label col-3"> @L["Có xuất hóa đơn"]</label>
-                        <div class="col-sm-9">
-                            <div class="form-control"></div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="" class="col-form-label col-3"> @L["Hình thức thanh toán"]</label>
-                        <div class="col-sm-9">
-                            <div class="form-control"></div>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="" class="col-form-label col-3"> @L["Điều khoản thanh toán"]</label>
-                        <div class="col-sm-9">
-                            <div class="form-control"></div>
-                        </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <h4 class="card-header text-bold">Chi tiết đơn hàng</h4>
+                <hr />
+                <div class="card-body">
+                    <div class="overflow-auto">
+                        <Table Models="@Model.OrderMaster.OrderDetails" TItem="OrderDetailSimpleView">
+                            <NavLabel>
+                                Mã đơn đặt hàng
+                            </NavLabel>
+                            <NavKey Context="o">
+                                <a href="/OrderDetail/@o.RowUniqueId">@o.OrderId</a>
+                            </NavKey>
+                            <ActionLabel></ActionLabel>
+                            <Action Context="o">
+                                <div>
+                                    <a href="/OrderDetail/Edit/@o.RowUniqueId"><i
+                                            class="mdi mdi-pencil-box i-warning"></i></a>
+                                    <a href="/OrderDetail/Details/@o.RowUniqueId"><i
+                                            class="mdi mdi-magnify i-primary"></i></a>
+                                </div>
+                            </Action>
+                        </Table>
                     </div>
                 </div>
             </div>
@@ -226,58 +298,29 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-xl-6 col-xxl-12">
-        <div class="card">
-            <h4 class="card-header">Điễn giãi</h4>
-            <hr>
-            <div class="card-body">
-                <div class="form-group">
-                    <textarea type="text" class="form-control" id="Description" name="Description"
-                        rows="6">@Model.OrderMaster.Description</textarea>
-                </div>
-            </div>
-        </div>
+<div class="row page-titles mx-0">
+    <div class="col-sm-6 p-md-0 justify-content-sm-start mt-2 mt-sm-0 d-flex">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/OrderMaster">
+                    @L["Đơn Hàng"]
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/OrderMaster/Details/@Model.OrderMaster.RowUniqueId">
+                    @Model.OrderMaster.OrderNo
+                </a>
+            </li>
+        </ol>
     </div>
-    <div class="col-xl-6 col-xxl-12">
-        <div class="card">
-            <h4 class="card-header ">Ghi Chú</h4>
-            <hr>
-            <div class="card-body">
-                <div class="form-group">
-                    <textarea type="text" class="form-control" id="Notes" name="Notes"
-                        rows="6">@Model.OrderMaster.Notes</textarea>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <h4 class="card-header text-bold">Chi tiết đơn hàng</h4>
-            <hr />
-            <div class="card-body">
-                <div class="overflow-auto">
-                    <Table Models="@Model.OrderMaster.OrderDetails" TItem="OrderDetailSimpleView">
-                        <NavLabel>
-                            Mã đơn đặt hàng
-                        </NavLabel>
-                        <NavKey Context="o">
-                            <a href="/OrderDetail/@o.RowUniqueId">@o.OrderId</a>
-                        </NavKey>
-                        <ActionLabel></ActionLabel>
-                        <Action Context="o">
-                            <div>
-                                <a href="/OrderDetail/Edit/@o.RowUniqueId"><i
-                                        class="mdi mdi-pencil-box i-warning"></i></a>
-                                <a href="/OrderDetail/Details/@o.RowUniqueId"><i
-                                        class="mdi mdi-magnify i-primary"></i></a>
-                            </div>
-                        </Action>
-                    </Table>
-                </div>
-            </div>
-        </div>
+    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+        <a href="/MasterOrder/Edit/@Model.OrderMaster.RowUniqueId" class="btn btn-round btn-warning mx-2">
+            <span class="mdi mdi-pencil"></span>
+            <b>@L["Chỉnh sửa"]</b>
+        </a>
+        <a href="MasterOrder" class="btn btn-round btn-primary mx-2">
+            <span class="mdi mdi-list-box-outline"></span>
+            <b>@L["Danh sách đơn hàng"]</b>
+        </a>
     </div>
 </div>
