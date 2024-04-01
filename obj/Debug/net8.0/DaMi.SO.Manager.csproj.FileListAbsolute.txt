@@ -160,3 +160,4 @@ d:\Project\DaMi.SO.Manager\bin\Debug\net8.0\Microsoft.Extensions.Localization.dl
 d:\Project\DaMi.SO.Manager\bin\Debug\net8.0\Microsoft.Extensions.Localization.Abstractions.dll
 d:\Project\DaMi.SO.Manager\obj\Debug\net8.0\DaMi.SO.Manager.csproj.GenerateResource.cache
 D:\Project\DaMi.SO.Manager\obj\Debug\net8.0\DaMi.SO.Manager.Resources.ShareResource.resources
+D:\Project\DaMi.SO.Manager\obj\Debug\net8.0\DaMi.SO.Manager.sourcelink.json

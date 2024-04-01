@@ -13,5 +13,13 @@ i {
 }
 
 a {
-    color: cyan;
+    color: blue;
+}
+
+input[type='checkbox']:checked:after {
+    display: none !important;
+}
+
+input[type='checkbox']::after {
+    display: none !important;
 }

@@ -3,16 +3,8 @@
   "WorkspaceRootPath": "D:\\Project\\DaMi.SO.Manager\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{191DC039-2357-45D5-99F2-60ACC98B6F5B}|DaMi.SO.Manager.csproj|d:\\project\\dami.so.manager\\resources\\shareresource.resx||{FF4D6ACA-9352-4A5F-821E-F4D6EBDCAB11}",
-      "RelativeMoniker": "D:0:0:{191DC039-2357-45D5-99F2-60ACC98B6F5B}|DaMi.SO.Manager.csproj|solutionrelative:resources\\shareresource.resx||{FF4D6ACA-9352-4A5F-821E-F4D6EBDCAB11}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{191DC039-2357-45D5-99F2-60ACC98B6F5B}|DaMi.SO.Manager.csproj|d:\\project\\dami.so.manager\\components\\ordermasters\\ordermastercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{191DC039-2357-45D5-99F2-60ACC98B6F5B}|DaMi.SO.Manager.csproj|solutionrelative:components\\ordermasters\\ordermastercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{191DC039-2357-45D5-99F2-60ACC98B6F5B}|DaMi.SO.Manager.csproj|d:\\project\\dami.so.manager\\components\\ordermasters\\ordermasterdetailpage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{191DC039-2357-45D5-99F2-60ACC98B6F5B}|DaMi.SO.Manager.csproj|solutionrelative:components\\ordermasters\\ordermasterdetailpage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{191DC039-2357-45D5-99F2-60ACC98B6F5B}|DaMi.SO.Manager.csproj|d:\\project\\dami.so.manager\\dami.so.manager.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
@@ -29,6 +21,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|d:\\project\\dami.so.manager\\resources\\component1.resx||{FF4D6ACA-9352-4A5F-821E-F4D6EBDCAB11}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:resources\\component1.resx||{FF4D6ACA-9352-4A5F-821E-F4D6EBDCAB11}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\Project\\DaMi.SO.Manager\\Components\\OrderMasters\\OrderMasterDetailPage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Components\\OrderMasters\\OrderMasterDetailPage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     }
   ],
   "DocumentGroupContainers": [
@@ -47,31 +43,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "ShareResource.resx",
-              "DocumentMoniker": "D:\\Project\\DaMi.SO.Manager\\Resources\\ShareResource.resx",
-              "RelativeDocumentMoniker": "Resources\\ShareResource.resx",
-              "ToolTip": "D:\\Project\\DaMi.SO.Manager\\Resources\\ShareResource.resx",
-              "RelativeToolTip": "Resources\\ShareResource.resx",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
-              "WhenOpened": "2024-03-29T03:13:30.473Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
               "Title": "OrderMasterController.cs",
               "DocumentMoniker": "D:\\Project\\DaMi.SO.Manager\\Components\\OrderMasters\\OrderMasterController.cs",
               "RelativeDocumentMoniker": "Components\\OrderMasters\\OrderMasterController.cs",
               "ToolTip": "D:\\Project\\DaMi.SO.Manager\\Components\\OrderMasters\\OrderMasterController.cs",
               "RelativeToolTip": "Components\\OrderMasters\\OrderMasterController.cs",
-              "ViewState": "AQIAAAwAAAAAAAAAAAAAABQAAABAAAAA",
+              "ViewState": "AQIAAHEAAAAAAAAAAAAywHoAAABEAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-03-29T02:37:26.753Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "OrderMasterDetailPage.razor",
               "DocumentMoniker": "D:\\Project\\DaMi.SO.Manager\\Components\\OrderMasters\\OrderMasterDetailPage.razor",
               "RelativeDocumentMoniker": "Components\\OrderMasters\\OrderMasterDetailPage.razor",
@@ -83,7 +67,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 4,
               "Title": "Component1.resx",
               "DocumentMoniker": "D:\\Project\\DaMi.SO.Manager\\Resources\\Component1.resx",
               "RelativeDocumentMoniker": "Resources\\Component1.resx",
@@ -94,7 +78,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "_Layout.razor",
               "DocumentMoniker": "D:\\Project\\DaMi.SO.Manager\\Components\\Share\\_Layout.razor",
               "RelativeDocumentMoniker": "Components\\Share\\_Layout.razor",
@@ -106,7 +90,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 3,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\Project\\DaMi.SO.Manager\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
@@ -118,7 +102,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "DaMi.SO.Manager.csproj",
               "DocumentMoniker": "D:\\Project\\DaMi.SO.Manager\\DaMi.SO.Manager.csproj",
               "RelativeDocumentMoniker": "DaMi.SO.Manager.csproj",

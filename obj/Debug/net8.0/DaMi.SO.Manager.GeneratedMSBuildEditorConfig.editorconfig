@@ -42,6 +42,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xPcmRlck1hc3RlcnNcSW5kZXhQYWdlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Project/DaMi.SO.Manager/Components/OrderMasters/ModifyTemplate.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xPcmRlck1hc3RlcnNcTW9kaWZ5VGVtcGxhdGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Project/DaMi.SO.Manager/Components/OrderMasters/OOBCustomerInfo.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xPcmRlck1hc3RlcnNcT09CQ3VzdG9tZXJJbmZvLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Project/DaMi.SO.Manager/Components/Share/Table.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xTaGFyZVxUYWJsZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 

@@ -79,9 +79,6 @@ public partial class <#= EntityType.Name.Replace("Tbl", "").Replace("List", "") 
         if (!string.IsNullOrEmpty(property.GetComment()))
         {
 #>
-    /// <summary>
-    /// <#= code.XmlComment(property.GetComment(), indent: 1) #>
-    /// </summary>
     [DisplayName("<#= code.XmlComment(property.GetComment(), indent: 1) #>")]
 <#
         }

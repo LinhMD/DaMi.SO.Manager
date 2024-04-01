@@ -1,0 +1,6 @@
+﻿<input id="CustomerTax" hx-swap-oob="true" disabled class="form-control" value="@TaxCode">
+<input id="CustomerPhone" hx-swap-oob="true" name="Phone" class="form-control" value="@Phone">
+@code {
+    [Parameter] public string TaxCode { get; set; }
+    [Parameter] public string Phone { get; set; }
+}

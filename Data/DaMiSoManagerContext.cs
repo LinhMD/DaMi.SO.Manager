@@ -23,6 +23,8 @@ public partial class DaMiSoManagerContext : DbContext
 
     public virtual DbSet<CustomerUser> CustomerUsers { get; set; }
 
+    public virtual DbSet<Currency> Currencies { get; set; }
+
     public virtual DbSet<Department> Departments { get; set; }
 
     public virtual DbSet<Employee> Employees { get; set; }
@@ -1148,6 +1150,91 @@ public partial class DaMiSoManagerContext : DbContext
             entity.Property(e => e.UnitName)
                 .HasMaxLength(50)
                 .HasComment("Tên đơn vị tính");
+        });
+        modelBuilder.Entity<Permision>(entity =>
+        {
+            entity.HasKey(e => e.RowUniqueId);
+
+            entity.ToTable("tblPermisionList");
+
+            entity.HasIndex(e => e.DepartmentId, "UK_tblPermisionList").IsUnique();
+
+            entity.Property(e => e.RowUniqueId)
+                .HasDefaultValueSql("(newid())")
+                .HasColumnName("RowUniqueID");
+            entity.Property(e => e.AcceptOrder).HasComment("Quyền duyệt Đơn hàng");
+            entity.Property(e => e.AddNew).HasComment("Quyền thêm danh sách");
+            entity.Property(e => e.AddNewOrder).HasComment("Quyền thêm Đơn hàng");
+            entity.Property(e => e.CancelOrder).HasComment("Quyền hủy Đơn hàng");
+            entity.Property(e => e.ChangeStatusOrder).HasComment("Quyền thay đổi trạng thái khác Đơn hàng");
+            entity.Property(e => e.CreatedDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasComment("Ngày tạo");
+            entity.Property(e => e.CreatedUserId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasDefaultValue("DAMIADMIN")
+                .HasComment("Mã người tạo")
+                .HasColumnName("CreatedUserID");
+            entity.Property(e => e.Delete).HasComment("Quyền xóa danh sách");
+            entity.Property(e => e.DeleteOrder).HasComment("Quyền xóa Đơn hàng");
+            entity.Property(e => e.DepartmentId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasComment("Mã phòng ban")
+                .HasColumnName("DepartmentID");
+            entity.Property(e => e.LastModifiedDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasComment("Ngày chỉnh sửa cuối cùng");
+            entity.Property(e => e.LastModifiedUserId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasDefaultValue("DAMIADMIN")
+                .HasComment("Mã người chỉnh sửa cuối cùng")
+                .HasColumnName("LastModifiedUserID");
+            entity.Property(e => e.SuspendOrder).HasComment("Quyền treo Đơn hàng");
+            entity.Property(e => e.Update).HasComment("Quyền sửa danh sách");
+            entity.Property(e => e.UpdateOrder).HasComment("Quyền sửa Đơn hàng");
+            entity.Property(e => e.ViewFullOrder).HasComment("Quyền xem đầy đủ Đơn hàng");
+            entity.Property(e => e.ViewLimitOrder).HasComment("Quyền xem có giới hạn Đơn hàng");
+            entity.Property(e => e.View).HasComment("Quyền xem danh sách");
+
+            entity.HasOne(d => d.Department).WithOne(p => p.Permision)
+                .HasPrincipalKey<Department>(p => p.DepartmentId)
+                .HasForeignKey<Permision>(d => d.DepartmentId)
+                .HasConstraintName("FK_tblPermisionList_tblDepartmentList");
+        });
+        modelBuilder.Entity<Currency>(entity =>
+        {
+            entity.HasKey(e => e.CurrencyId);
+
+            entity.ToTable("tblCurrencyList");
+
+            entity.Property(e => e.CurrencyId)
+                .HasMaxLength(3)
+                .IsUnicode(false)
+                .HasDefaultValue("VND")
+                .HasComment("Loại tiền")
+                .HasColumnName("CurrencyID");
+            entity.Property(e => e.AmountDecimalPlaces).HasDefaultValue((byte)2);
+            entity.Property(e => e.AmountNumberFormat)
+                .HasMaxLength(15)
+                .IsUnicode(false)
+                .HasDefaultValue("#,##0.00")
+                .HasComment("Mã định dạng số tiền");
+            entity.Property(e => e.CurrencyName)
+                .HasMaxLength(50)
+                .HasComment("Tên loại tiền");
+            entity.Property(e => e.CurrencyName2)
+                .HasMaxLength(50)
+                .HasComment("Tên loại tiền");
+            entity.Property(e => e.PriceDecimalPlaces).HasDefaultValue((byte)2);
+            entity.Property(e => e.PriceNumberFormat)
+                .HasMaxLength(15)
+                .IsUnicode(false)
+                .HasDefaultValue("#,##0.00")
+                .HasComment("Mã định dạng đơn giá");
+            entity.Property(e => e.UnitName).HasMaxLength(30);
         });
 
         OnModelCreatingPartial(modelBuilder);

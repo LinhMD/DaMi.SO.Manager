@@ -12,25 +12,25 @@ namespace DaMi.SO.Manager.Services.OrderMasterDTO
 {
     public class OrderMasterDetailView : IUpdateRequest<OrderMaster>, IView<OrderMaster>
     {
-        public Guid RowUniqueId { get; set; }
+        public Guid? RowUniqueId { get; set; }
 
         [DisplayName("Kiểu đơn hàng")]
-        public string OrderFormId { get; set; } = null!;
+        public string? OrderFormId { get; set; } = null!;
         [DisplayName("Loại đơn hàng")]
-        public string OrderTypeId { get; set; } = null!;
+        public string? OrderTypeId { get; set; } = null!;
         [DisplayName("Số đơn hàng")]
         public string? OrderNo { get; set; }
         [DisplayName("Ngày tạo")]
-        public DateTime OrderDate { get; set; }
+        public DateTime? OrderDate { get; set; }
         [DisplayName("Trạng thái ĐH")]
-        public string OrderStatusId { get; set; } = null!;
+        public string? OrderStatusId { get; set; } = null!;
 
         [DisplayName("Mã khách hàng")]
-        public string CustomerId { get; set; } = null!;
+        public string? CustomerId { get; set; } = null!;
         [DisplayName("MST/CCCD")]
-        public string TaxCode { get; set; } = null!;
+        public string? TaxCode { get; set; } = null!;
         [DisplayName("Điện thoại")]
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
         [DisplayName("Người đại diện")]
         public string? RefPerson { get; set; }
         [DisplayName("Chức vụ")]
@@ -54,23 +54,23 @@ namespace DaMi.SO.Manager.Services.OrderMasterDTO
 
 
         [DisplayName("Loại tiền")]
-        public string CurrencyId { get; set; } = null!;
+        public string? CurrencyId { get; set; } = null!;
         [DisplayName("Tỷ giá")]
-        public long ExchangeRate { get; set; }
+        public long? ExchangeRate { get; set; }
         [DisplayName("Cộng thành tiền")]
-        public long ConvertTotalAmount { get; set; }
+        public long? ConvertTotalAmount { get; set; }
         [DisplayName("Cộng tiền thuế VAT")]
-        public long ConvertTaxAmount { get; set; }
+        public long? ConvertTaxAmount { get; set; }
         [DisplayName("Cộng tiền CK")]
-        public long ConvertDiscAmount { get; set; }
+        public long? ConvertDiscAmount { get; set; }
         //Tổng tiền thanh toán = ConvertTotalAmount + ConvertTaxAmount - ConvertDiscAmount
         [DisplayName("Tổng số tiền")]
-        public long TotalAmount { get; set; }
+        public long? TotalAmount { get; set; }
         [DisplayName("Hạn thanh toán")]
         public DateOnly? OverDate { get; set; }
 
         [DisplayName("Có hóa đơn GTGT")]
-        public bool HasInvoiceVat { get; set; }
+        public bool? HasInvoiceVat { get; set; }
 
         [DisplayName("Hình thức thanh toán")]
         public string? PaymentMethodId { get; set; }
@@ -80,6 +80,6 @@ namespace DaMi.SO.Manager.Services.OrderMasterDTO
         [DisplayName("Diễn giải")]
         public string? Description { get; set; }
 
-        public IEnumerable<OrderDetailSimpleView> OrderDetails { get; set; }
+        public IEnumerable<OrderDetailSimpleView>? OrderDetails { get; set; }
     }
 }

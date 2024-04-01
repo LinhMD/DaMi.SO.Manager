@@ -9,7 +9,7 @@
         </ol>
     </div>
     <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
-        <a href="/OrderMaster/Create" class="btn btn-success btn-bordered btn-round">@L["Lập đơn hàng mới"]</a>
+        <a href="/OrderMaster/New" class="btn btn-success btn-bordered btn-round">@L["Lập đơn hàng mới"]</a>
     </div>
 </div>
 <div class="row">
@@ -30,10 +30,8 @@
                         <ActionLabel></ActionLabel>
                         <Action Context="o">
                             <div>
-                                <a href="/OrderMaster/Edit/@o.RowUniqueId"><i
-                                        class="mdi mdi-pencil-box i-warning"></i></a>
-                                <a href="/OrderMaster/Details/@o.RowUniqueId"><i
-                                        class="mdi mdi-magnify i-primary"></i></a>
+                                <a href="/OrderMaster/Edit/@o.RowUniqueId"><span class="mdi mdi-pencil-box"></span></a>
+                                <a href="/OrderMaster/Details/@o.RowUniqueId"><span class="mdi mdi-magnify"></span></a>
                             </div>
                         </Action>
                     </Table>

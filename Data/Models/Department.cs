@@ -81,4 +81,6 @@ public partial class Department
     public string LastModifiedUserId { get; set; } = null!;
 
     public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
+
+    public virtual Permision? Permision { get; set; }
 }
