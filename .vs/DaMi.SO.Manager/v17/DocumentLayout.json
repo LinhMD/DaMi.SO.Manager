@@ -3,16 +3,28 @@
   "WorkspaceRootPath": "D:\\Project\\DaMi.SO.Manager\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{191DC039-2357-45D5-99F2-60ACC98B6F5B}|DaMi.SO.Manager.csproj|d:\\project\\dami.so.manager\\dami.so.manager.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{191DC039-2357-45D5-99F2-60ACC98B6F5B}|DaMi.SO.Manager.csproj|solutionrelative:dami.so.manager.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{191DC039-2357-45D5-99F2-60ACC98B6F5B}|DaMi.SO.Manager.csproj|d:\\project\\dami.so.manager\\endpoints\\ordermasters\\pages\\modifytemplate.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{191DC039-2357-45D5-99F2-60ACC98B6F5B}|DaMi.SO.Manager.csproj|solutionrelative:endpoints\\ordermasters\\pages\\modifytemplate.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{191DC039-2357-45D5-99F2-60ACC98B6F5B}|DaMi.SO.Manager.csproj|d:\\project\\dami.so.manager\\endpoints\\ordermasters\\pages\\createpage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{191DC039-2357-45D5-99F2-60ACC98B6F5B}|DaMi.SO.Manager.csproj|solutionrelative:endpoints\\ordermasters\\pages\\createpage.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{191DC039-2357-45D5-99F2-60ACC98B6F5B}|DaMi.SO.Manager.csproj|d:\\project\\dami.so.manager\\endpoints\\share\\form.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{191DC039-2357-45D5-99F2-60ACC98B6F5B}|DaMi.SO.Manager.csproj|solutionrelative:endpoints\\share\\form.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{191DC039-2357-45D5-99F2-60ACC98B6F5B}|DaMi.SO.Manager.csproj|d:\\project\\dami.so.manager\\endpoints\\customers\\customercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{191DC039-2357-45D5-99F2-60ACC98B6F5B}|DaMi.SO.Manager.csproj|solutionrelative:endpoints\\customers\\customercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{191DC039-2357-45D5-99F2-60ACC98B6F5B}|DaMi.SO.Manager.csproj|d:\\project\\dami.so.manager\\endpoints\\ordermasters\\ordermastercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{191DC039-2357-45D5-99F2-60ACC98B6F5B}|DaMi.SO.Manager.csproj|solutionrelative:endpoints\\ordermasters\\ordermastercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{191DC039-2357-45D5-99F2-60ACC98B6F5B}|DaMi.SO.Manager.csproj|d:\\project\\dami.so.manager\\dami.so.manager.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{191DC039-2357-45D5-99F2-60ACC98B6F5B}|DaMi.SO.Manager.csproj|solutionrelative:dami.so.manager.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{191DC039-2357-45D5-99F2-60ACC98B6F5B}|DaMi.SO.Manager.csproj|d:\\project\\dami.so.manager\\endpoints\\share\\_layout.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
@@ -38,21 +50,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 10,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "CustomerController.cs",
-              "DocumentMoniker": "D:\\Project\\DaMi.SO.Manager\\Endpoints\\Customers\\CustomerController.cs",
-              "RelativeDocumentMoniker": "Endpoints\\Customers\\CustomerController.cs",
-              "ToolTip": "D:\\Project\\DaMi.SO.Manager\\Endpoints\\Customers\\CustomerController.cs",
-              "RelativeToolTip": "Endpoints\\Customers\\CustomerController.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-01T01:55:14.506Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{004be353-6879-467c-9d1e-9ac23cdf6d49}"
@@ -60,6 +59,55 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "ModifyTemplate.razor",
+              "DocumentMoniker": "D:\\Project\\DaMi.SO.Manager\\Endpoints\\OrderMasters\\Pages\\ModifyTemplate.razor",
+              "RelativeDocumentMoniker": "Endpoints\\OrderMasters\\Pages\\ModifyTemplate.razor",
+              "ToolTip": "D:\\Project\\DaMi.SO.Manager\\Endpoints\\OrderMasters\\Pages\\ModifyTemplate.razor",
+              "RelativeToolTip": "Endpoints\\OrderMasters\\Pages\\ModifyTemplate.razor",
+              "ViewState": "AQIAAD8AAAAAAAAAAAAAAFUAAABCAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-04-02T02:39:43.691Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CreatePage.razor",
+              "DocumentMoniker": "D:\\Project\\DaMi.SO.Manager\\Endpoints\\OrderMasters\\Pages\\CreatePage.razor",
+              "RelativeDocumentMoniker": "Endpoints\\OrderMasters\\Pages\\CreatePage.razor",
+              "ToolTip": "D:\\Project\\DaMi.SO.Manager\\Endpoints\\OrderMasters\\Pages\\CreatePage.razor",
+              "RelativeToolTip": "Endpoints\\OrderMasters\\Pages\\CreatePage.razor",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAAATAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-04-02T02:36:56.61Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Form.razor",
+              "DocumentMoniker": "D:\\Project\\DaMi.SO.Manager\\Endpoints\\Share\\Form.razor",
+              "RelativeDocumentMoniker": "Endpoints\\Share\\Form.razor",
+              "ToolTip": "D:\\Project\\DaMi.SO.Manager\\Endpoints\\Share\\Form.razor",
+              "RelativeToolTip": "Endpoints\\Share\\Form.razor",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAEAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-04-02T02:34:39.286Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "CustomerController.cs",
+              "DocumentMoniker": "D:\\Project\\DaMi.SO.Manager\\Endpoints\\Customers\\CustomerController.cs",
+              "RelativeDocumentMoniker": "Endpoints\\Customers\\CustomerController.cs",
+              "ToolTip": "D:\\Project\\DaMi.SO.Manager\\Endpoints\\Customers\\CustomerController.cs",
+              "RelativeToolTip": "Endpoints\\Customers\\CustomerController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-01T01:55:14.506Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "OrderMasterController.cs",
               "DocumentMoniker": "D:\\Project\\DaMi.SO.Manager\\Endpoints\\OrderMasters\\OrderMasterController.cs",
               "RelativeDocumentMoniker": "Endpoints\\OrderMasters\\OrderMasterController.cs",
@@ -67,12 +115,11 @@
               "RelativeToolTip": "Endpoints\\OrderMasters\\OrderMasterController.cs",
               "ViewState": "AQIAAAEAAAAAAAAAAAAAABUAAAAKAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-29T02:37:26.753Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-03-29T02:37:26.753Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 9,
               "Title": "OrderMasterDetailPage.razor",
               "DocumentMoniker": "D:\\Project\\DaMi.SO.Manager\\Components\\OrderMasters\\OrderMasterDetailPage.razor",
               "RelativeDocumentMoniker": "Components\\OrderMasters\\OrderMasterDetailPage.razor",
@@ -84,7 +131,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 8,
               "Title": "Component1.resx",
               "DocumentMoniker": "D:\\Project\\DaMi.SO.Manager\\Resources\\Component1.resx",
               "RelativeDocumentMoniker": "Resources\\Component1.resx",
@@ -95,7 +142,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
               "Title": "_Layout.razor",
               "DocumentMoniker": "D:\\Project\\DaMi.SO.Manager\\Endpoints\\Share\\_Layout.razor",
               "RelativeDocumentMoniker": "Endpoints\\Share\\_Layout.razor",
@@ -107,7 +154,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 7,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\Project\\DaMi.SO.Manager\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
@@ -119,15 +166,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "DaMi.SO.Manager.csproj",
               "DocumentMoniker": "D:\\Project\\DaMi.SO.Manager\\DaMi.SO.Manager.csproj",
               "RelativeDocumentMoniker": "DaMi.SO.Manager.csproj",
               "ToolTip": "D:\\Project\\DaMi.SO.Manager\\DaMi.SO.Manager.csproj",
               "RelativeToolTip": "DaMi.SO.Manager.csproj",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAAAAAA",
+              "ViewState": "AQIAAAYAAAAAAAAAAAAAACYAAAARAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2024-03-27T09:00:37.073Z"
+              "WhenOpened": "2024-03-27T09:00:37.073Z",
+              "EditorCaption": ""
             }
           ]
         }

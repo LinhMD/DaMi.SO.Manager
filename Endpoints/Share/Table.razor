@@ -2,6 +2,7 @@
 @using System.ComponentModel
 @using Microsoft.AspNetCore.Mvc
 @using System.ComponentModel.DataAnnotations
+@using System.Globalization
 @typeparam TItem
 @inject IStringLocalizer<ShareResource> L
 
@@ -36,10 +37,10 @@
     <tbody>
         @foreach (var model in Models)
         {
-            <tr class="@(RowStyleClass is not null ? RowStyleClass(model) : "")">
+            <tr class="@(RowStyleColor is not null ? RowStyleColor(model) : "" )">
                 @if (NavKey is not null)
                 {
-                    <th>@NavKey(model)</th>
+                    <td>@NavKey(model)</td>
                 }
                 @foreach (var fieldInfo in propertyInfos)
                 {
@@ -48,26 +49,18 @@
                         var value = fieldInfo.GetValue(model);
                         if (value is null)
                         {
-                            <th></th>
+                            <td></td>
                         }
                         else
                         {
-                            if (fieldInfo.GetType().IsAssignableFrom(typeof(bool)))
+                            try
                             {
-                                if (((bool)value))
-                                {
-                                    <th>
-                                        <input type="checkbox" checked disabled />
-                                    </th>
-                                }
-                                else
-                                {
-                                    <th>
-                                        <input type="checkbox" disabled />
-                                    </th>
-                                }
+                                var boolValue = (bool)value;
+                                <td>
+                                    <Switch Disabled @bind-Value="boolValue" />
+                                </td>
                             }
-                            else
+                            catch (Exception)
                             {
                                 var dataType = (Attribute.GetCustomAttribute(fieldInfo, typeof(DataTypeAttribute)) as DataTypeAttribute);
                                 if (dataType is not null)
@@ -75,22 +68,22 @@
                                     switch (dataType.DataType)
                                     {
                                         case DataType.Currency:
-                                            <th class="currency">@value</th>
+                                            <td class="text-right">@(((decimal)value).ToString("C", CultureInfo.CurrentCulture))</td>
                                             break;
                                         case DataType.Date:
-                                            <th class="date">
-                                                <input id="OrderDate" data-provide="datepicker" disabled type="date" name="OrderDate"
+                                            <td class="date">
+                                                <input data-provide="datepicker" disabled type="date"
                                                     value="@(((DateTime)value).ToString("yyyy-MM-dd"))" class="form-control">
-                                            </th>
+                                            </td>
                                             break;
                                         default:
-                                            <th>@value</th>
+                                            <td>@value</td>
                                             break;
                                     }
                                 }
                                 else
                                 {
-                                    <th>@value</th>
+                                    <td>@value</td>
                                 }
                             }
                         }
@@ -98,7 +91,7 @@
                 }
                 @if (Action is not null)
                 {
-                    <th>@Action(model)</th>
+                    <td>@Action(model)</td>
                 }
             </tr>
         }
@@ -110,7 +103,7 @@
     [Parameter]
     public IEnumerable<TItem> Models { get; set; } = [];
     public PropertyInfo[] propertyInfos { get; init; } = typeof(TItem).GetProperties();
-    [Parameter] public Func<TItem, string>? RowStyleClass { get; set; }
+    [Parameter] public Func<TItem, string>? RowStyleColor { get; set; }
     [Parameter] public RenderFragment<TItem>? NavKey { get; set; }
     [Parameter] public RenderFragment? NavLabel { get; set; }
     [Parameter] public RenderFragment<TItem>? Action { get; set; }

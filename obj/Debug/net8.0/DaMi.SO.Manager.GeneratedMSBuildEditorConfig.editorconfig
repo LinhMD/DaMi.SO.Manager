@@ -1,12 +1,19 @@
 is_global = true
 build_property.TargetFramework = net8.0
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
 build_property.TargetPlatformMinVersion = 
 build_property.UsingMicrosoftNETSdkWeb = true
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
 build_property.ProjectTypeGuids = 
 build_property.InvariantGlobalization = 
+build_property.InvariantGlobalization = 
 build_property.PlatformNeutralAssembly = 
-build_property.EnforceExtendedAnalyzerRules = 
+build_property.PlatformNeutralAssembly = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.EnforceExtendedAnalyzerRules = 
 build_property.RootNamespace = DaMi.SO.Manager
 build_property.RootNamespace = DaMi.SO.Manager
 build_property.ProjectDir = D:\Project\DaMi.SO.Manager\
@@ -18,12 +25,24 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = D:\Project\DaMi.SO.Manager
 build_property._RazorSourceGeneratorDebug = 
 
-[D:/Project/DaMi.SO.Manager/Endpoints/HomePages/HomePage.razor]
-build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXEhvbWVQYWdlc1xIb21lUGFnZS5yYXpvcg==
+[D:/Project/DaMi.SO.Manager/Endpoints/Homes/HomePage.razor]
+build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXEhvbWVzXEhvbWVQYWdlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Project/DaMi.SO.Manager/Endpoints/Logins/Pages/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXExvZ2luc1xQYWdlc1xMb2dpbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Project/DaMi.SO.Manager/Endpoints/Logins/Pages/NewPassword.razor]
+build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXExvZ2luc1xQYWdlc1xOZXdQYXNzd29yZC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Project/DaMi.SO.Manager/Endpoints/OrderDetails/OrderDetailRow.razor]
 build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXE9yZGVyRGV0YWlsc1xPcmRlckRldGFpbFJvdy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Project/DaMi.SO.Manager/Endpoints/OrderDetails/Pages/SS75.razor]
+build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXE9yZGVyRGV0YWlsc1xQYWdlc1xTUzc1LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Project/DaMi.SO.Manager/Endpoints/OrderMasters/Pages/CreatePage.razor]
@@ -48,6 +67,26 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/Project/DaMi.SO.Manager/Endpoints/OrderMasters/Pages/OOBCustomerInfo.razor]
 build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXE9yZGVyTWFzdGVyc1xQYWdlc1xPT0JDdXN0b21lckluZm8ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Project/DaMi.SO.Manager/Endpoints/OrderMasters/Pages/TabContent.razor]
+build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXE9yZGVyTWFzdGVyc1xQYWdlc1xUYWJDb250ZW50LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Project/DaMi.SO.Manager/Endpoints/Share/EnumField.razor]
+build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXFNoYXJlXEVudW1GaWVsZC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Project/DaMi.SO.Manager/Endpoints/Share/Form.razor]
+build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXFNoYXJlXEZvcm0ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Project/DaMi.SO.Manager/Endpoints/Share/FormField.razor]
+build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXFNoYXJlXEZvcm1GaWVsZC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Project/DaMi.SO.Manager/Endpoints/Share/GenericField.razor]
+build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXFNoYXJlXEdlbmVyaWNGaWVsZC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Project/DaMi.SO.Manager/Endpoints/Share/Table.razor]

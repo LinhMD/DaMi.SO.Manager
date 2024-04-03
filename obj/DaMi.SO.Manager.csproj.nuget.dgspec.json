@@ -50,6 +50,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Blazor.Bootstrap": {
+              "target": "Package",
+              "version": "[2.1.0, )"
+            },
             "FluentValidation": {
               "target": "Package",
               "version": "[11.9.0, )"
@@ -81,6 +85,10 @@
             "Microsoft.AspNetCore.Components.Web": {
               "target": "Package",
               "version": "[8.0.3, )"
+            },
+            "Microsoft.CodeAnalysis.Common": {
+              "target": "Package",
+              "version": "[4.5.0, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",

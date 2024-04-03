@@ -2,7 +2,7 @@
 using BlazorMinimalApis.Lib.Validation;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DaMi.SO.Manager.Endpoints.HomePages;
+namespace DaMi.SO.Manager.Endpoints.Homes;
 
 [ApiController]
 [Route("")]
@@ -11,7 +11,11 @@ public class HomeController : ControllerBase
     [HttpGet]
     public IResult Get()
     {
-        return this.Page<HomePage, HomeModel>(new() { Hello = 2 });
+        if (HttpContext.User?.Identity?.IsAuthenticated ?? false)
+        {
+            return this.Page<HomePage, HomeModel>(new() { Hello = 2 });
+        }
+        return Results.Redirect("/Login");
     }
 }
 

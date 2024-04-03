@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using CrudApiTemplate.Model;
 using CrudApiTemplate.View;
 using DaMi.SO.Manager.Data.Models;
+using DaMi.SO.Manager.Endpoints.OrderStatuses.DTO;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,17 +20,20 @@ public class OrderMasterSimpleView : IView<OrderMaster>
     public string? OrderNo { get; set; }
 
     [DataType(DataType.Date)]
-    [DisplayName("Ngày đặt hàng")]
+    [DisplayName("Ngày ĐH")]
     public DateTime OrderDate { get; set; }
 
     [DisplayName("Khách hàng")]
     public string CustomerId { get; set; } = null!;
 
-    [DisplayName("Số hợp đồng")]
-    public string? ContractNo { get; set; }
+    [DisplayName("Trạng thái")]
+    public string OrderStatusName { get; set; } = null!;
 
-    [DisplayName("Trạng thái ĐH")]
-    public string OrderStatus { get; set; } = null!;
+    [HiddenInput]
+    public OrderStatusSView OrderStatus { get; set; } = null!;
+
+    [DisplayName("NV triển khai")]
+    public string ExecutorName { get; set; } = null!;
 
     [DataType(DataType.Date)]
     [DisplayName("Ngày triển khai")]
@@ -43,14 +47,14 @@ public class OrderMasterSimpleView : IView<OrderMaster>
     public int NumOfData { get; set; }
     [DisplayName("Số MST")]
     public int NumOfTaxCode { get; set; }
-    [DisplayName("Số HĐ")]
+    [DisplayName("Số hóa đơn")]
     public int NumOfInv { get; set; }
     [DisplayName("Số User")]
     public int NumOfUser { get; set; }
     [DisplayName("Số iCloudData")]
     public int NoICloudData { get; set; }
 
-    [DisplayName("Tổng số tiền")]
+    [DisplayName("Thành tiền thực")]
     [DataType(DataType.Currency)]
     public decimal OriginalTotalAmount { get; set; }
 
@@ -58,17 +62,17 @@ public class OrderMasterSimpleView : IView<OrderMaster>
     [DisplayName("Số tiền đã thu")]
     public decimal CollectAmount { get; set; }
 
-
-    [DisplayName("Có hóa đơn GTGT")]
+    [DisplayName("Có xuất HĐ")]
     public bool HasInvoiceVat { get; set; }
 
-    [DisplayName("Đã xuất Hóa đơn")]
+    [DisplayName("Đã xuất HĐ")]
     public bool PublishedInvoice { get; set; }
 
     public static void InitMapper()
     {
         TypeAdapterConfig<OrderMaster, OrderMasterSimpleView>.NewConfig()
-            .Map(view => view.OrderStatus, order => order.OrderStatus.OrderStatusName)
+            .Map(view => view.ExecutorName, order => order.Executor != null ? order.Executor.EmployeeName : "")
+            .Map(view => view.OrderStatusName, order => order.OrderStatus.OrderStatusName)
             .Map(view => view.NumOfPC, order => order.OrderDetails.Sum(d => d.NumOfPc))
             .Map(view => view.NumOfData, order => order.OrderDetails.Sum(d => d.NumOfData))
             .Map(view => view.NumOfInv, order => order.OrderDetails.Sum(d => d.NumOfInv))

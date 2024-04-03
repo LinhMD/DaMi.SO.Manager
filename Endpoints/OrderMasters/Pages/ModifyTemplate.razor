@@ -1,11 +1,12 @@
-﻿@inherits XComponent<OrderMasterEditModel>
+﻿@using BlazorBootstrap
+@inherits XComponent<OrderMasterEditModel>
 @inject IStringLocalizer<ShareResource> L
 
 <div class="row">
-    <div class="col-xl-6 col-xxl-12">
+    <div class="col-6">
         <div class="card">
             <h4 class="card-header text-bold">@L["Thông tin đơn hàng"]</h4>
-            <hr />
+
             <div class="card-body">
                 <div class="basic-form">
                     <div class="form-group row">
@@ -19,6 +20,7 @@
                                 }
                             </select>
                         </div>
+                        <ValidationMessage For=@(() => Model.OrderMaster.OrderFormId) />
                     </div>
                     <div class="form-group row">
                         <label for="OrderTypeId" class="col-form-label col-2">@L["Loại đơn hàng"]</label>
@@ -35,17 +37,18 @@
                     <div class="form-group row">
                         <label for="Guid" class="col-form-label col-2">@L["Số đơn hàng"]</label>
                         <div class="col-sm-10">
-                            <input id="Guid" name="OrderNo" class="form-control" disabled
-                                value="@Model.OrderMaster.OrderNo">
+                            <InputText id="Guid" name="OrderNo" class="form-control" disabled
+                                @bind-Value=Model.OrderMaster.OrderNo />
                         </div>
+                        <ValidationMessage For=@(() => Model.OrderMaster.OrderNo) />
                     </div>
                     <div class="form-group row">
                         <label for="OrderDate" class="col-form-label col-2">@L["Ngày tạo"]</label>
                         <div class="col-sm-10">
-                            <input id="OrderDate" data-provide="datepicker" disabled type="date" name="OrderDate"
-                                value="@(Model.OrderMaster.OrderDate?.ToString("yyyy-MM-dd") ?? DateTime.Now.ToString("yyyy-MM-dd"))"
-                                class="form-control">
+                            <DateInput TValue="DateTime?" @bind-Value="@Model.OrderMaster.OrderDate"
+                                Placeholder="Enter Date" name="OrderDate" id="OrderDate" />
                         </div>
+                        <ValidationMessage For=@(() => Model.OrderMaster.OrderDate) />
                     </div>
                     <div class="form-group row">
                         <label for="OrderStatusId" class="col-form-label col-2">@L["Trạng thái ĐH"]</label>
@@ -54,65 +57,58 @@
                                 value="@Model.OrderMaster.OrderStatusId">
                                 @foreach (var orderStatus in Model.OrderStatuses)
                                 {
-                                    if (orderStatus.OrderStatusId == Model.OrderMaster.OrderStatusId)
-                                    {
-                                        <option value="@orderStatus.OrderStatusId" selected>@orderStatus.OrderStatusName
-                                        </option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@orderStatus.OrderStatusId">@orderStatus.OrderStatusName</option>
-                                    }
+                                    <option value="@orderStatus.OrderStatusId"
+                                        @(orderStatus.OrderStatusId==Model.OrderMaster.OrderStatusId ? "selected" : "" )>
+                                        @orderStatus.OrderStatusName</option>
                                 }
                             </select>
+                            <ValidationMessage For=@(() => Model.OrderMaster.OrderStatusId) />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-xl-6 col-xxl-12">
+    <div class="col-6">
         <div class="card">
             <h4 class="card-header text-bold">@L["Thông tin khác"]</h4>
-            <hr />
+
             <div class="card-body">
                 <div class="basic-form">
                     <div class="form-group row">
-                        <label for="ExecutorId" class="col-form-label col-3">@L["Nhân viên triển khai"]</label>
-                        <div class="col-sm-9">
+                        <label for="ExecutorId" class="col-form-label col-2">@L["Nhân viên triển khai"]</label>
+                        <div class="col-10">
                             <select class="form-control selectpicker" id="ExecutorId" name="ExecutorId"
                                 @bind="Model.OrderMaster.ExecutorId">
                                 @foreach (var employee in Model.Employees.Where(e => e.Department.IsInstall))
                                 {
-                                    if (employee.EmployeeId == Model.OrderMaster.ExecutorId)
-                                    {
-                                        <option value="@employee.EmployeeId" selected> @employee.EmployeeName</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@employee.EmployeeId">@employee.EmployeeName</option>
-                                    }
+                                    <option value="@employee.EmployeeId"
+                                        @(employee.EmployeeId==Model.OrderMaster.ExecutorId? "selected" : "" )>
+                                        @employee.EmployeeName
+                                    </option>
                                 }
                             </select>
                         </div>
+                        <ValidationMessage For=@(() => Model.OrderMaster.ExecutorId) />
                     </div>
                     <div class="form-group row">
-                        <label for="BeginExecDate" class="col-form-label col-3">@L["Ngày BĐ triển khai"]</label>
-                        <div class="col-sm-9">
-                            <input id="BeginExecDate" class="form-control" data-provide="datepicker"
-                                name="BeginExecDate" type="date" value="@Model.OrderMaster.BeginExecDate">
+                        <label for="BeginExecDate" class="col-form-label col-2">@L["Ngày BĐ triển khai"]</label>
+                        <div class="col-10">
+                            <DateInput TValue="DateTime?" @bind-Value="@Model.OrderMaster.BeginExecDate"
+                                Placeholder="Ngày BĐ triển khai" name="BeginExecDate" id="BeginExecDate" />
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="EndExecDate" class="col-form-label col-3">@L["Ngày KT triển khai"]</label>
-                        <div class="col-sm-9">
-                            <input id="EndExecDate" class="form-control" data-provide="datepicker" type="date"
-                                name="EndExecDate" value="@Model.OrderMaster.EndExecDate">
+                        <label for="EndExecDate" class="col-form-label col-2">@L["Ngày KT triển khai"]</label>
+                        <div class="col-10">
+                            <DateInput TValue="DateTime?" @bind-Value="@Model.OrderMaster.EndExecDate"
+                                Placeholder="Ngày KT triển khai" name="EndExecDate" id="EndExecDate" />
                         </div>
+                        <ValidationMessage For=@(() => Model.OrderMaster.EndExecDate) />
                     </div>
                     <div class="form-group row">
-                        <label for="SalesManId" class="col-form-label col-3">@L["Nhân viên bán hàng"]</label>
-                        <div class="col-sm-9">
+                        <label for="SalesManId" class="col-form-label col-2">@L["Nhân viên bán hàng"]</label>
+                        <div class="col-10">
                             <select class="form-control selectpicker" id="SalesManId" disabled name="SalesManId"
                                 value="@Model.OrderMaster.SalesManId">
                                 @foreach (var employee in Model.Employees)
@@ -128,10 +124,11 @@
                                 }
                             </select>
                         </div>
+                        <ValidationMessage For=@(() => Model.OrderMaster.SalesManId) />
                     </div>
                     <div class="form-group row">
-                        <label for="SalesManId" class="col-form-label col-3"></label>
-                        <div class="col-sm-9">
+                        <label for="SalesManId" class="col-form-label col-2"></label>
+                        <div class="col-10">
                         </div>
                     </div>
                 </div>
@@ -140,10 +137,10 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-xl-6 col-xxl-12">
+    <div class="col-6">
         <div class="card">
             <h4 class="card-header">@L["Thông tin hợp đồng"]</h4>
-            <hr>
+
             <div class="card-body">
                 <div class="basic-form">
                     <div class="form-group row">
@@ -152,7 +149,8 @@
                             <span class="mdi mdi-reload htmx-indicator"></span>
                         </label>
                         <div class="col-sm-10">
-                            <input type="hidden" id="CustomerId" name="CustomerId">
+                            <InputText type="hidden" id="CustomerId" name="CustomerId"
+                                @bind-Value="Model.OrderMaster.CustomerId" />
                             <select class="form-control selectpicker" hx-indicator=".htmx-indicator"
                                 hx-get="/OrderMaster/Edit/Customer" id="CustomerIdSelect" name="CustomerIdSelect"
                                 value="@Model.OrderMaster.CustomerId">
@@ -162,6 +160,7 @@
                                     <option value="@customer.CustomerId">@customer.CustomerName</option>
                                 }
                             </select>
+                            <ValidationMessage For=@(() => Model.OrderMaster.CustomerId) />
                             <script>
                                 var select = new SlimSelect({
                                     select: '#CustomerIdSelect',
@@ -181,8 +180,10 @@
                             <span class="mdi mdi-reload htmx-indicator"></span>
                         </label>
                         <div class="col-sm-10">
-                            <input id="CustomerTax" disabled class="form-control" value="@Model.OrderMaster.TaxCode">
+                            <InputText id="CustomerTax" name="TaxCode" disabled class="form-control"
+                                @bind-Value=Model.OrderMaster.TaxCode />
                         </div>
+                        <ValidationMessage For=@(() => Model.OrderMaster.TaxCode) />
                     </div>
                     <div class="form-group row">
                         <label for="CustomerPhone" class="col-form-label col-2">
@@ -190,150 +191,148 @@
                             <span class="mdi mdi-reload customer-info htmx-indicator"></span>
                         </label>
                         <div class="col-sm-10">
-                            <input id="CustomerPhone" name="Phone" type="tel" class="form-control"
-                                value="@Model.OrderMaster.Phone">
+                            <InputText id="Phone" disabled class="form-control" name="Phone"
+                                @bind-Value=Model.OrderMaster.Phone />
                         </div>
+                        <ValidationMessage For=@(() => Model.OrderMaster.Phone) />
                     </div>
                     <div class="form-group row">
                         <label for="RefPerson" class="col-form-label col-2">
                             @L["Người đại điện"]
                         </label>
                         <div class="col-sm-10">
-                            <input id="RefPerson" name="RefPerson" class="form-control"
-                                value="@Model.OrderMaster.RefPerson">
+                            <InputText id="RefPerson" name="RefPerson" class="form-control"
+                                @bind-Value=Model.OrderMaster.RefPerson />
                         </div>
+                        <ValidationMessage For=@(() => Model.OrderMaster.RefPerson) />
                     </div>
                     <div class="form-group row">
                         <label for="RefPos" class="col-form-label col-2">
                             @L["Chức vụ"]
                         </label>
                         <div class="col-sm-10">
-                            <input id="RefPos" name="RefPos" class="form-control" value="@Model.OrderMaster.RefPos">
+                            <InputText id="RefPos" name="RefPos" class="form-control"
+                                @bind-Value=Model.OrderMaster.RefPos />
                         </div>
+                        <ValidationMessage For=@(() => Model.OrderMaster.RefPos) />
                     </div>
                     <div class="form-group row">
                         <label for="ContractNo" class="col-form-label col-2">
                             @L["Số hợp đồng"]
                         </label>
                         <div class="col-sm-10">
-                            <input id="ContractNo" name="ContractNo" class="form-control"
-                                value="@Model.OrderMaster.ContractNo">
+                            <InputText id="ContractNo" name="ContractNo" class="form-control"
+                                @bind-Value=Model.OrderMaster.ContractNo />
                         </div>
+                        <ValidationMessage For=@(() => Model.OrderMaster.ContractNo) />
                     </div>
                     <div class="form-group row">
                         <label for="ContractDate" class="col-form-label col-2">
                             @L["Ngày hợp đồng"]
                         </label>
                         <div class="col-sm-10">
-                            <input id="ContractDate" name="ContractDate" data-provide="datepicker" type="date"
-                                class="form-control" value="@Model.OrderMaster.ContractDate">
+                            <DateInput TValue="DateOnly?" @bind-Value="@Model.OrderMaster.ContractDate"
+                                Placeholder="Ngày hợp đồng" name="ContractDate" id="ContractDate" />
                         </div>
+                        <ValidationMessage For=@(() => Model.OrderMaster.ContractDate) />
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-xl-6 col-xxl-12">
+    <div class="col-6">
         <div class="card">
             <h4 class="card-header text-bold"> @L["Thông tin thanh toán"]</h4>
-            <hr>
+
             <div class="card-body">
                 <div class="basic-form">
                     <div class="form-group row">
-                        <label for="CurrencyId" class="col-form-label col-3"> @L["Loại tiền"]</label>
-                        <div class="col-sm-9">
-                            <select class="form-control selectpicker" id="CurrencyId" name="CurrencyId"
-                                value="@Model.OrderMaster.CurrencyId">
+                        <label for="CurrencyId" class="col-form-label col-2"> @L["Loại tiền"]</label>
+                        <div class="col-10">
+                            <InputSelect class="form-control selectpicker" id="CurrencyId" name="CurrencyId"
+                                @bind-Value="Model.OrderMaster.CurrencyId">
                                 @foreach (var currency in Model.Currencies)
                                 {
-                                    if (currency.CurrencyId == Model.OrderMaster.CurrencyId)
-                                    {
-                                        <option value="@currency.CurrencyId" selected>@currency.CurrencyName</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@currency.CurrencyId">@currency.CurrencyName</option>
-                                    }
+                                    <option value="@currency.CurrencyId"
+                                        @(currency.CurrencyId==Model.OrderMaster.CurrencyId? "selected" : "" )>
+                                        @currency.CurrencyName
+                                    </option>
                                 }
-                            </select>
+                            </InputSelect>
+                            <ValidationMessage For=@(() => Model.OrderMaster.CurrencyId) />
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="ExchangeRate" class="col-form-label col-3"> @L["Tỉ giá"]</label>
-                        <div class="col-sm-9">
-                            <input id="ExchangeRate" type="number" name="ExchangeRate" class="form-control"
-                                value="@Model.OrderMaster.ExchangeRate">
+                        <label for="ExchangeRate" class="col-form-label col-2"> @L["Tỉ giá"]</label>
+                        <div class="col-10">
+                            <InputNumber id="ExchangeRate" type="number" name="ExchangeRate" class="form-control"
+                                @bind-Value=Model.OrderMaster.ExchangeRate />
                         </div>
+                        <ValidationMessage For=@(() => Model.OrderMaster.ExchangeRate) />
                     </div>
                     <div class="form-group row">
-                        <label for="OriginalTotalAmount" class="col-form-label col-3"> @L["Cộng thành tiền"]</label>
-                        <div class="col-sm-9">
-                            <input id="OriginalTotalAmount" type="number" name="OriginalTotalAmount"
-                                class="form-control" value="@Model.OrderMaster.ConvertTotalAmount">
+                        <label for="OriginalTotalAmount" class="col-form-label col-2"> @L["Cộng thành tiền"]</label>
+                        <div class="col-10">
+                            <CurrencyInput Locale="vi-VN" TValue="decimal?" name="ConvertTotalAmount"
+                                @bind-Value="@Model.OrderMaster.ConvertTotalAmount" Placeholder="Cộng thành tiền" />
                         </div>
+                        <ValidationMessage For=@(() => Model.OrderMaster.ConvertTotalAmount) />
                     </div>
                     <div class="form-group row">
-                        <label for="ConvertDiscAmount" class="col-form-label col-3"> @L["Cộng tiền CK"]</label>
-                        <div class="col-sm-9">
-                            <input id="ConvertDiscAmount" name="ConvertDiscAmount" type="number" class="form-control"
-                                value="@Model.OrderMaster.ConvertDiscAmount">
+                        <label for="ConvertDiscAmount" class="col-form-label col-2"> @L["Cộng tiền CK"]</label>
+                        <div class="col-10">
+                            <CurrencyInput Locale="vi-VN" TValue="decimal?" name="ConvertTotalAmount"
+                                @bind-Value="@Model.OrderMaster.ConvertDiscAmount" Placeholder="Cộng tiền CK" />
                         </div>
+                        <ValidationMessage For=@(() => Model.OrderMaster.ConvertDiscAmount) />
                     </div>
                     <div class="form-group row">
-                        <label for="TotalAmount" class="col-form-label col-3"> @L["Tổng tiền thanh toán"]</label>
-                        <div class="col-sm-9">
-                            <input id="TotalAmount" name="TotalAmount" type="number" class="form-control"
-                                value="@Model.OrderMaster.TotalAmount">
+                        <label for="TotalAmount" class="col-form-label col-2"> @L["Tổng tiền thanh toán"]</label>
+                        <div class="col-10">
+                            <CurrencyInput Locale="vi-VN" TValue="decimal?" name="TotalAmount"
+                                @bind-Value="@Model.OrderMaster.TotalAmount" Placeholder="Tổng tiền thanh toán" />
                         </div>
+                        <ValidationMessage For=@(() => Model.OrderMaster.ConvertTotalAmount) />
                     </div>
                     <div class="form-group row">
-                        <label for="OverDate" class="col-form-label col-3"> @L["Hạn thanh toán"]</label>
-                        <div class="col-sm-9">
-                            <input id="OverDate" name="OverDate" data-provide="datepicker" type="date"
-                                class="form-control" value="@Model.OrderMaster.OverDate">
+                        <label for="OverDate" class="col-form-label col-2"> @L["Hạn thanh toán"]</label>
+                        <div class="col-10">
+                            <DateInput TValue="DateOnly?" @bind-Value="@Model.OrderMaster.OverDate"
+                                Placeholder="Hạn thanh toán" name="OverDate" id="OverDate" />
                         </div>
+                        <ValidationMessage For=@(() => Model.OrderMaster.OverDate) />
                     </div>
                     <div class="form-group row">
-                        <label for="PublishedInvoice" class="col-form-label col-3"> @L["Có xuất hóa đơn"]</label>
-                        <div class="col-sm-9">
-                            @if (Model.OrderMaster.HasInvoiceVat ?? false)
-                            {
-                                <input type="checkbox" id="HasInvoiceVat" value="true" name="HasInvoiceVat"
-                                    class="form-control" checked>
-                            }
-                            else
-                            {
-                                <input type="checkbox" id="HasInvoiceVat" name="HasInvoiceVat" class="form-control"
-                                    value="false">
-                            }
+                        <label for="PublishedInvoice" class="col-form-label col-2"> @L["Có xuất hóa đơn"]</label>
+                        <div class="col-10">
+                            <Switch @bind-Value="Model.OrderMaster.HasInvoiceVat" Label="" name="HasInvoiceVat" />
                         </div>
+                        <ValidationMessage For=@(() => Model.OrderMaster.HasInvoiceVat) />
                     </div>
                     <div class="form-group row">
-                        <label for="PaymentMethodId" class="col-form-label col-3"> @L["Hình thức thanh toán"]</label>
-                        <div class="col-sm-9">
+                        <label for="PaymentMethodId" class="col-form-label col-2"> @L["Hình thức thanh toán"]</label>
+                        <div class="col-10">
                             <select class="form-control selectpicker" id="PaymentMethodId" name="PaymentMethodId"
-                                value="@Model.OrderMaster.CurrencyId">
+                                value="@Model.OrderMaster.PaymentMethodId">
                                 @foreach (var paymentMethod in Model.PaymentMethods)
                                 {
-                                    if (paymentMethod.PaymentMethodId == Model.OrderMaster.PaymentMethodId)
-                                    {
-                                        <option value="@paymentMethod.PaymentMethodId" selected>@paymentMethod.PaymentMethodName
-                                        </option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@paymentMethod.PaymentMethodId">@paymentMethod.PaymentMethodName</option>
-                                    }
+                                    <option value="@paymentMethod.PaymentMethodId"
+                                        @(paymentMethod.PaymentMethodId==Model.OrderMaster.PaymentMethodId ? "selected"
+                                        :"")>
+                                        @paymentMethod.PaymentMethodName
+                                    </option>
                                 }
                             </select>
                         </div>
+                        <ValidationMessage For=@(() => Model.OrderMaster.PaymentMethodId) />
                     </div>
                     <div class="form-group row">
-                        <label for="PaymentTerms" class="col-form-label col-3"> @L["Điều khoản thanh toán"]</label>
-                        <div class="col-sm-9">
-                            <input type="text" id="PaymentTerms" name="PaymentTerms" class="form-control"
-                                value="@Model.OrderMaster.PaymentTerms">
+                        <label for="PaymentTerms" class="col-form-label col-2"> @L["Điều khoản thanh toán"]</label>
+                        <div class="col-10">
+                            <InputText type="text" id="PaymentTerms" name="PaymentTerms" class="form-control"
+                                @bind-Value=Model.OrderMaster.PaymentTerms />
                         </div>
+                        <ValidationMessage For=@(() => Model.OrderMaster.PaymentTerms) />
                     </div>
                 </div>
             </div>
@@ -341,10 +340,10 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-xl-6 col-xxl-12">
+    <div class="col-x-12 col-xxl-6">
         <div class="card">
             <h4 class="card-header">Điễn giãi</h4>
-            <hr>
+
             <div class="card-body">
                 <div class="form-group">
                     <textarea type="text" class="form-control" id="Description" name="Description"
@@ -353,10 +352,10 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-6 col-xxl-12">
+    <div class="col-x-12 col-xxl-6">
         <div class="card">
             <h4 class="card-header ">Ghi Chú</h4>
-            <hr>
+
             <div class="card-body">
                 <div class="form-group">
                     <textarea type="text" class="form-control" id="Notes" name="Notes"

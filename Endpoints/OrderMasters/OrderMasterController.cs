@@ -9,13 +9,15 @@ using BlazorMinimalApis.Lib.Helpers;
 using DaMi.SO.Manager.Endpoints.OrderMasters.Pages;
 using Mapster;
 using CrudApiTemplate.Utilities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DaMi.SO.Manager.Endpoints.OrderMasters;
+
 [ApiController]
+[Authorize]
 [Route("[controller]")]
 public class OrderMasterController(IUnitOfWork work) : ControllerBase
 {
-
     [HttpGet]
     public async Task<IResult> GetAsync()
     {
@@ -26,11 +28,14 @@ public class OrderMasterController(IUnitOfWork work) : ControllerBase
     [HttpGet("Details/{guid}")]
     public async Task<IResult> GetDetailsAsync(Guid guid)
     {
-        var orderMaster = await work.Get<OrderMaster>().GetAsync<OrderMasterDetailView>(guid);
+        var orderMaster = await work.Get<OrderMaster>().Find<OrderMasterDetailView>(f => f.RowUniqueId == guid).FirstOrDefaultAsync();
 
         if (orderMaster is null)
             return new RazorComponentResult(typeof(_404));
 
+        var customer = await work.Get<ViwCustomer>().Find(c => c.CustomerId == orderMaster.CustomerId).FirstOrDefaultAsync() ?? new ViwCustomer();
+        orderMaster.TaxCode = customer.TaxCode;
+        orderMaster.Phone = customer.Phone;
         return this.Page<DetailPage, OrderMasterDetailModel>(new() { OrderMaster = orderMaster });
     }
     [HttpGet("Edit/Customer")]
@@ -52,7 +57,6 @@ public class OrderMasterController(IUnitOfWork work) : ControllerBase
             ExchangeRate = 1
             //TODO: mặc định current user
         };
-
 
         var orderTypes = await work.Get<OrderType>().GetAll().ToListAsync();
         var orderForms = await work.Get<OrderForm>().GetAll().ToListAsync();
@@ -111,7 +115,7 @@ public class OrderMasterController(IUnitOfWork work) : ControllerBase
     [HttpGet("Edit/{guid}")]
     public async Task<IResult> GetEditAsync(Guid guid)
     {
-        var orderMaster = await work.Get<OrderMaster>().GetAsync<OrderMasterDetailView>(guid);
+        var orderMaster = await work.Get<OrderMaster>().Find<OrderMasterDetailView>(f => f.RowUniqueId == guid).FirstOrDefaultAsync();
 
         if (orderMaster is null)
             return new RazorComponentResult(typeof(_404));
@@ -124,7 +128,6 @@ public class OrderMasterController(IUnitOfWork work) : ControllerBase
         var paymentMethods = await work.Get<PaymentMethod>().GetAll().ToListAsync();
 
         var customer = customers.FirstOrDefault(c => c.CustomerId == orderMaster.CustomerId);
-        orderMaster.TaxCode = customer?.TaxCode ?? string.Empty;
         orderMaster.Phone = customer?.Phone ?? string.Empty;
 
         var orderStatuses = await work.Get<OrderStatus>().GetAll().ToListAsync();

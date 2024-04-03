@@ -4,9 +4,11 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>12</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Blazor.Bootstrap" Version="2.1.0" />
     <PackageReference Include="FluentValidation" Version="11.9.0" />
     <PackageReference Include="Htmx" Version="1.7.0" />
     <PackageReference Include="Htmx.TagHelpers" Version="1.7.0" />
@@ -15,6 +17,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Components" Version="8.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.3" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.5.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.3">
@@ -35,9 +38,11 @@
   <ItemGroup>
     <Reference Include="BlazorMinimalApis">
       <HintPath>BlazorMinimalApis.dll</HintPath>
-    </Reference>
+    </Reference> 
+    
     <Reference Include="CrudApiTemplate">
       <HintPath>CrudApiTemplate.dll</HintPath>
-    </Reference>
+    </Reference> 
   </ItemGroup>
+
 </Project>

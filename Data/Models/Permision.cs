@@ -21,14 +21,19 @@ public partial class Permision
     public string PermisionId { get; set; } = null!;
 
     [DisplayName("Quyền xem danh sách")]
+    [Column("ViewList")]
     public bool View { get; set; }
 
     [DisplayName("Quyền thêm danh sách")]
+
+    [Column("AddNewList")]
     public bool AddNew { get; set; }
 
+    [Column("DeleteList")]
     [DisplayName("Quyền xóa danh sách")]
     public bool Delete { get; set; }
 
+    [Column("UpdateList")]
     [DisplayName("Quyền sửa danh sách")]
     public bool Update { get; set; }
 

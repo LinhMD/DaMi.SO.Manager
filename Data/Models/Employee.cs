@@ -60,8 +60,11 @@ public partial class Employee
     [StringLength(40)]
     public string? Email { get; set; }
 
-    [StringLength(130)]
-    public string? EmployeePassword { get; set; }
+    [StringLength(64)]
+    public string? PwHash { get; set; }
+
+    [StringLength(10)]
+    public string? PwSalt { get; set; }
 
     [DisplayName("Thứ tự sắp xếp")]
     public int SortOrder { get; set; }

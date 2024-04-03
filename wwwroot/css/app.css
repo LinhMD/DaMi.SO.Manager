@@ -31,3 +31,39 @@ input[type='checkbox']::after {
 .currency::after {
     content: "₫";
 }
+
+.pink {
+    color: #ff00ff !important;
+}
+
+.red {
+    color: red !important;
+}
+
+.green {
+    color: green !important;
+}
+
+.blue {
+    color: blue !important;
+}
+
+.orange {
+    color: orange !important;
+}
+
+.gray {
+    color: #666666 !important;
+}
+
+td.bg-pink {
+    background-color: pink !important;
+}
+
+td.bg-orange {
+    background-color: orange !important;
+}
+
+td.bg-gray {
+    background-color: gray !important;
+}

@@ -1,0 +1,28 @@
+﻿@typeparam TEntity
+
+@using System.Reflection
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components
+
+@if (Property != null)
+
+{
+    <select class="form-control" value="@Property.GetValue(Entity)">
+        @foreach (var value in Enum.GetValues(Property.PropertyType))
+
+        {
+            <option value="@value">@value</option>
+        }
+    </select>
+}
+
+@code {
+    [Parameter]
+
+    public TEntity? Entity { get; set; }
+
+    [Parameter]
+
+    public PropertyInfo? Property { get; set; }
+
+}

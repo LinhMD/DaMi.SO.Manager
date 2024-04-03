@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "TrajvttM/+LTlbwdaViWVyHvnN0IHrll2BntZQJ0FjtVCtttbhTYmdc798VBWrluMFYjrXc3qUfpYgiNqACBfg==",
+  "dgSpecHash": "64yN0XnOzk6iXzOpiREDoDnqOkJNJe3U0iIRoxKBh+/j9hhiYz9YGu7/8Z43pAFi+/Si4zQwS09erep5P/pBJw==",
   "success": true,
   "projectFilePath": "D:\\Project\\DaMi.SO.Manager\\DaMi.SO.Manager.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Windows\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\Windows\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
+    "C:\\Users\\Windows\\.nuget\\packages\\blazor.bootstrap\\2.1.0\\blazor.bootstrap.2.1.0.nupkg.sha512",
     "C:\\Users\\Windows\\.nuget\\packages\\fluentvalidation\\11.9.0\\fluentvalidation.11.9.0.nupkg.sha512",
     "C:\\Users\\Windows\\.nuget\\packages\\htmx\\1.7.0\\htmx.1.7.0.nupkg.sha512",
     "C:\\Users\\Windows\\.nuget\\packages\\htmx.taghelpers\\1.7.0\\htmx.taghelpers.1.7.0.nupkg.sha512",

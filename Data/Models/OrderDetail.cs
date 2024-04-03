@@ -54,6 +54,7 @@ public partial class OrderDetail
     [DisplayName("Danh sách Mã số thuế sử dụng")]
     [StringLength(500)]
     [Unicode(false)]
+    [Column("ListTaxCode")]
     public string? TaxCode { get; set; }
 
     [DisplayName("Ngày bắt đầu sử dụng")]

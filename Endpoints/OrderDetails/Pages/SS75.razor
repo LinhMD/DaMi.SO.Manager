@@ -1,0 +1,55 @@
+@using DaMi.SO.Manager.Endpoints.OrderDetails.DTO
+@inherits XComponent<IEnumerable<OrderDetailSimpleView>>
+@inject IStringLocalizer<ShareResource> L
+<div class="col-lg-12">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">@L["Đơn Hàng chi tiết"]</div>
+        </div>
+        <div class="card-body">
+            <div class="overflow-auto">
+                <table class="table table-hover table-bordered table-responsive text-black">
+                    <thead>
+                        <tr>
+                            <th>@L["Mã sản phẩm"]</th>
+                            <th>@L["Tên sản phẩm"]</th>
+                            <th>@L["Đơn vị tính"]</th>
+                            <th>@L["Số lượng"]</th>
+                            <th>@L["Đơn giá"]</th>
+                            <th>@L["Thành tiền"]</th>
+                            <th>@L["% VAT"]</th>
+                            <th>@L["Tiền thuế VAT"]</th>
+                            <th>@L["% Chiết khấu"]</th>
+                            <th>@L["Số tiền CK"]</th>
+                            <th>@L["MST sử dụng"]</th>
+                            <th>@L["Số máy"]</th>
+                            <th>@L["Số hệ thống"]</th>
+                            <th>@L["Số User"]</th>
+                            <th>@L["Ngày sử dụng"]</th>
+                            <th>@L["Số tháng SD"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var detail in Model)
+                        {
+                            <tr>
+                                <form>
+                                    <td>
+                                        <select name="@nameof(detail.ItemId)" id="">
+
+                                        </select>
+                                    </td>
+                                </form>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public bool isEditMode { get; set; } = false;
+
+}

@@ -4,44 +4,93 @@
 @layout _Layout
 @inject IStringLocalizer<ShareResource> L
 
-<div class="row page-titles mx-0">
-    <div class="col-sm-6 p-md-0 justify-content-sm-start mt-2 mt-sm-0 d-flex">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/OrderMaster">@L["Đơn Hàng"]</a></li>
-        </ol>
-    </div>
-    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
-        <a href="/OrderMaster/New" class="btn btn-success btn-bordered btn-round">@L["Lập đơn hàng mới"]</a>
-    </div>
-</div>
-<div class="row">
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-header">
-                <div class="card-title">@L["Đơn Hàng"]</div>
-            </div>
-            <div class="card-body">
-                <div class="overflow-auto">
-                    <Table Models="@Model.OrderMasters" TItem="OrderMasterSimpleView" RowStyleClass="Color">
-                        <NavLabel>
-                            @L["Số đơn Hàng"]
-                        </NavLabel>
-                        <NavKey Context="o">
-                            <a href="/OrderMaster/Details/@o.RowUniqueId">@o.OrderNo</a>
-                        </NavKey>
-                        <ActionLabel></ActionLabel>
-                        <Action Context="o">
-                            <div>
-                                <a href="/OrderMaster/Edit/@o.RowUniqueId"><span class="mdi mdi-pencil-box"></span></a>
-                                <a href="/OrderMaster/Details/@o.RowUniqueId"><span class="mdi mdi-magnify"></span></a>
-                            </div>
-                        </Action>
-                    </Table>
-                </div>
-            </div>
-        </div>
+<div class="card">
+    <div class="card-body">
+        <ul class="nav nav-pills" id="pills-tab" role="tablist">
+            <li class="nav-item mx-2" role="presentation">
+                <button class="nav-link active" id="pills-all-tab" data-bs-toggle="pill" data-bs-target="#pills-all"
+                    type="button" role="tab" aria-controls="pills-all" aria-selected="true">Tất cả đơn hàng</button>
+            </li>
+            <li class="nav-item mx-2" role="presentation">
+                <button class="nav-link" id="pills-wait-for-approve-tab" data-bs-toggle="pill"
+                    data-bs-target="#pills-wait-for-approve" type="button" role="tab"
+                    aria-controls="pills-wait-for-approve" aria-selected="false">Chưa duyệt</button>
+            </li>
+            <li class="nav-item mx-2" role="presentation">
+                <button class="nav-link " id="pills-unfinish-tab" data-bs-toggle="pill" data-bs-target="#pills-unfinish"
+                    type="button" role="tab" aria-controls="pills-unfinish" aria-selected="false">Chưa hoàn
+                    thành</button>
+            </li>
+            <li class="nav-item mx-2" role="presentation">
+                <button class="nav-link " id="pills-finish-tab" data-bs-toggle="pill" data-bs-target="#pills-finish"
+                    type="button" role="tab" aria-controls="pills-finish" aria-selected="false">Đã hoàn thành</button>
+            </li>
+            <li class="nav-item mx-2" role="presentation">
+                <button class="nav-link" id="pills-cancel-tab" data-bs-toggle="pill" data-bs-target="#pills-cancel"
+                    type="button" role="tab" aria-controls="pills-cancel" aria-selected="false">Đơn bị hủy</button>
+            </li>
+        </ul>
     </div>
 </div>
-@code {
-    public Func<OrderMasterSimpleView, string> Color = (o) => o.OrderStatus switch { "" => "", _ => "text-danger" };
-}
+<div class="tab-content" id="pills-tabContent">
+    <div class="tab-pane fade show active" id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab">
+        <TabContent Model="Model.OrderMasters"></TabContent>
+    </div>
+    <div class="tab-pane fade" id="pills-wait-for-approve" role="tabpanel" aria-labelledby="pills-wait-for-approve-tab">
+        <TabContent Model="Model.OrderMasters.Where(o => o.OrderStatus.IsAcceptStatus)"></TabContent>
+    </div>
+    <div class="tab-pane fade" id="pills-unfinish" role="tabpanel" aria-labelledby="pills-unfinish-tab">
+        <TabContent Model='Model.OrderMasters
+            .Where(o => o.OrderStatus.OrderStatusId != "OS99"
+                && o.OrderStatus.IsCancelStatus
+                && o.OrderStatus.IsSuspendStatus)'>
+        </TabContent>
+    </div>
+    <div class="tab-pane fade" id="pills-finish" role="tabpanel" aria-labelledby="pills-finish-tab">
+        <TabContent Model='Model.OrderMasters.Where(o => o.OrderStatus.OrderStatusId == "OS99")'></TabContent>
+    </div>
+    <div class="tab-pane fade" id="pills-cancel" role="tabpanel" aria-labelledby="pills-cancel-tab">
+        <TabContent Model="Model.OrderMasters.Where(o => o.OrderStatus.IsCancelStatus)"></TabContent>
+    </div>
+</div>
+<script>
+    var triggerTabList = [].slice.call(document.querySelectorAll('#pills-tab a'))
+    triggerTabList.forEach(function (triggerEl) {
+        var tabTrigger = new bootstrap.Tab(triggerEl)
+        triggerEl.addEventListener('click', function (event) {
+            event.preventDefault()
+            tabTrigger.show()
+        })
+    })
+</script>
+@* <Tabs EnableFadeEffect="true" NavStyle="NavStyle.Underline">
+<Tab Title="@L["Tất cả đơn hàng"]" IsActive="true">
+<Content>
+<TabContent Model="Model.OrderMasters"></TabContent>
+</Content>
+</Tab>
+<Tab Title="@L["Chưa duyệt"]">
+<Content>
+<TabContent Model="Model.OrderMasters.Where(o => o.OrderStatus.IsAcceptStatus)"></TabContent>
+</Content>
+</Tab>
+<Tab Title="@L["Chưa hoàn thành"]">
+<Content>
+<TabContent Model='Model.OrderMasters
+.Where(o => o.OrderStatus.OrderStatusId != "OS99"
+&& o.OrderStatus.IsCancelStatus
+&& o.OrderStatus.IsSuspendStatus)'>
+</TabContent>
+</Content>
+</Tab>
+<Tab Title="@L["Đã hoàn thành"]">
+<Content>
+<TabContent Model='Model.OrderMasters.Where(o => o.OrderStatus.OrderStatusId == "OS99")'></TabContent>
+</Content>
+</Tab>
+<Tab Title="@L["Đơn bị hủy"]">
+<Content>
+<TabContent Model="Model.OrderMasters.Where(o => o.OrderStatus.IsCancelStatus)"></TabContent>
+</Content>
+</Tab>
+</Tabs> *@
