@@ -67,3 +67,7 @@ td.bg-orange {
 td.bg-gray {
     background-color: gray !important;
 }
+
+table thead th {
+    text-transform: none !important;
+}

@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using CrudApiTemplate.Request;
 using CrudApiTemplate.View;
 using DaMi.SO.Manager.Data.Models;
 using DaMi.SO.Manager.Endpoints.OrderDetails.DTO;
@@ -7,7 +8,7 @@ using Mapster;
 
 namespace DaMi.SO.Manager.Endpoints.OrderMasters.DTO
 {
-    public class OrderMasterDetailView : IView<OrderMaster>
+    public class OrderMasterDetailView : IView<OrderMaster>, IUpdateRequest<OrderMaster>, ICreateRequest<OrderMaster>
     {
         public Guid? RowUniqueId { get; set; }
 
@@ -78,7 +79,7 @@ namespace DaMi.SO.Manager.Endpoints.OrderMasters.DTO
         [DisplayName("Ghi chú")]
         public string? Notes { get; set; }
 
-        public IEnumerable<OrderDetailSimpleView>? OrderDetails { get; set; }
+        public IEnumerable<OrderDetailSimpleView> OrderDetails { get; set; } = [];
 
         public static void InitMapper()
         {

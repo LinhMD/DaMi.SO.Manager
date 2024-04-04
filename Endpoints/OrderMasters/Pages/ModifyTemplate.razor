@@ -1,12 +1,14 @@
 ﻿@using BlazorBootstrap
+@using DaMi.SO.Manager.Endpoints.OrderDetails.Pages
 @inherits XComponent<OrderMasterEditModel>
 @inject IStringLocalizer<ShareResource> L
+
+
 
 <div class="row">
     <div class="col-6">
         <div class="card">
             <h4 class="card-header text-bold">@L["Thông tin đơn hàng"]</h4>
-
             <div class="card-body">
                 <div class="basic-form">
                     <div class="form-group row">
@@ -29,7 +31,10 @@
                                 value="@Model.OrderMaster.OrderTypeId">
                                 @foreach (var orderType in Model.OrderTypes)
                                 {
-                                    <option value="@orderType.OrderTypeId">@orderType.OrderTypeName</option>
+                                    <option value="@orderType.OrderTypeId"
+                                        @(Model.OrderMaster.OrderTypeId==orderType.OrderTypeId? "selected" : "" )>
+                                        @orderType.OrderTypeName
+                                    </option>
                                 }
                             </select>
                         </div>
@@ -59,7 +64,8 @@
                                 {
                                     <option value="@orderStatus.OrderStatusId"
                                         @(orderStatus.OrderStatusId==Model.OrderMaster.OrderStatusId ? "selected" : "" )>
-                                        @orderStatus.OrderStatusName</option>
+                                        @orderStatus.OrderStatusName
+                                    </option>
                                 }
                             </select>
                             <ValidationMessage For=@(() => Model.OrderMaster.OrderStatusId) />
@@ -191,7 +197,7 @@
                             <span class="mdi mdi-reload customer-info htmx-indicator"></span>
                         </label>
                         <div class="col-sm-10">
-                            <InputText id="Phone" disabled class="form-control" name="Phone"
+                            <InputText id="CustomerPhone" class="form-control" name="Phone"
                                 @bind-Value=Model.OrderMaster.Phone />
                         </div>
                         <ValidationMessage For=@(() => Model.OrderMaster.Phone) />
@@ -305,7 +311,16 @@
                     <div class="form-group row">
                         <label for="PublishedInvoice" class="col-form-label col-2"> @L["Có xuất hóa đơn"]</label>
                         <div class="col-10">
-                            <Switch @bind-Value="Model.OrderMaster.HasInvoiceVat" Label="" name="HasInvoiceVat" />
+                            @if (Model.OrderMaster.HasInvoiceVat)
+                            {
+                                <input type="checkbox" id="HasInvoiceVat" value="true" name="HasInvoiceVat"
+                                    class="form-control" checked>
+                            }
+                            else
+                            {
+                                <input type="checkbox" id="HasInvoiceVat" name="HasInvoiceVat" class="form-control"
+                                    value="false">
+                            }
                         </div>
                         <ValidationMessage For=@(() => Model.OrderMaster.HasInvoiceVat) />
                     </div>
@@ -340,7 +355,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-x-12 col-xxl-6">
+    <div class="col-6">
         <div class="card">
             <h4 class="card-header">Điễn giãi</h4>
 
@@ -352,7 +367,7 @@
             </div>
         </div>
     </div>
-    <div class="col-x-12 col-xxl-6">
+    <div class="col-6">
         <div class="card">
             <h4 class="card-header ">Ghi Chú</h4>
 
@@ -365,3 +380,31 @@
         </div>
     </div>
 </div>
+
+<div class="row">
+    <SS75 Model="@Model.OrderDetailModify">
+    </SS75>
+</div>
+@if (Model.ErrorMessage is not null)
+{
+    <div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;" id='error-toast'>
+        <div class="toast" style="position: absolute; top: 0; right: 0;">
+            <div class="toast-header">
+                <img src="..." class="rounded mr-2" alt="...">
+                <strong class="mr-auto">Lỗi Khi Lưu</strong>
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="toast-body">
+                @Model.ErrorMessage
+            </div>
+        </div>
+    </div>
+    <script>
+        window.onload = (event) => {
+            $('#error-toast').toast('show');
+            setTimeout(5000, $('#error-toast').toast('dispose'));
+        }
+    </script>
+}

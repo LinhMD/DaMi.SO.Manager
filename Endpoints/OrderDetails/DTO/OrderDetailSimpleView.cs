@@ -54,11 +54,11 @@ public class OrderDetailSimpleView : IView<OrderDetail>, IDto
 
     [DataType(DataType.Currency)]
     [DisplayName("Đơn giá quy đổi (VND)")]
-    public double ConvertPrice { get; set; }
+    public decimal ConvertPrice { get; set; }
 
     [DataType(DataType.Currency)]
     [DisplayName("Đơn giá nguyên tệ")]
-    public double OriginalPrice { get; set; }
+    public decimal OriginalPrice { get; set; }
 
     [DisplayName("Thuế suất")]
     public decimal TaxRate { get; set; }
@@ -108,6 +108,8 @@ public class OrderDetailSimpleView : IView<OrderDetail>, IDto
     [DisplayName("Mã người chỉnh sửa cuối cùng")]
     public string LastModifiedUserId { get; set; } = null!;
 
+    [DisplayName("Ngày sử dụng")]
+    public DateTime? StartDate { get; set; }
     // public byte[]? RowVersionId { get; set; }
 
     // public virtual WhItemLink Item { get; set; } = null!;

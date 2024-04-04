@@ -1,5 +1,6 @@
 using System.Globalization;
 using BlazorMinimalApis.Lib.Session;
+using CrudApiTemplate.CustomBinding;
 using CrudApiTemplate.Repository;
 using CrudApiTemplate.Services;
 using DaMi.SO.Manager.Data;
@@ -29,6 +30,12 @@ builder.Services.AddAuthentication(o =>
     o.LoginPath = "/Login";
 });
 builder.Services.AddAuthorization();
+builder.Services.AddLogging(c =>
+{
+
+    c.AddDebug();
+    c.AddConsole();
+});
 const string defaultCulture = "vi-VN";
 List<CultureInfo> supportedCultures = [new CultureInfo(defaultCulture)];
 
@@ -52,6 +59,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddControllersWithViews(options => options.ValueProviderFactories.Add(new ClaimValueProviderFactory()));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

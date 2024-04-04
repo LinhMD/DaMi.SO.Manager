@@ -10,13 +10,18 @@ using DaMi.SO.Manager.Endpoints.OrderMasters.Pages;
 using Mapster;
 using CrudApiTemplate.Utilities;
 using Microsoft.AspNetCore.Authorization;
+using DaMi.SO.Manager.Endpoints.OrderDetails;
+using CrudApiTemplate.Services;
+using CrudApiTemplate.CustomException;
+using BlazorMinimalApis.Lib.Validation;
+using BlazorMinimalApis.Lib.Views;
 
 namespace DaMi.SO.Manager.Endpoints.OrderMasters;
 
 [ApiController]
 [Authorize]
 [Route("[controller]")]
-public class OrderMasterController(IUnitOfWork work) : ControllerBase
+public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> service) : ControllerBase
 {
     [HttpGet]
     public async Task<IResult> GetAsync()
@@ -57,61 +62,33 @@ public class OrderMasterController(IUnitOfWork work) : ControllerBase
             ExchangeRate = 1
             //TODO: mặc định current user
         };
-
-        var orderTypes = await work.Get<OrderType>().GetAll().ToListAsync();
-        var orderForms = await work.Get<OrderForm>().GetAll().ToListAsync();
-        var customers = await work.Get<ViwCustomer>().GetAll().ToListAsync();
-        var employees = await work.Get<Employee>().IncludeAll().Include(e => e.Department).ToListAsync();
-        var currencies = await work.Get<Currency>().GetAll().ToListAsync();
-
-        var paymentMethods = await work.Get<PaymentMethod>().GetAll().ToListAsync();
-        var orderStatuses = await work.Get<OrderStatus>().GetAll().ToListAsync();
-        return this.Page<CreatePage, OrderMasterEditModel>(new()
-        {
-            OrderMaster = orderMaster,
-            OrderForms = orderForms,
-            OrderTypes = orderTypes,
-            Customers = customers,
-            Employees = employees,
-            Currencies = currencies,
-            OrderStatuses = orderStatuses,
-            PaymentMethods = paymentMethods
-        });
+        return await ReturnPage<CreatePage>(work, orderMaster);
     }
     [HttpPost("New")]
     public async Task<IResult> PostNew([FromForm] OrderMasterDetailView orderMasterCreate)
     {
         OrderMaster orderMaster = orderMasterCreate.Adapt<OrderMaster>();
+
+        var validateError = default(List<ValidationMember>);
+        string? ErrorMessage = null;
         try
         {
             orderMaster.OrderStatusId = "OS10";
             await work.Get<OrderMaster>().AddAsync(orderMaster);
+            return Results.Redirect($"/OrderMaster/Edit/{orderMaster.RowUniqueId}");
         }
-        catch (Exception e)
+        catch (ModelValueInvalidException e)
         {
-            e.Dump();
-            var orderTypes = await work.Get<OrderType>().GetAll().ToListAsync();
-            var orderForms = await work.Get<OrderForm>().GetAll().ToListAsync();
-            var customers = await work.Get<ViwCustomer>().GetAll().ToListAsync();
-            var employees = await work.Get<Employee>().IncludeAll().Include(e => e.Department).ToListAsync();
-            var currencies = await work.Get<Currency>().GetAll().ToListAsync();
-            var orderStatuses = await work.Get<OrderStatus>().GetAll().ToListAsync();
-
-            var paymentMethods = await work.Get<PaymentMethod>().GetAll().ToListAsync();
-            return this.Page<CreatePage, OrderMasterEditModel>(new()
-            {
-                OrderMaster = orderMasterCreate,
-                OrderForms = orderForms,
-                OrderTypes = orderTypes,
-                Customers = customers,
-                Employees = employees,
-                Currencies = currencies,
-                OrderStatuses = orderStatuses,
-                PaymentMethods = paymentMethods
-            });
+            validateError = e.MemberErrors;
         }
-        return Results.Redirect($"/OrderMaster/Edit/{orderMaster.RowUniqueId}");
+        catch (DbUpdateException ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+
+        return await ReturnPage<CreatePage>(work, orderMasterCreate, validateError, ErrorMessage);
     }
+
     [HttpGet("Edit/{guid}")]
     public async Task<IResult> GetEditAsync(Guid guid)
     {
@@ -120,6 +97,33 @@ public class OrderMasterController(IUnitOfWork work) : ControllerBase
         if (orderMaster is null)
             return new RazorComponentResult(typeof(_404));
 
+        return await ReturnPage<EditPage>(work, orderMaster);
+    }
+
+    [HttpPost("Edit/{guid}")]
+    public async Task<IResult> EditAsync(Guid guid, [FromForm] OrderMasterDetailView orderMaster)
+    {
+        var validateError = default(List<ValidationMember>);
+        string? ErrorMessage = null;
+        try
+        {
+            await service.UpdateAsync(orderMaster);
+            return await Task.FromResult(Results.Redirect($"/OrderMaster/Detail/{guid}"));
+        }
+        catch (ModelValueInvalidException e)
+        {
+            validateError = e.MemberErrors;
+        }
+        catch (DbUpdateException ex)
+        {
+            ErrorMessage = ex.Message;
+        }
+
+        return await ReturnPage<EditPage>(work, orderMaster, validateError, ErrorMessage);
+    }
+
+    private async Task<IResult> ReturnPage<TPage>(IUnitOfWork work, OrderMasterDetailView orderMaster, List<ValidationMember>? validateError = null, string? ErrorMessage = null) where TPage : XComponent<OrderMasterEditModel>
+    {
         var orderTypes = await work.Get<OrderType>().GetAll().ToListAsync();
         var orderForms = await work.Get<OrderForm>().GetAll().ToListAsync();
         var customers = await work.Get<ViwCustomer>().GetAll().ToListAsync();
@@ -131,7 +135,7 @@ public class OrderMasterController(IUnitOfWork work) : ControllerBase
         orderMaster.Phone = customer?.Phone ?? string.Empty;
 
         var orderStatuses = await work.Get<OrderStatus>().GetAll().ToListAsync();
-        return this.Page<EditPage, OrderMasterEditModel>(new()
+        return this.Page<TPage, OrderMasterEditModel>(new OrderMasterEditModel()
         {
             OrderMaster = orderMaster,
             OrderForms = orderForms,
@@ -140,14 +144,21 @@ public class OrderMasterController(IUnitOfWork work) : ControllerBase
             Employees = employees,
             Currencies = currencies,
             OrderStatuses = orderStatuses,
-            PaymentMethods = paymentMethods
-        });
-    }
+            PaymentMethods = paymentMethods,
+            OrderDetailModify = new OrderDetailModifyModel()
+            {
+                OrderDetails = orderMaster.OrderDetails,
+                Items = await work.Get<ViwItem>().GetAll().ToDictionaryAsync(i => i.ItemId),
+                ItemTypes = await work.Get<ViwItemType>().GetAll().ToListAsync(),
+                TaxCodes = await work.Get<TaxCode>().GetAll().ToListAsync()
+            },
+            ErrorMessage = ErrorMessage
 
-    [HttpPost("Edit/{guid}")]
-    public async Task<IResult> EditAsync(Guid guid, [FromForm] OrderMasterDetailView orderMaster)
-    {
-        return await Task.FromResult(Results.Redirect($"/OrderMaster/Detail/{guid}"));
+        }, validation: new ValidationResponse()
+        {
+            Errors = validateError?.Select(f => f.Adapt<ValidationError>()).ToList() ?? [],
+            HasErrors = validateError is not null
+        });
     }
 }
 
@@ -158,15 +169,18 @@ public class OrderMasterDetailModel
 
 public class OrderMasterEditModel
 {
+    public OrderDetailModifyModel OrderDetailModify { get; set; } = null!;
     public OrderMasterDetailView OrderMaster { get; set; } = null!;
 
-    public IEnumerable<OrderType> OrderTypes { get; set; } = null!;
-    public IEnumerable<OrderForm> OrderForms { get; set; } = null!;
-    public IEnumerable<ViwCustomer> Customers { get; set; } = null!;
-    public IEnumerable<Employee> Employees { get; set; } = null!;
-    public IEnumerable<Currency> Currencies { get; set; } = null!;
-    public IEnumerable<OrderStatus> OrderStatuses { get; set; } = null!;
-    public IEnumerable<PaymentMethod> PaymentMethods { get; set; } = null!;
+    public IEnumerable<OrderType> OrderTypes { get; set; } = [];
+    public IEnumerable<OrderForm> OrderForms { get; set; } = [];
+    public IEnumerable<ViwCustomer> Customers { get; set; } = [];
+    public IEnumerable<Employee> Employees { get; set; } = [];
+    public IEnumerable<Currency> Currencies { get; set; } = [];
+    public IEnumerable<OrderStatus> OrderStatuses { get; set; } = [];
+    public IEnumerable<PaymentMethod> PaymentMethods { get; set; } = [];
+
+    public string? ErrorMessage { get; set; }
 }
 
 

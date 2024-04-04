@@ -1,5 +1,6 @@
 @using DaMi.SO.Manager.Endpoints.OrderDetails.DTO
-@inherits XComponent<IEnumerable<OrderDetailSimpleView>>
+@using System.Globalization
+@inherits XComponent<OrderDetailModifyModel>
 @inject IStringLocalizer<ShareResource> L
 <div class="col-lg-12">
     <div class="card">
@@ -10,7 +11,7 @@
             <div class="overflow-auto">
                 <table class="table table-hover table-bordered table-responsive text-black">
                     <thead>
-                        <tr>
+                        <tr class="text-black">
                             <th>@L["Mã sản phẩm"]</th>
                             <th>@L["Tên sản phẩm"]</th>
                             <th>@L["Đơn vị tính"]</th>
@@ -30,14 +31,116 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var detail in Model)
+                        @foreach (var detail in Model.OrderDetails)
                         {
-                            <tr>
-                                <form>
+                            <tr class="basic-form">
+                                <form action="">
                                     <td>
-                                        <select name="@nameof(detail.ItemId)" id="">
-
+                                        <select name="@nameof(detail.ItemId)" class="form-control selectpicker"
+                                            id="@nameof(detail.ItemId)_@(detail.RowUniqueId)" value="@detail.ItemId">
+                                            @foreach (var item in Model.Items.Keys)
+                                            {
+                                                <option value="@item">
+                                                    @Model.Items[item].ItemId
+                                                </option>
+                                            }
                                         </select>
+                                    </td>
+                                    <td>
+                                        <input type="text" value="@Model.Items[detail.ItemId].ItemName" class="form-control"
+                                            name="ItemName" id="ItemName_@(detail.RowUniqueId)" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="@Model.Items[detail.ItemId].InvUnitOfMeasr"
+                                            class="form-control" disabled name="Unit" id="Unit_@(detail.RowUniqueId)" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="@detail.Quantity" class="form-control"
+                                            name="@nameof(detail.Quantity)"
+                                            id="@nameof(detail.Quantity)_@(detail.RowUniqueId)" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="@Convert.ToInt64(Model.Items[detail.ItemId].ConvertPrice)"
+                                            class="form-control currency"  name="ConvertPrice"
+                                            id="ConvertPrice_@(detail.RowUniqueId)" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control currency" value="@(Convert.ToInt64(detail.ConvertAmount))"
+                                            name="@nameof(detail.ConvertAmount)"
+                                            id="@nameof(detail.ConvertAmount)_@(detail.RowUniqueId)" 
+                                            />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="@(Convert.ToInt32(@Model.Items[detail.ItemId].TaxRate))" class="form-control"
+                                            disabled name="@nameof(detail.TaxRate)"
+                                            id="@nameof(detail.TaxRate)_@(detail.RowUniqueId)" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control currency" value="@(Convert.ToInt64(detail.ConvertTaxAmount))"
+                                            name="@nameof(detail.ConvertTaxAmount)"
+                                            id="@nameof(detail.ConvertTaxAmount)_@(detail.RowUniqueId)" 
+                                            
+                                            />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control currency" value="@(Convert.ToInt64(detail.DiscountPercent))"
+                                            name="@nameof(detail.DiscountPercent)"
+                                            id="@nameof(detail.DiscountPercent)_@(detail.RowUniqueId)" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control currency" value="@(Convert.ToInt64(detail.ConvertDiscAmount))"
+                                            name="@nameof(detail.ConvertDiscAmount)"
+                                            id="@nameof(detail.ConvertDiscAmount)_@(detail.RowUniqueId)" />
+                                    </td>
+                                    <td>
+                                        <input type="hidden" id="@nameof(detail.NumOfTaxCode)_@(detail.RowUniqueId)" name="@nameof(detail.NumOfTaxCode)"
+                                            value="@detail.NumOfTaxCode" />
+                                        <select name="@nameof(detail.NumOfTaxCode)_select" class="form-control selectpicker" 
+                                            id="@nameof(detail.NumOfTaxCode)_@(detail.RowUniqueId)_select"
+                                            value="@detail.NumOfTaxCode">
+                                            @foreach (var item in Model.TaxCodes)
+                                            {
+                                                <option value="@item.TaxCodeId">
+                                                    @item.TaxCodeId
+                                                </option>
+                                            }
+                                        </select>
+                                        <script>
+                                            var select = new SlimSelect({
+                                                select: '#@nameof(detail.NumOfTaxCode)_@(detail.RowUniqueId)',
+                                                events: {
+                                                    afterChange: (newVal) => {
+                                                        console.log(newVal);
+                                                        $("#@nameof(detail.NumOfTaxCode)_@(detail.RowUniqueId)").val(newVal.map(f => f.value).join(","));
+                                                    }
+                                                }
+                                            });
+                                        </script>
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control" value="@(detail.NumOfPc)"
+                                            name="@nameof(detail.NumOfPc)"
+                                            id="@nameof(detail.NumOfPc)_@(detail.RowUniqueId)" />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control " value="@(detail.NumOfData)"
+                                            name="@nameof(detail.NumOfData)"
+                                            id="@nameof(detail.NumOfData)_@(detail.RowUniqueId)" />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control " value="@(detail.NumOfUser)"
+                                            name="@nameof(detail.NumOfUser)"
+                                            id="@nameof(detail.NumOfUser)_@(detail.RowUniqueId)" />
+                                    </td>
+                                    <td>
+                                        <input data-provide="datepicker" type="date" name="@nameof(detail.StartDate)"
+                                            id="@nameof(detail.StartDate)_@(detail.RowUniqueId)"
+                                            value="@(detail.StartDate is not null ? detail.StartDate.Value.ToString("yyyy-MM-dd") : "")" class="form-control">
+                                    </td>
+                                    <td>
+                                        <input   type="number" name="@nameof(detail.NumOfMonth)"
+                                            id="@nameof(detail.NumOfMonth)_@(detail.RowUniqueId)"
+                                            value="@(detail.NumOfMonth)" class="form-control">
                                     </td>
                                 </form>
                             </tr>
@@ -51,5 +154,4 @@
 
 @code {
     [Parameter] public bool isEditMode { get; set; } = false;
-
 }
