@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using CrudApiTemplate.Attributes.Update;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 
 namespace DaMi.SO.Manager.Data.Models;
@@ -13,7 +15,7 @@ public partial class OrderMaster
 {
     [Key]
     [Column("RowUniqueID")]
-    public Guid RowUniqueId { get; set; }
+    public Guid RowUniqueId { get; set; } = Guid.NewGuid();
 
     [DisplayName("Số đơn đặt hàng")]
     [StringLength(20)]
@@ -243,6 +245,9 @@ public partial class OrderMaster
     [InverseProperty("OrderMasterSalesMen")]
     public virtual Employee? SalesMan { get; set; }
 
+    [AdaptIgnore]
     [InverseProperty("Order")]
-    public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
+
+    [UpdateIgnore]
+    public virtual IEnumerable<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 }

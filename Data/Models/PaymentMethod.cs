@@ -31,5 +31,5 @@ public partial class PaymentMethod
     public bool IsDebit { get; set; }
 
     [InverseProperty("PaymentMethod")]
-    public virtual ICollection<OrderMaster> OrderMasters { get; set; } = new List<OrderMaster>();
+    public virtual IEnumerable<OrderMaster> OrderMasters { get; set; } = new List<OrderMaster>();
 }

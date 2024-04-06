@@ -42,5 +42,5 @@ public partial class Computer
     public string CustomerId { get; set; } = null!;
 
     [InverseProperty("Computer")]
-    public virtual ICollection<ComputerItemMap> ComputerItemMaps { get; set; } = new List<ComputerItemMap>();
+    public virtual IEnumerable<ComputerItemMap> ComputerItemMaps { get; set; } = new List<ComputerItemMap>();
 }

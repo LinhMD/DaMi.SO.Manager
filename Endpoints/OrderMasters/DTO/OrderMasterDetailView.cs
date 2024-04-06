@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using CrudApiTemplate.Attributes.Update;
 using CrudApiTemplate.Request;
 using CrudApiTemplate.View;
 using DaMi.SO.Manager.Data.Models;
@@ -79,6 +80,7 @@ namespace DaMi.SO.Manager.Endpoints.OrderMasters.DTO
         [DisplayName("Ghi chú")]
         public string? Notes { get; set; }
 
+        [UpdateIgnore]
         public IEnumerable<OrderDetailSimpleView> OrderDetails { get; set; } = [];
 
         public static void InitMapper()

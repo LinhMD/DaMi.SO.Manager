@@ -34,5 +34,5 @@ public partial class OrderStatus
     public bool CanChangeStatus { get; set; }
 
     [InverseProperty("OrderStatus")]
-    public virtual ICollection<OrderMaster> OrderMasters { get; set; } = new List<OrderMaster>();
+    public virtual IEnumerable<OrderMaster> OrderMasters { get; set; } = new List<OrderMaster>();
 }

@@ -152,8 +152,8 @@ public partial class OrderDetail
     public virtual OrderMaster Order { get; set; } = null!;
 
     [InverseProperty("OrderDetail")]
-    public virtual ICollection<ComputerItemMap> ComputerItemMaps { get; set; } = new List<ComputerItemMap>();
+    public virtual IEnumerable<ComputerItemMap> ComputerItemMaps { get; set; } = new List<ComputerItemMap>();
 
     [InverseProperty("OrderDetail")]
-    public virtual ICollection<CustomerUser> CustomerUsers { get; set; } = new List<CustomerUser>();
+    public virtual IEnumerable<CustomerUser> CustomerUsers { get; set; } = new List<CustomerUser>();
 }

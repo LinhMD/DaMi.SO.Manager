@@ -47,5 +47,5 @@ public partial class OrderForm
     public int SortOrder { get; set; }
 
     [InverseProperty("OrderForm")]
-    public virtual ICollection<OrderMaster> OrderMasters { get; set; } = new List<OrderMaster>();
+    public virtual IEnumerable<OrderMaster> OrderMasters { get; set; } = new List<OrderMaster>();
 }

@@ -101,8 +101,8 @@ public partial class Employee
     public virtual Department Department { get; set; } = null!;
 
     [InverseProperty("Executor")]
-    public virtual ICollection<OrderMaster> OrderMasterExecutors { get; set; } = new List<OrderMaster>();
+    public virtual IEnumerable<OrderMaster> OrderMasterExecutors { get; set; } = new List<OrderMaster>();
 
     [InverseProperty("SalesMan")]
-    public virtual ICollection<OrderMaster> OrderMasterSalesMen { get; set; } = new List<OrderMaster>();
+    public virtual IEnumerable<OrderMaster> OrderMasterSalesMen { get; set; } = new List<OrderMaster>();
 }

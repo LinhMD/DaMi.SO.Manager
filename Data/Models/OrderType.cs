@@ -22,5 +22,5 @@ public partial class OrderType
     public string OrderTypeName { get; set; } = null!;
 
     [InverseProperty("OrderType")]
-    public virtual ICollection<OrderMaster> OrderMasters { get; set; } = new List<OrderMaster>();
+    public virtual IEnumerable<OrderMaster> OrderMasters { get; set; } = new List<OrderMaster>();
 }

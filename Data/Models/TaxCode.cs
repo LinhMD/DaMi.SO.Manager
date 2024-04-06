@@ -32,5 +32,5 @@ public partial class TaxCode
     public string CustomerId { get; set; } = null!;
 
     [InverseProperty("TaxCodeNavigation")]
-    public virtual ICollection<ComputerItemMap> ComputerItemMaps { get; set; } = new List<ComputerItemMap>();
+    public virtual IEnumerable<ComputerItemMap> ComputerItemMaps { get; set; } = new List<ComputerItemMap>();
 }

@@ -16,13 +16,15 @@ using CrudApiTemplate.CustomException;
 using BlazorMinimalApis.Lib.Validation;
 using BlazorMinimalApis.Lib.Views;
 using DaMi.SO.Manager.Components;
+using DaMi.SO.Manager.Data;
+using Microsoft.Data.SqlClient;
 
 namespace DaMi.SO.Manager.Endpoints.OrderMasters;
 
 [ApiController]
 [Authorize]
 [Route("[controller]")]
-public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> service) : ControllerBase
+public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> service, DaMiSoManagerContext context) : ControllerBase
 {
     [HttpGet]
     public async Task<IResult> GetAsync()
@@ -69,25 +71,57 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
     public async Task<IResult> PostNew([FromForm] OrderMasterDetailView orderMasterCreate)
     {
         OrderMaster orderMaster = orderMasterCreate.Adapt<OrderMaster>();
-
-        var validateError = default(Dictionary<string, string>);
-        string? ErrorMessage = null;
         try
         {
+            var SubCompanyID = new SqlParameter
+            {
+                ParameterName = "SubCompanyID",
+                SqlDbType = System.Data.SqlDbType.VarChar,
+                Size = 20,
+                Value = "MAIN",
+            };
+            var OrderDate = new SqlParameter
+            {
+                ParameterName = "OrderDate",
+                SqlDbType = System.Data.SqlDbType.Date,
+                Value = orderMaster.OrderDate,
+            };
+            var OrderNo = new SqlParameter
+            {
+                ParameterName = "@OrderNo",
+                SqlDbType = System.Data.SqlDbType.VarChar,
+                Direction = System.Data.ParameterDirection.Output,
+                Size = 20
+            };
+            var SeqInMonth = new SqlParameter
+            {
+                ParameterName = "@SeqInMonth",
+                SqlDbType = System.Data.SqlDbType.BigInt,
+                Direction = System.Data.ParameterDirection.Output
+            };
+            context.Database.ExecuteSqlRaw("EXECUTE [dbo].[spGetNewOrderNo] @SubCompanyID, @OrderDate, @OrderNo OUTPUT, @SeqInMonth OUTPUT",
+                SubCompanyID,
+                OrderDate,
+                OrderNo,
+                SeqInMonth
+            );
+
             orderMaster.OrderStatusId = "OS10";
+            orderMaster.OrderNo = (string)OrderNo.Value;
+            orderMaster.SeqInMonth = (long)SeqInMonth.Value;
+
             await work.Get<OrderMaster>().AddAsync(orderMaster);
             return Results.Redirect($"/OrderMaster/Edit/{orderMaster.RowUniqueId}");
         }
         catch (ModelValueInvalidException e)
         {
-            validateError = e.MemberErrors;
+            return await ReturnPage<CreatePage>(work, orderMasterCreate, ViewMode.Create, e.MemberErrors);
         }
-        catch (DbUpdateException ex)
+        catch (Exception e)
         {
-            ErrorMessage = ex.Message;
+            e.Dump();
+            return await ReturnPage<CreatePage>(work, orderMasterCreate, ViewMode.Create, null, e.Message);
         }
-
-        return await ReturnPage<CreatePage>(work, orderMasterCreate, ViewMode.Create, validateError, ErrorMessage);
     }
 
     [HttpGet("Edit/{guid}")]
@@ -104,23 +138,22 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
     [HttpPost("Edit/{guid}")]
     public async Task<IResult> EditAsync(Guid guid, [FromForm] OrderMasterDetailView orderMaster)
     {
-        var validateError = default(Dictionary<string, string>);
-        string? ErrorMessage = null;
         try
         {
-            await service.UpdateAsync(orderMaster);
-            return await Task.FromResult(Results.Redirect($"/OrderMaster/Detail/{guid}"));
+            await service.UpdateAsync(orderMaster, guid);
+            return await Task.FromResult(Results.Redirect($"/OrderMaster/Details/{guid}"));
         }
         catch (ModelValueInvalidException e)
         {
-            validateError = e.MemberErrors;
+            return await ReturnPage<EditPage>(work, orderMaster, ViewMode.Edit, e.MemberErrors);
         }
-        catch (DbUpdateException ex)
+        catch (Exception e)
         {
-            ErrorMessage = ex.Message;
+            e.Dump();
+
+            return await ReturnPage<EditPage>(work, orderMaster, ViewMode.Edit, null, e.Message);
         }
 
-        return await ReturnPage<EditPage>(work, orderMaster, ViewMode.Edit, validateError, ErrorMessage);
     }
 
     private async Task<IResult> ReturnPage<TPage>(IUnitOfWork work, OrderMasterDetailView orderMaster, ViewMode viewMode = ViewMode.Detail, Dictionary<string, string>? validateError = null, string? ErrorMessage = null) where TPage : XComponent<OrderMasterEditModel>

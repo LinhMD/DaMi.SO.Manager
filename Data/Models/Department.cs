@@ -76,5 +76,5 @@ public partial class Department
     public virtual Permision Permision { get; set; } = null!;
 
     [InverseProperty("Department")]
-    public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
+    public virtual IEnumerable<Employee> Employees { get; set; } = new List<Employee>();
 }

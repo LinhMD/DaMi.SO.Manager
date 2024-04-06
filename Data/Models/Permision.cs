@@ -83,5 +83,5 @@ public partial class Permision
     public string LastModifiedUserId { get; set; } = null!;
 
     [InverseProperty("Permision")]
-    public virtual ICollection<Department> Departments { get; set; } = new List<Department>();
+    public virtual IEnumerable<Department> Departments { get; set; } = new List<Department>();
 }

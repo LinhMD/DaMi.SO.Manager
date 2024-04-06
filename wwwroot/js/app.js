@@ -38,3 +38,9 @@ document.body.addEventListener('htmx:responseError', function (evt) {
         toastr.error(JSON.parse(evt.detail.xhr.response).message)
     }
 });
+function ModifyInput() {
+    Array.from(document.getElementsByClassName('currency')).forEach(e => {
+        e.value = e.value.toString().replace(/,/g, '')
+    })
+    return true;
+}

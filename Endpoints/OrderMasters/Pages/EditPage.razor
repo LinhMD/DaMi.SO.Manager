@@ -28,10 +28,10 @@
     </div>
 </div>
 
-<EditForm Model="@Model" id="Edit-form" method="post">
+<form id="Edit-form" method="post" onsubmit="ModifyInput()">
     <ModifyTemplate Model="@Model">
     </ModifyTemplate>
-</EditForm>
+</form>
 <div class="row">
     <SS75 Model="@Model.OrderDetailModify" ViewMode='@Components.ViewMode.Detail'
         OrderID="@Model.OrderMaster.RowUniqueId">

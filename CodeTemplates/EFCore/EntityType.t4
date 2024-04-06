@@ -123,7 +123,7 @@ public partial class <#= EntityType.Name.Replace("Tbl", "").Replace("List", "") 
         if (navigation.IsCollection)
         {
 #>
-    public virtual ICollection<<#= targetType #>> <#= navigation.Name.Replace("Tbl", "").Replace("List", "") #> { get; set; } = new List<<#= targetType #>>();
+    public virtual IEnumerable<<#= targetType #>> <#= navigation.Name.Replace("Tbl", "").Replace("List", "") #> { get; set; } = new List<<#= targetType #>>();
 <#
         }
         else
@@ -150,7 +150,7 @@ public partial class <#= EntityType.Name.Replace("Tbl", "").Replace("List", "") 
             }
         }
 #>
-    public virtual ICollection<<#= skipNavigation.TargetEntityType.Name.Replace("Tbl", "").Replace("List", "") #>> <#= skipNavigation.Name.Replace("Tbl", "").Replace("List", "") #> { get; set; } = new List<<#= skipNavigation.TargetEntityType.Name.Replace("Tbl", "").Replace("List", "") #>>();
+    public virtual IEnumerable<<#= skipNavigation.TargetEntityType.Name.Replace("Tbl", "").Replace("List", "") #>> <#= skipNavigation.Name.Replace("Tbl", "").Replace("List", "") #> { get; set; } = new List<<#= skipNavigation.TargetEntityType.Name.Replace("Tbl", "").Replace("List", "") #>>();
 <#
     }
 #>
