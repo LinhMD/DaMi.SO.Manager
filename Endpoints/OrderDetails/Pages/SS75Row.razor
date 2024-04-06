@@ -38,6 +38,7 @@
                     </option>
                 }
             </select>
+            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.ItemId)" />
         }
     </td>
     <td>
@@ -78,6 +79,7 @@
             <input type="text" disabled="@(ViewMode == ViewMode.Detail)" value="@detail?.Quantity" class="form-control"
                 form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")" name="@nameof(detail.Quantity)"
                 id="@nameof(detail.Quantity)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")" />
+            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.Quantity)" />
         }
 
     </td>
@@ -93,6 +95,7 @@
                 value="@Convert.ToInt64((detail is not null && detail.ItemId is not null && Model.Items.Keys.Contains(detail.ItemId) ?  Model.Items[detail.ItemId].ConvertPrice : 0))"
                 class="form-control currency" name="ConvertPrice"
                 id="@nameof(detail.ConvertPrice)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")" />
+            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.ConvertPrice)" />
         }
 
     </td>
@@ -107,6 +110,7 @@
                 form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
                 value="@(Convert.ToInt64(detail?.ConvertAmount))" name="@nameof(detail.ConvertAmount)"
                 id="@nameof(detail.ConvertAmount)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")" />
+            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.ConvertAmount)" />
         }
     </td>
     <td>
@@ -120,6 +124,7 @@
                 value="@(Convert.ToInt32((detail is not null && detail.ItemId is not null && Model.Items.Keys.Contains(detail.ItemId) ?  Model.Items[detail.ItemId].TaxRate : 0)))"
                 class="form-control" name="@nameof(detail.TaxRate)"
                 id="@nameof(detail.TaxRate)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")" />
+            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.TaxRate)" />
         }
 
     </td>
@@ -134,6 +139,7 @@
                 form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
                 value="@(Convert.ToInt64(detail?.ConvertTaxAmount))" name="@nameof(detail.ConvertTaxAmount)"
                 id="@nameof(detail.ConvertTaxAmount)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")" />
+            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.ConvertTaxAmount)" />
         }
 
     </td>
@@ -148,6 +154,7 @@
                 form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
                 value="@(Convert.ToInt64(detail?.DiscountPercent))" name="@nameof(detail.DiscountPercent)"
                 id="@nameof(detail.DiscountPercent)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")" />
+            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.DiscountPercent)" />
         }
     </td>
     <td class="currency">
@@ -161,6 +168,7 @@
                 form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
                 value="@(Convert.ToInt64(detail?.ConvertDiscAmount))" name="@nameof(detail.ConvertDiscAmount)"
                 id="@nameof(detail.ConvertDiscAmount)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")" />
+            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.ConvertDiscAmount)" />
         }
     </td>
     <td>
@@ -185,6 +193,7 @@
                     </option>
                 }
             </select>
+            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.NumOfTaxCode)" />
             <script>
                 var select = new SlimSelect({
                     select: '#@nameof(detail.NumOfTaxCode)_@(detail is not null ? detail.RowUniqueId.ToString() : "editing")',
@@ -209,6 +218,7 @@
             <input type="number" disabled="@(ViewMode == ViewMode.Detail)" class="form-control" value="@(detail?.NumOfPc)"
                 name="@nameof(detail.NumOfPc)" form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
                 id="@nameof(detail.NumOfPc)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")" />
+            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.NumOfPc)" />
         }
     </td>
     <td>
@@ -222,6 +232,7 @@
                 form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")" value="@(detail?.NumOfData)"
                 name="@nameof(detail.NumOfData)"
                 id="@nameof(detail.NumOfData)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")" />
+            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.NumOfData)" />
         }
     </td>
     <td>
@@ -235,6 +246,7 @@
                 value="@(detail?.NumOfUser)" name="@nameof(detail.NumOfUser)"
                 form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
                 id="@nameof(detail.NumOfUser)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")" />
+            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.NumOfUser)" />
         }
     </td>
     <td>
@@ -250,6 +262,7 @@
                 id="@nameof(detail.StartDate)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")"
                 value="@(detail?.StartDate is not null ? detail.StartDate.Value.ToString("yyyy-MM-dd") : "")"
                 class="form-control">
+            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.StartDate)" />
         }
 
     </td>
@@ -264,6 +277,7 @@
                 form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
                 id="@nameof(detail.NumOfMonth)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")"
                 value="@(detail?.NumOfMonth)" class="form-control">
+            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.NumOfMonth)" />
         }
     </td>
     @if (ViewMode == ViewMode.Detail)

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CrudApiTemplate.CustomException;
 using CrudApiTemplate.Repository;
 using CrudApiTemplate.Services;
 using CrudApiTemplate.Utilities;
@@ -21,80 +22,55 @@ namespace DaMi.SO.Manager.Endpoints.OrderDetails;
 [Route("[controller]")]
 public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> service) : ControllerBase
 {
+
+    [HttpGet("Detail/{guid}")]
+    public async Task<IResult> GetDetailsAsync(Guid guid)
+    {
+        return await ReturnPage(work, work.Get<OrderDetail>().Get<OrderDetailSimpleView>(guid), null, ViewMode.Detail);
+    }
+
     [HttpGet("Create/{OrderId}")]
     public async Task<IResult> GetNewRow(Guid OrderId)
     {
-        return new RazorComponentResult(typeof(SS75Row), new
-        {
-            Model = new OrderDetailModifyModel
-            {
-                OrderDetails = [],
-                Items = await work.Get<ViwItem>().GetAll().ToDictionaryAsync(i => i.ItemId),
-                ItemTypes = await work.Get<ViwItemType>().GetAll().ToListAsync(),
-                TaxCodes = await work.Get<TaxCode>().GetAll().ToListAsync()
-            },
-            ViewMode = ViewMode.Create,
-            detail = new OrderDetailSimpleView()
-            {
-                OrderId = OrderId
-            }
-        });
+        return await ReturnPage(work, new OrderDetailSimpleView() { OrderId = OrderId }, null, ViewMode.Create);
     }
 
     [HttpPost("Create")]
     public async Task<IResult> PostNew([FromForm] OrderDetailSimpleView orderDetailNew)
     {
-        OrderDetail orderDetail = orderDetailNew.Adapt<OrderDetail>();
-        orderDetail.Dump();
-        await work.Get<OrderDetail>().AddAsync(orderDetail);
-        return new RazorComponentResult(typeof(SS75Row), new
+        try
         {
-            Model = new OrderDetailModifyModel
-            {
-                OrderDetails = [],
-                Items = await work.Get<ViwItem>().GetAll().ToDictionaryAsync(i => i.ItemId),
-                ItemTypes = await work.Get<ViwItemType>().GetAll().ToListAsync(),
-                TaxCodes = await work.Get<TaxCode>().GetAll().ToListAsync()
-            },
-            ViewMode = ViewMode.Detail,
-            detail = orderDetail.Adapt<OrderDetailSimpleView>()
-        });
-    }
-    [HttpPost("Edit/{guid}")]
-    public async Task<IResult> PostEdit([FromForm] OrderDetailSimpleView orderDetailNew, Guid guid)
-    {
-        await service.UpdateAsync(orderDetailNew, guid);
-        return new RazorComponentResult(typeof(SS75Row), new
+            OrderDetail orderDetail = orderDetailNew.Adapt<OrderDetail>();
+            orderDetail.Dump();
+            await work.Get<OrderDetail>().AddAsync(orderDetail);
+            return await ReturnPage(work, work.Get<OrderDetail>().Get<OrderDetailSimpleView>(orderDetail.RowUniqueId), viewMode: ViewMode.Detail);
+        }
+        catch (ModelValueInvalidException e)
         {
-            Model = new OrderDetailModifyModel
-            {
-                OrderDetails = [],
-                Items = await work.Get<ViwItem>().GetAll().ToDictionaryAsync(i => i.ItemId),
-                ItemTypes = await work.Get<ViwItemType>().GetAll().ToListAsync(),
-                TaxCodes = await work.Get<TaxCode>().GetAll().ToListAsync()
-            },
-            ViewMode = ViewMode.Detail,
-            detail = work.Get<OrderDetail>().Get<OrderDetailSimpleView>(guid)
-        });
+            return await ReturnPage(work, null, e.MemberErrors, ViewMode.Create);
+        }
     }
     [HttpGet("Edit/{guid}")]
     public async Task<IResult> GetEdit(Guid guid)
     {
-        return new RazorComponentResult(typeof(SS75Row), new
-        {
-            Model = new OrderDetailModifyModel
-            {
-                OrderDetails = [],
-                Items = await work.Get<ViwItem>().GetAll().ToDictionaryAsync(i => i.ItemId),
-                ItemTypes = await work.Get<ViwItemType>().GetAll().ToListAsync(),
-                TaxCodes = await work.Get<TaxCode>().GetAll().ToListAsync()
-            },
-            ViewMode = ViewMode.Edit,
-            detail = work.Get<OrderDetail>().Get<OrderDetailSimpleView>(guid)
-        });
+        return await ReturnPage(work, work.Get<OrderDetail>().Get<OrderDetailSimpleView>(guid), null, ViewMode.Edit);
     }
-    [HttpGet("Detail/{guid}")]
-    public async Task<IResult> GetDetailsAsync(Guid guid)
+
+    [HttpPost("Edit/{guid}")]
+    public async Task<IResult> PostEdit([FromForm] OrderDetailSimpleView orderDetailNew, Guid guid)
+    {
+        try
+        {
+            await service.UpdateAsync(orderDetailNew, guid);
+            return await ReturnPage(work, work.Get<OrderDetail>().Get<OrderDetailSimpleView>(guid), viewMode: ViewMode.Detail);
+        }
+        catch (ModelValueInvalidException e)
+        {
+            return await ReturnPage(work, work.Get<OrderDetail>().Get<OrderDetailSimpleView>(guid), e.MemberErrors, ViewMode.Edit);
+        }
+    }
+
+    private static async Task<IResult> ReturnPage(IUnitOfWork work, OrderDetailSimpleView? orderDetail, Dictionary<string, string>? e = null, ViewMode viewMode = ViewMode.Detail)
     {
         return new RazorComponentResult(typeof(SS75Row), new
         {
@@ -105,8 +81,9 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
                 ItemTypes = await work.Get<ViwItemType>().GetAll().ToListAsync(),
                 TaxCodes = await work.Get<TaxCode>().GetAll().ToListAsync()
             },
-            ViewMode = ViewMode.Detail,
-            detail = work.Get<OrderDetail>().Get<OrderDetailSimpleView>(guid)
+            ViewMode = viewMode,
+            detail = orderDetail,
+            Errors = e
         });
     }
 }
@@ -115,7 +92,7 @@ public class OrderDetailModifyModel
     public IEnumerable<OrderDetailSimpleView> OrderDetails { get; set; } = [];
 
     public Dictionary<string, ViwItem> Items { get; set; } = [];
-
+    public Dictionary<string, string>? Errors { get; set; }
     public IEnumerable<ViwItemType> ItemTypes { get; set; } = [];
 
     public IEnumerable<TaxCode> TaxCodes { get; set; } = [];

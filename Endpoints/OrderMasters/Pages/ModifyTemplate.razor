@@ -20,7 +20,7 @@
                                 }
                             </select>
                         </div>
-                        <ValidationMessage For=@(() => Model.OrderMaster.OrderFormId) />
+                        <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.OrderFormId)" />
                     </div>
                     <div class="form-group row">
                         <label for="OrderTypeId" class="col-form-label col-2">@L["Loại đơn hàng"]</label>
@@ -30,11 +30,13 @@
                                 @foreach (var orderType in Model.OrderTypes)
                                 {
                                     <option value="@orderType.OrderTypeId"
-                                        @(Model.OrderMaster.OrderTypeId==orderType.OrderTypeId? "selected" : "" )>
+                                        selected="@(Model.OrderMaster.OrderTypeId==orderType.OrderTypeId)">
                                         @orderType.OrderTypeName
                                     </option>
                                 }
                             </select>
+
+                            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.OrderTypeId)" />
                         </div>
                     </div>
                     <div class="form-group row">
@@ -43,7 +45,7 @@
                             <InputText id="Guid" name="OrderNo" class="form-control" disabled
                                 @bind-Value=Model.OrderMaster.OrderNo />
                         </div>
-                        <ValidationMessage For=@(() => Model.OrderMaster.OrderNo) />
+                        <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.OrderNo)" />
                     </div>
                     <div class="form-group row">
                         <label for="OrderDate" class="col-form-label col-2">@L["Ngày tạo"]</label>
@@ -51,7 +53,7 @@
                             <DateInput TValue="DateTime?" @bind-Value="@Model.OrderMaster.OrderDate"
                                 Placeholder="Enter Date" name="OrderDate" id="OrderDate" />
                         </div>
-                        <ValidationMessage For=@(() => Model.OrderMaster.OrderDate) />
+                        <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.OrderDate)" />
                     </div>
                     <div class="form-group row">
                         <label for="OrderStatusId" class="col-form-label col-2">@L["Trạng thái ĐH"]</label>
@@ -61,12 +63,12 @@
                                 @foreach (var orderStatus in Model.OrderStatuses)
                                 {
                                     <option value="@orderStatus.OrderStatusId"
-                                        @(orderStatus.OrderStatusId==Model.OrderMaster.OrderStatusId ? "selected" : "" )>
+                                        selected="@(Model.OrderMaster.OrderStatusId == orderStatus.OrderStatusId)">
                                         @orderStatus.OrderStatusName
                                     </option>
                                 }
                             </select>
-                            <ValidationMessage For=@(() => Model.OrderMaster.OrderStatusId) />
+                            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.OrderStatusId)" />
                         </div>
                     </div>
                 </div>
@@ -87,13 +89,13 @@
                                 @foreach (var employee in Model.Employees.Where(e => e.Department.IsInstall))
                                 {
                                     <option value="@employee.EmployeeId"
-                                        @(employee.EmployeeId==Model.OrderMaster.ExecutorId? "selected" : "" )>
+                                        selected="@(Model.OrderMaster.ExecutorId == employee.EmployeeId)">
                                         @employee.EmployeeName
                                     </option>
                                 }
                             </select>
                         </div>
-                        <ValidationMessage For=@(() => Model.OrderMaster.ExecutorId) />
+                        <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.ExecutorId)" />
                     </div>
                     <div class="form-group row">
                         <label for="BeginExecDate" class="col-form-label col-2">@L["Ngày BĐ triển khai"]</label>
@@ -101,6 +103,7 @@
                             <DateInput TValue="DateTime?" @bind-Value="@Model.OrderMaster.BeginExecDate"
                                 Placeholder="Ngày BĐ triển khai" name="BeginExecDate" id="BeginExecDate" />
                         </div>
+                        <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.BeginExecDate)" />
                     </div>
                     <div class="form-group row">
                         <label for="EndExecDate" class="col-form-label col-2">@L["Ngày KT triển khai"]</label>
@@ -108,7 +111,7 @@
                             <DateInput TValue="DateTime?" @bind-Value="@Model.OrderMaster.EndExecDate"
                                 Placeholder="Ngày KT triển khai" name="EndExecDate" id="EndExecDate" />
                         </div>
-                        <ValidationMessage For=@(() => Model.OrderMaster.EndExecDate) />
+                        <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.EndExecDate)" />
                     </div>
                     <div class="form-group row">
                         <label for="SalesManId" class="col-form-label col-2">@L["Nhân viên bán hàng"]</label>
@@ -117,18 +120,13 @@
                                 value="@Model.OrderMaster.SalesManId">
                                 @foreach (var employee in Model.Employees)
                                 {
-                                    if (employee.EmployeeId == Model.OrderMaster.SalesManId)
-                                    {
-                                        <option value="@employee.EmployeeId" selected> @employee.EmployeeName</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@employee.EmployeeId">@employee.EmployeeName</option>
-                                    }
+                                    <option value="@employee.EmployeeId"
+                                        selected="@(Model.OrderMaster.SalesManId == employee.EmployeeId)">
+                                        @employee.EmployeeName</option>
                                 }
                             </select>
                         </div>
-                        <ValidationMessage For=@(() => Model.OrderMaster.SalesManId) />
+                        <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.SalesManId)" />
                     </div>
                     <div class="form-group row">
                         <label for="SalesManId" class="col-form-label col-2"></label>
@@ -164,7 +162,7 @@
                                     <option value="@customer.CustomerId">@customer.CustomerName</option>
                                 }
                             </select>
-                            <ValidationMessage For=@(() => Model.OrderMaster.CustomerId) />
+                            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.CustomerId)" />
                             <script>
                                 var select = new SlimSelect({
                                     select: '#CustomerIdSelect',
@@ -187,7 +185,7 @@
                             <InputText id="CustomerTax" name="TaxCode" disabled class="form-control"
                                 @bind-Value=Model.OrderMaster.TaxCode />
                         </div>
-                        <ValidationMessage For=@(() => Model.OrderMaster.TaxCode) />
+                        <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.TaxCode)" />
                     </div>
                     <div class="form-group row">
                         <label for="CustomerPhone" class="col-form-label col-2">
@@ -198,7 +196,7 @@
                             <InputText id="CustomerPhone" class="form-control" name="Phone"
                                 @bind-Value=Model.OrderMaster.Phone />
                         </div>
-                        <ValidationMessage For=@(() => Model.OrderMaster.Phone) />
+                        <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.Phone)" />
                     </div>
                     <div class="form-group row">
                         <label for="RefPerson" class="col-form-label col-2">
@@ -208,7 +206,7 @@
                             <InputText id="RefPerson" name="RefPerson" class="form-control"
                                 @bind-Value=Model.OrderMaster.RefPerson />
                         </div>
-                        <ValidationMessage For=@(() => Model.OrderMaster.RefPerson) />
+                        <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.RefPerson)" />
                     </div>
                     <div class="form-group row">
                         <label for="RefPos" class="col-form-label col-2">
@@ -218,7 +216,7 @@
                             <InputText id="RefPos" name="RefPos" class="form-control"
                                 @bind-Value=Model.OrderMaster.RefPos />
                         </div>
-                        <ValidationMessage For=@(() => Model.OrderMaster.RefPos) />
+                        <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.RefPos)" />
                     </div>
                     <div class="form-group row">
                         <label for="ContractNo" class="col-form-label col-2">
@@ -228,7 +226,7 @@
                             <InputText id="ContractNo" name="ContractNo" class="form-control"
                                 @bind-Value=Model.OrderMaster.ContractNo />
                         </div>
-                        <ValidationMessage For=@(() => Model.OrderMaster.ContractNo) />
+                        <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.ContractNo)" />
                     </div>
                     <div class="form-group row">
                         <label for="ContractDate" class="col-form-label col-2">
@@ -238,7 +236,7 @@
                             <DateInput TValue="DateOnly?" @bind-Value="@Model.OrderMaster.ContractDate"
                                 Placeholder="Ngày hợp đồng" name="ContractDate" id="ContractDate" />
                         </div>
-                        <ValidationMessage For=@(() => Model.OrderMaster.ContractDate) />
+                        <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.ContractDate)" />
                     </div>
                 </div>
             </div>
@@ -258,12 +256,12 @@
                                 @foreach (var currency in Model.Currencies)
                                 {
                                     <option value="@currency.CurrencyId"
-                                        @(currency.CurrencyId==Model.OrderMaster.CurrencyId? "selected" : "" )>
+                                        selected="@(Model.OrderMaster.CurrencyId == currency.CurrencyId)">
                                         @currency.CurrencyName
                                     </option>
                                 }
                             </InputSelect>
-                            <ValidationMessage For=@(() => Model.OrderMaster.CurrencyId) />
+                            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.CurrencyId)" />
                         </div>
                     </div>
                     <div class="form-group row">
@@ -272,7 +270,7 @@
                             <InputNumber id="ExchangeRate" type="number" name="ExchangeRate" class="form-control"
                                 @bind-Value=Model.OrderMaster.ExchangeRate />
                         </div>
-                        <ValidationMessage For=@(() => Model.OrderMaster.ExchangeRate) />
+                        <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.ExchangeRate)" />
                     </div>
                     <div class="form-group row">
                         <label for="OriginalTotalAmount" class="col-form-label col-2"> @L["Cộng thành tiền"]</label>
@@ -280,7 +278,8 @@
                             <CurrencyInput Locale="vi-VN" TValue="decimal?" name="ConvertTotalAmount"
                                 @bind-Value="@Model.OrderMaster.ConvertTotalAmount" Placeholder="Cộng thành tiền" />
                         </div>
-                        <ValidationMessage For=@(() => Model.OrderMaster.ConvertTotalAmount) />
+                        <ErrorMember Errors="@Model.Errors"
+                            MemberName="@nameof(Model.OrderMaster.ConvertTotalAmount)" />
                     </div>
                     <div class="form-group row">
                         <label for="ConvertDiscAmount" class="col-form-label col-2"> @L["Cộng tiền CK"]</label>
@@ -288,7 +287,7 @@
                             <CurrencyInput Locale="vi-VN" TValue="decimal?" name="ConvertTotalAmount"
                                 @bind-Value="@Model.OrderMaster.ConvertDiscAmount" Placeholder="Cộng tiền CK" />
                         </div>
-                        <ValidationMessage For=@(() => Model.OrderMaster.ConvertDiscAmount) />
+                        <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.ConvertDiscAmount)" />
                     </div>
                     <div class="form-group row">
                         <label for="TotalAmount" class="col-form-label col-2"> @L["Tổng tiền thanh toán"]</label>
@@ -296,7 +295,7 @@
                             <CurrencyInput Locale="vi-VN" TValue="decimal?" name="TotalAmount"
                                 @bind-Value="@Model.OrderMaster.TotalAmount" Placeholder="Tổng tiền thanh toán" />
                         </div>
-                        <ValidationMessage For=@(() => Model.OrderMaster.ConvertTotalAmount) />
+                        <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.TotalAmount)" />
                     </div>
                     <div class="form-group row">
                         <label for="OverDate" class="col-form-label col-2"> @L["Hạn thanh toán"]</label>
@@ -304,7 +303,7 @@
                             <DateInput TValue="DateOnly?" @bind-Value="@Model.OrderMaster.OverDate"
                                 Placeholder="Hạn thanh toán" name="OverDate" id="OverDate" />
                         </div>
-                        <ValidationMessage For=@(() => Model.OrderMaster.OverDate) />
+                        <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.OverDate)" />
                     </div>
                     <div class="form-group row">
                         <label for="PublishedInvoice" class="col-form-label col-2"> @L["Có xuất hóa đơn"]</label>
@@ -320,7 +319,7 @@
                                     value="false">
                             }
                         </div>
-                        <ValidationMessage For=@(() => Model.OrderMaster.HasInvoiceVat) />
+                        <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.HasInvoiceVat)" />
                     </div>
                     <div class="form-group row">
                         <label for="PaymentMethodId" class="col-form-label col-2"> @L["Hình thức thanh toán"]</label>
@@ -330,14 +329,13 @@
                                 @foreach (var paymentMethod in Model.PaymentMethods)
                                 {
                                     <option value="@paymentMethod.PaymentMethodId"
-                                        @(paymentMethod.PaymentMethodId==Model.OrderMaster.PaymentMethodId ? "selected"
-                                        :"")>
+                                        selected="@(Model.OrderMaster.PaymentMethodId == paymentMethod.PaymentMethodId)">
                                         @paymentMethod.PaymentMethodName
                                     </option>
                                 }
                             </select>
                         </div>
-                        <ValidationMessage For=@(() => Model.OrderMaster.PaymentMethodId) />
+                        <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.PaymentMethodId)" />
                     </div>
                     <div class="form-group row">
                         <label for="PaymentTerms" class="col-form-label col-2"> @L["Điều khoản thanh toán"]</label>
@@ -345,7 +343,7 @@
                             <InputText type="text" id="PaymentTerms" name="PaymentTerms" class="form-control"
                                 @bind-Value=Model.OrderMaster.PaymentTerms />
                         </div>
-                        <ValidationMessage For=@(() => Model.OrderMaster.PaymentTerms) />
+                        <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.PaymentTerms)" />
                     </div>
                 </div>
             </div>
@@ -361,6 +359,8 @@
                 <div class="form-group">
                     <textarea type="text" class="form-control" id="Description" name="Description"
                         rows="6">@Model.OrderMaster.Description</textarea>
+
+                    <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.Description)" />
                 </div>
             </div>
         </div>
@@ -373,6 +373,8 @@
                 <div class="form-group">
                     <textarea type="text" class="form-control" id="Notes" name="Notes"
                         rows="6">@Model.OrderMaster.Notes</textarea>
+
+                    <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.Notes)" />
                 </div>
             </div>
         </div>
