@@ -15,6 +15,7 @@ using CrudApiTemplate.Services;
 using CrudApiTemplate.CustomException;
 using BlazorMinimalApis.Lib.Validation;
 using BlazorMinimalApis.Lib.Views;
+using DaMi.SO.Manager.Components;
 
 namespace DaMi.SO.Manager.Endpoints.OrderMasters;
 
@@ -69,7 +70,7 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
     {
         OrderMaster orderMaster = orderMasterCreate.Adapt<OrderMaster>();
 
-        var validateError = default(List<ValidationMember>);
+        var validateError = default(Dictionary<string, string>);
         string? ErrorMessage = null;
         try
         {
@@ -86,7 +87,7 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
             ErrorMessage = ex.Message;
         }
 
-        return await ReturnPage<CreatePage>(work, orderMasterCreate, validateError, ErrorMessage);
+        return await ReturnPage<CreatePage>(work, orderMasterCreate, ViewMode.Create, validateError, ErrorMessage);
     }
 
     [HttpGet("Edit/{guid}")]
@@ -103,7 +104,7 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
     [HttpPost("Edit/{guid}")]
     public async Task<IResult> EditAsync(Guid guid, [FromForm] OrderMasterDetailView orderMaster)
     {
-        var validateError = default(List<ValidationMember>);
+        var validateError = default(Dictionary<string, string>);
         string? ErrorMessage = null;
         try
         {
@@ -119,10 +120,10 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
             ErrorMessage = ex.Message;
         }
 
-        return await ReturnPage<EditPage>(work, orderMaster, validateError, ErrorMessage);
+        return await ReturnPage<EditPage>(work, orderMaster, ViewMode.Edit, validateError, ErrorMessage);
     }
 
-    private async Task<IResult> ReturnPage<TPage>(IUnitOfWork work, OrderMasterDetailView orderMaster, List<ValidationMember>? validateError = null, string? ErrorMessage = null) where TPage : XComponent<OrderMasterEditModel>
+    private async Task<IResult> ReturnPage<TPage>(IUnitOfWork work, OrderMasterDetailView orderMaster, ViewMode viewMode = ViewMode.Detail, Dictionary<string, string>? validateError = null, string? ErrorMessage = null) where TPage : XComponent<OrderMasterEditModel>
     {
         var orderTypes = await work.Get<OrderType>().GetAll().ToListAsync();
         var orderForms = await work.Get<OrderForm>().GetAll().ToListAsync();
@@ -152,7 +153,8 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
                 ItemTypes = await work.Get<ViwItemType>().GetAll().ToListAsync(),
                 TaxCodes = await work.Get<TaxCode>().GetAll().ToListAsync()
             },
-            ErrorMessage = ErrorMessage
+            ErrorMessage = ErrorMessage,
+            ViewMode = viewMode
 
         }, validation: new ValidationResponse()
         {
@@ -179,8 +181,10 @@ public class OrderMasterEditModel
     public IEnumerable<Currency> Currencies { get; set; } = [];
     public IEnumerable<OrderStatus> OrderStatuses { get; set; } = [];
     public IEnumerable<PaymentMethod> PaymentMethods { get; set; } = [];
-
+    public ViewMode ViewMode { get; set; } = ViewMode.Detail;
     public string? ErrorMessage { get; set; }
+
+    public Dictionary<string, string>? Errors { get; set; }
 }
 
 

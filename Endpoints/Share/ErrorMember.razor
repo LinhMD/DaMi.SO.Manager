@@ -1,0 +1,10 @@
+@if (Errors is not null && MemberName is not null && Errors.ContainsKey(MemberName))
+{
+
+    <span class="text-danger">@Errors[MemberName]</span>
+}
+@code {
+    [Parameter]
+    public string? MemberName { get; set; }
+    [Parameter] public Dictionary<string, string>? Errors { get; set; }
+}

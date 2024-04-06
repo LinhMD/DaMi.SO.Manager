@@ -1,8 +1,10 @@
+@using DaMi.SO.Manager.Endpoints.OrderDetails.Pages
 @using DaMi.SO.Manager.Endpoints.OrderMasters
 @inherits XComponent<OrderMasterEditModel>
 @layout _Layout
 @inject IStringLocalizer<ShareResource> L
 @using System.Text.Json
+
 
 <div class="row page-titles mx-0">
     <div class="col-sm-6 p-md-0 justify-content-sm-start mt-2 mt-sm-0 d-flex">
@@ -14,17 +16,13 @@
     </div>
     <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
         <div>
-            <span class="mdi mdi-content-save-edit-outline">
-            </span>
             <input class="btn btn-round btn-warning mx-2" type="submit" form="Edit-form" name="Edit"
                 value="@L["Lưu chỉnh sửa"]">
         </div>
-        <a href="/OrderMaster/Details/@Model.OrderMaster.RowUniqueId" class="btn btn-round btn-primary mx-2">
-            <span class="mdi mdi-list-box-outline"></span>
-            <b>@L["Danh sách đơn hàng"]</b>
+        <a href="/OrderMaster/Details/@Model.OrderMaster.RowUniqueId" class="btn btn-round btn-dark mx-2">
+            <b>@L["Bỏ qua"]</b>
         </a>
         <a href="/OrderMaster" class="btn btn-round btn-primary mx-2">
-            <span class="mdi mdi-list-box-outline"></span>
             <b>@L["Danh sách đơn hàng"]</b>
         </a>
     </div>
@@ -34,7 +32,11 @@
     <ModifyTemplate Model="@Model">
     </ModifyTemplate>
 </EditForm>
-
+<div class="row">
+    <SS75 Model="@Model.OrderDetailModify" ViewMode='@Components.ViewMode.Detail'
+        OrderID="@Model.OrderMaster.RowUniqueId">
+    </SS75>
+</div>
 
 
 <div class="row page-titles mx-0">
@@ -42,12 +44,19 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/OrderMaster">@L["Đơn Hàng"] </a></li>
             <li class="breadcrumb-item"><a
-                    href="/OrderMaster/Details/@Model.OrderMaster.RowUniqueId">@Model.OrderMaster.OrderNo</a></li>
+                    href="/OrderMaster/Edit/@Model.OrderMaster.RowUniqueId">@Model.OrderMaster.OrderNo</a></li>
         </ol>
     </div>
     <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
-        <input class="btn btn-round btn-warning mx-2" type="submit" form="Edit-form" name="Edit"
-            value="@L["Chỉnh sửa"]">
-        <a href="MasterOrder" class="btn btn-round btn-primary mx-2"> @L["Danh sách đơn hàng"]</a>
+        <div>
+            <input class="btn btn-round btn-warning mx-2" type="submit" form="Edit-form" name="Edit"
+                value="@L["Lưu chỉnh sửa"]">
+        </div>
+        <a href="/OrderMaster/Details/@Model.OrderMaster.RowUniqueId" class="btn btn-round btn-dark mx-2">
+            <b>@L["Bỏ qua"]</b>
+        </a>
+        <a href="/OrderMaster" class="btn btn-round btn-primary mx-2">
+            <b>@L["Danh sách đơn hàng"]</b>
+        </a>
     </div>
 </div>

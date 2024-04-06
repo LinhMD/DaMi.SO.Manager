@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DaMi.SO.Manager")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c3c17bb5e8ecc9777416b288c83762114ef1d620")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+60e19e1095fbe91dc3dccc7de6ebdbc42106c700")]
 [assembly: System.Reflection.AssemblyProductAttribute("DaMi.SO.Manager")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DaMi.SO.Manager")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

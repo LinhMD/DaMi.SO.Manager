@@ -1,0 +1,309 @@
+@using DaMi.SO.Manager.Components
+@using DaMi.SO.Manager.Data.Models
+@using DaMi.SO.Manager.Endpoints.OrderDetails.DTO
+@using System.Globalization
+<tr class="basic-form @(ViewMode == ViewMode.Detail? "" : "no-padding")"
+    id="row_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")">
+    @if (ViewMode == ViewMode.Detail)
+    {
+    }
+    else
+    {
+        <form action="/OrderDetail/@ViewMode/@detail?.RowUniqueId" hx-boost="true" hx-swap='outerHTML'
+            hx-target='#row_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")'
+            id="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")" method="post">
+        </form>
+
+        <input type="hidden" form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+            name="@nameof(detail.RowUniqueId)" value="@detail?.RowUniqueId">
+        <input type="hidden" form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+            name="@nameof(detail.OrderId)" value="@(detail?.OrderId ?? OrderID)">
+    }
+    <td>
+        @if (ViewMode == ViewMode.Detail)
+        {
+            @(detail?.ItemId ?? "")
+        }
+        else
+        {
+            <select disabled="@(ViewMode == ViewMode.Detail)"
+                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")" name="@nameof(detail.ItemId)"
+                class="form-control selectpicker "
+                id="@nameof(detail.ItemId)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")"
+                value="@(detail?.ItemId ?? "")">
+                @foreach (var item in Model.Items.Keys)
+                {
+                    <option value="@item">
+                        @item
+                    </option>
+                }
+            </select>
+        }
+    </td>
+    <td>
+        @if (ViewMode == ViewMode.Detail)
+        {
+            @(detail is not null && detail.ItemId is not null && Model.Items.Keys.Contains(detail.ItemId) ?
+                Model.Items[detail.ItemId].ItemName : "")
+        }
+        else
+        {
+            <input type="text" disabled="@(ViewMode == ViewMode.Detail)"
+                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                value="@(detail is not null && detail.ItemId is not null && Model.Items.Keys.Contains(detail.ItemId) ? Model.Items[detail.ItemId].ItemName : "")"
+                class="form-control" name="ItemName"
+                id="ItemName_@(detail is not null? detail.RowUniqueId.ToString() : "editing")" />
+        }
+    </td>
+    <td>
+        @if (ViewMode == ViewMode.Detail)
+        {
+            @(detail is not null && detail.ItemId is not null && Model.Items.Keys.Contains(detail.ItemId) ?
+                Model.Items[detail.ItemId].InvUnitOfMeasr : "")
+        }
+        else
+        {
+            <input type="text" form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                value="@(detail is not null && detail.ItemId is not null && Model.Items.Keys.Contains(detail.ItemId) ?  Model.Items[detail.ItemId].InvUnitOfMeasr : "")"
+                class="form-control" disabled id="Unit_@(detail is not null? detail.RowUniqueId.ToString() : "editing")" />
+        }
+    </td>
+    <td>
+        @if (ViewMode == ViewMode.Detail)
+        {
+            @((detail?.Quantity ?? 0))
+        }
+        else
+        {
+            <input type="text" disabled="@(ViewMode == ViewMode.Detail)" value="@detail?.Quantity" class="form-control"
+                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")" name="@nameof(detail.Quantity)"
+                id="@nameof(detail.Quantity)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")" />
+        }
+
+    </td>
+    <td class="currency">
+        @if (ViewMode == ViewMode.Detail)
+        {
+            @((detail?.ConvertPrice ?? 0).ToString("C", CultureInfo.CurrentCulture))
+        }
+        else
+        {
+            <input type="text" disabled="@(ViewMode == ViewMode.Detail)"
+                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                value="@Convert.ToInt64((detail is not null && detail.ItemId is not null && Model.Items.Keys.Contains(detail.ItemId) ?  Model.Items[detail.ItemId].ConvertPrice : 0))"
+                class="form-control currency" name="ConvertPrice"
+                id="@nameof(detail.ConvertPrice)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")" />
+        }
+
+    </td>
+    <td class="currency">
+        @if (ViewMode == ViewMode.Detail)
+        {
+            @((detail?.ConvertAmount ?? 0).ToString("C", CultureInfo.CurrentCulture))
+        }
+        else
+        {
+            <input type="text" disabled="@(ViewMode == ViewMode.Detail)" class="form-control currency"
+                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                value="@(Convert.ToInt64(detail?.ConvertAmount))" name="@nameof(detail.ConvertAmount)"
+                id="@nameof(detail.ConvertAmount)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")" />
+        }
+    </td>
+    <td>
+        @if (ViewMode == ViewMode.Detail)
+        {
+            @(Convert.ToInt32(detail?.TaxRate ?? 0))
+        }
+        else
+        {
+            <input type="text" form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                value="@(Convert.ToInt32((detail is not null && detail.ItemId is not null && Model.Items.Keys.Contains(detail.ItemId) ?  Model.Items[detail.ItemId].TaxRate : 0)))"
+                class="form-control" name="@nameof(detail.TaxRate)"
+                id="@nameof(detail.TaxRate)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")" />
+        }
+
+    </td>
+    <td class="currency">
+        @if (ViewMode == ViewMode.Detail)
+        {
+            @((detail?.ConvertTaxAmount ?? 0).ToString("C", CultureInfo.CurrentCulture))
+        }
+        else
+        {
+            <input type="text" disabled="@(ViewMode == ViewMode.Detail)" class="form-control currency"
+                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                value="@(Convert.ToInt64(detail?.ConvertTaxAmount))" name="@nameof(detail.ConvertTaxAmount)"
+                id="@nameof(detail.ConvertTaxAmount)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")" />
+        }
+
+    </td>
+    <td class="currency">
+        @if (ViewMode == ViewMode.Detail)
+        {
+            @((detail?.DiscountPercent ?? 0).ToString("C", CultureInfo.CurrentCulture))
+        }
+        else
+        {
+            <input type="text" disabled="@(ViewMode == ViewMode.Detail)" class="form-control currency"
+                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                value="@(Convert.ToInt64(detail?.DiscountPercent))" name="@nameof(detail.DiscountPercent)"
+                id="@nameof(detail.DiscountPercent)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")" />
+        }
+    </td>
+    <td class="currency">
+        @if (ViewMode == ViewMode.Detail)
+        {
+            @((detail?.ConvertDiscAmount ?? 0).ToString("C", CultureInfo.CurrentCulture))
+        }
+        else
+        {
+            <input type="text" disabled="@(ViewMode == ViewMode.Detail)" class="form-control currency"
+                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                value="@(Convert.ToInt64(detail?.ConvertDiscAmount))" name="@nameof(detail.ConvertDiscAmount)"
+                id="@nameof(detail.ConvertDiscAmount)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")" />
+        }
+    </td>
+    <td>
+        @if (ViewMode == ViewMode.Detail)
+        {
+            @(@detail?.NumOfTaxCode)
+        }
+        else
+        {
+            <input type="hidden"
+                id="@nameof(detail.NumOfTaxCode)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")"
+                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                name="@nameof(detail.NumOfTaxCode)" value="@detail?.NumOfTaxCode" />
+            <select disabled="@(ViewMode == ViewMode.Detail)" name="@nameof(detail.NumOfTaxCode)_select"
+                class="form-control selectpicker"
+                id="@nameof(detail.NumOfTaxCode)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")_select"
+                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")" value="@detail?.NumOfTaxCode">
+                @foreach (var item in Model.TaxCodes)
+                {
+                    <option value="@item.TaxCodeId">
+                        @item.TaxCodeId
+                    </option>
+                }
+            </select>
+            <script>
+                var select = new SlimSelect({
+                    select: '#@nameof(detail.NumOfTaxCode)_@(detail is not null ? detail.RowUniqueId.ToString() : "editing")',
+                    events: {
+                        afterChange: (newVal) => {
+                            console.log(newVal);
+                            $("#@nameof(detail.NumOfTaxCode)_@(detail is not null ? detail.RowUniqueId.ToString() : "editing")").val(newVal.map(f => f.value).join(","));
+                        }
+                    }
+                });
+            </script>
+        }
+
+    </td>
+    <td>
+        @if (ViewMode == ViewMode.Detail)
+        {
+            @(detail?.NumOfPc)
+        }
+        else
+        {
+            <input type="number" disabled="@(ViewMode == ViewMode.Detail)" class="form-control" value="@(detail?.NumOfPc)"
+                name="@nameof(detail.NumOfPc)" form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                id="@nameof(detail.NumOfPc)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")" />
+        }
+    </td>
+    <td>
+        @if (ViewMode == ViewMode.Detail)
+        {
+            @(detail?.NumOfData)
+        }
+        else
+        {
+            <input type="number" disabled="@(ViewMode == ViewMode.Detail)" class="form-control "
+                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")" value="@(detail?.NumOfData)"
+                name="@nameof(detail.NumOfData)"
+                id="@nameof(detail.NumOfData)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")" />
+        }
+    </td>
+    <td>
+        @if (ViewMode == ViewMode.Detail)
+        {
+            @(detail?.NumOfUser)
+        }
+        else
+        {
+            <input type="number" disabled="@(ViewMode == ViewMode.Detail)" class="form-control "
+                value="@(detail?.NumOfUser)" name="@nameof(detail.NumOfUser)"
+                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                id="@nameof(detail.NumOfUser)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")" />
+        }
+    </td>
+    <td>
+        @if (ViewMode == ViewMode.Detail)
+        {
+            @(detail?.StartDate is not null ? detail.StartDate.Value.ToString("dd/MM/yyyy") : "")
+        }
+        else
+        {
+            <input data-provide="datepicker" disabled="@(ViewMode == ViewMode.Detail)" type="date"
+                name="@nameof(detail.StartDate)"
+                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                id="@nameof(detail.StartDate)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")"
+                value="@(detail?.StartDate is not null ? detail.StartDate.Value.ToString("yyyy-MM-dd") : "")"
+                class="form-control">
+        }
+
+    </td>
+    <td>
+        @if (ViewMode == ViewMode.Detail)
+        {
+            @detail?.NumOfMonth
+        }
+        else
+        {
+            <input disabled="@(ViewMode == ViewMode.Detail)" type="number" name="@nameof(detail.NumOfMonth)"
+                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                id="@nameof(detail.NumOfMonth)_@(detail is not null? detail.RowUniqueId.ToString() : "editing")"
+                value="@(detail?.NumOfMonth)" class="form-control">
+        }
+    </td>
+    @if (ViewMode == ViewMode.Detail)
+    {
+        <td>
+            <a href="/OrderDetail/Edit/@detail?.RowUniqueId"
+                hx-target="#row_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")" hx-swap="outerHTML">
+                <span class="mdi mdi-pencil"></span>
+            </a>
+            <a href="/OrderDetail/Remove/@detail?.RowUniqueId"
+                hx-target="#row_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")" hx-swap="outerHTML">
+                <span class="mdi mdi-delete"></span>
+            </a>
+        </td>
+    }
+    @if (ViewMode == ViewMode.Edit)
+    {
+        <td>
+            <input type="submit" class="btn btn-success" value="Lưu"
+                hx-target="#row_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")" hx-swap='outerHTML'
+                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")">
+            <button class="btn btn-dark" hx-get='/OrderDetail/Detail/@detail?.RowUniqueId' hx-swap='outerHTML'
+                hx-target='#row_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")'>Hủy</button>
+        </td>
+    }
+    @if (ViewMode == ViewMode.Create)
+    {
+        <td>
+            <input type="submit" class="btn btn-success" value="Lưu"
+                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")">
+            <button onclick="$('#add-new-btn').removeAttr('disabled');document.getElementById('row_').remove();"
+                class="btn btn-dark">Hủy</button>
+        </td>
+    }
+</tr>
+
+@code {
+    [Parameter] public ViewMode ViewMode { get; init; } = ViewMode.Detail;
+    [Parameter] public OrderDetailModifyModel Model { get; set; } = null!;
+    [Parameter] public OrderDetailSimpleView? detail { get; set; } = null!;
+
+    [Parameter] public Guid? OrderID { get; set; } = null!;
+}

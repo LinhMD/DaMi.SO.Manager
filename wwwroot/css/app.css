@@ -3,6 +3,10 @@
     text-transform: none !important;
 }
 
+span.mdi {
+    font-size: x-large;
+}
+
 .big-checkbox {
     width: 30px;
     height: 30px;
@@ -26,10 +30,6 @@ input[type='checkbox']::after {
 
 .currency {
     text-align: right;
-}
-
-.currency::after {
-    content: "₫";
 }
 
 .pink {
@@ -70,4 +70,9 @@ td.bg-gray {
 
 table thead th {
     text-transform: none !important;
+}
+
+tr.no-padding td {
+    padding: 0 !important;
+    margin: 0 !important;
 }

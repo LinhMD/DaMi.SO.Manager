@@ -15,7 +15,5 @@ public static class MappingConfig
         OrderMasterDetailView.InitMapper();
         OrderStatusSView.InitMapper();
         OrderDetailSimpleView.InitMapper();
-        TypeAdapterConfig<ValidationError, ValidationMember>.NewConfig();
-        TypeAdapterConfig<ValidationMember, ValidationError>.NewConfig();
     }
 }

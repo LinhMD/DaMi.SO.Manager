@@ -1,6 +1,7 @@
 using System.Globalization;
 using BlazorMinimalApis.Lib.Session;
 using CrudApiTemplate.CustomBinding;
+using CrudApiTemplate.ExceptionFilter;
 using CrudApiTemplate.Repository;
 using CrudApiTemplate.Services;
 using DaMi.SO.Manager.Data;
@@ -18,7 +19,10 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork<DaMiSoManagerContext>>();
 builder.Services.AddScoped(typeof(IServiceCrud<>), typeof(ServiceCrud<>));
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
-builder.Services.AddControllers().AddSessionStateTempDataProvider();
+builder.Services.AddControllers(option =>
+{
+    option.Filters.Add<CrudExceptionFilterAttribute>();
+}).AddSessionStateTempDataProvider();
 builder.Services.AddBlazorBootstrap();
 builder.Services.ConfigMapping();
 builder.Services.AddLocalization(o => o.ResourcesPath = "Resources");
