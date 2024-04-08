@@ -142,7 +142,6 @@
     <div class="col-6">
         <div class="card">
             <h4 class="card-header">@L["Thông tin hợp đồng"]</h4>
-
             <div class="card-body">
                 <div class="basic-form">
                     <div class="form-group row">
@@ -268,7 +267,7 @@
                         <label for="ExchangeRate" class="col-form-label col-2"> @L["Tỉ giá"]</label>
                         <div class="col-10">
 
-                            <input type="text" value="@Convert.ToInt64(Model.OrderMaster.ExchangeRate)"
+                            <CurrencyInput type="text" @bind-Value="@Model.OrderMaster.ExchangeRate"
                                 class="form-control currency" name="ExchangeRate" placeholder="Tỉ giá" />
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.ExchangeRate)" />
@@ -277,16 +276,29 @@
                         <label for="OriginalTotalAmount" class="col-form-label col-2"> @L["Cộng thành tiền"]</label>
                         <div class="col-10">
                             <input type="text" value="@Convert.ToInt64(Model.OrderMaster.ConvertTotalAmount)"
-                                class="form-control currency" name="ConvertTotalAmount" placeholder="Cộng thành tiền" />
+                                class="form-control currency" readonly id='ConvertTotalAmount'
+                                name="@nameof(Model.OrderMaster.ConvertTotalAmount)" placeholder="Cộng thành tiền" />
                         </div>
                         <ErrorMember Errors="@Model.Errors"
                             MemberName="@nameof(Model.OrderMaster.ConvertTotalAmount)" />
                     </div>
                     <div class="form-group row">
+                        <label for="ConvertTaxAmount" class="col-form-label col-2"> @L["Cộng tiền thuế VAT"]</label>
+                        <div class="col-10">
+                            <input type="text" value="@Convert.ToInt64(Model.OrderMaster.ConvertTaxAmount)"
+                                class="form-control currency" readonly
+                                name="@nameof(Model.OrderMaster.ConvertTaxAmount)"
+                                id='@nameof(Model.OrderMaster.ConvertTaxAmount)' placeholder="Cộng tiền thuế VAT" />
+                        </div>
+                        <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.ConvertTaxAmount)" />
+                    </div>
+                    <div class="form-group row">
                         <label for="ConvertDiscAmount" class="col-form-label col-2"> @L["Cộng tiền CK"]</label>
                         <div class="col-10">
                             <input type="text" value="@Convert.ToInt64(Model.OrderMaster.ConvertDiscAmount)"
-                                class="form-control currency" name="ConvertDiscAmount" placeholder="Cộng tiền CK" />
+                                class="form-control currency" readonly
+                                name="@nameof(Model.OrderMaster.ConvertDiscAmount)" id='ConvertDiscAmount'
+                                placeholder="Cộng tiền CK" />
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.ConvertDiscAmount)" />
                     </div>
@@ -294,7 +306,8 @@
                         <label for="TotalAmount" class="col-form-label col-2"> @L["Tổng tiền thanh toán"]</label>
                         <div class="col-10">
                             <input type="text" value="@Convert.ToInt64(Model.OrderMaster.TotalAmount)"
-                                class="form-control currency" name="TotalAmount" placeholder="Tổng tiền thanh toán" />
+                                id='@nameof(Model.OrderMaster.TotalAmount)' class="form-control currency" readonly
+                                name="@nameof(Model.OrderMaster.TotalAmount)" placeholder="Tổng tiền thanh toán" />
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.TotalAmount)" />
                     </div>
@@ -309,16 +322,8 @@
                     <div class="form-group row">
                         <label for="PublishedInvoice" class="col-form-label col-2"> @L["Có xuất hóa đơn"]</label>
                         <div class="col-10">
-                            @if (Model.OrderMaster.HasInvoiceVat)
-                            {
-                                <input type="checkbox" id="HasInvoiceVat" value="true" name="HasInvoiceVat"
-                                    class="form-control" checked>
-                            }
-                            else
-                            {
-                                <input type="checkbox" id="HasInvoiceVat" name="HasInvoiceVat" class="form-control"
-                                    value="false">
-                            }
+                            <input type="checkbox" id="HasInvoiceVat" value="true" name="HasInvoiceVat"
+                                class="form-control" checked='@Model.OrderMaster.HasInvoiceVat'>
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.HasInvoiceVat)" />
                     </div>
@@ -355,12 +360,10 @@
     <div class="col-6">
         <div class="card">
             <h4 class="card-header">@L["Điễn giãi"]</h4>
-
             <div class="card-body">
                 <div class="form-group">
                     <textarea type="text" class="form-control" id="Description" name="Description"
                         rows="6">@Model.OrderMaster.Description</textarea>
-
                     <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.Description)" />
                 </div>
             </div>
@@ -369,7 +372,6 @@
     <div class="col-6">
         <div class="card">
             <h4 class="card-header ">@L["Ghi Chú"]</h4>
-
             <div class="card-body">
                 <div class="form-group">
                     <textarea type="text" class="form-control" id="Notes" name="Notes"

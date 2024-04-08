@@ -60,6 +60,7 @@ public partial class OrderMaster
     [Column("CustomerID")]
     [StringLength(20)]
     [Unicode(false)]
+    [Required]
     public string CustomerId { get; set; } = null!;
 
     [DisplayName("Người đại diện")]
@@ -245,9 +246,7 @@ public partial class OrderMaster
     [InverseProperty("OrderMasterSalesMen")]
     public virtual Employee? SalesMan { get; set; }
 
-    [AdaptIgnore]
     [InverseProperty("Order")]
-
     [UpdateIgnore]
     public virtual IEnumerable<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using CrudApiTemplate.CustomException;
 using CrudApiTemplate.Repository;
@@ -34,6 +35,17 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
     {
         return await ReturnPage(work, new OrderDetailSimpleView() { OrderId = OrderId }, null, ViewMode.Create);
     }
+    [HttpGet("Item")]
+    public async Task<IResult> GetItem(Guid? OrderDetailId, string? FormID, string ItemIdSelect)
+    {
+        ViwItem? item = await work.Get<ViwItem>().Find(x => x.ItemId == ItemIdSelect).FirstOrDefaultAsync();
+        Console.WriteLine(JsonSerializer.Serialize(item));
+        return new RazorComponentResult(typeof(ItemOOB), new
+        {
+            DetailID = OrderDetailId,
+            Item = item
+        });
+    }
 
     [HttpPost("Create")]
     public async Task<IResult> PostNew([FromForm] OrderDetailSimpleView orderDetailNew)
@@ -62,6 +74,14 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
         try
         {
             await service.UpdateAsync(orderDetailNew, guid);
+            OrderMaster? orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Where(f => f.RowUniqueId == orderDetailNew.OrderId!).FirstOrDefaultAsync();
+            if (orderMaster != null)
+            {
+                orderMaster.ConvertDiscAmount = orderMaster.OrderDetails.Select(f => f.ConvertDiscAmount).Sum();
+                orderMaster.ConvertTaxAmount = orderMaster.OrderDetails.Select(f => f.ConvertTaxAmount).Sum();
+                orderMaster.ConvertTotalAmount = orderMaster.OrderDetails.Select(f => f.ConvertAmount + f.ConvertTaxAmount - f.ConvertDiscAmount).Sum();
+                await work.CompleteAsync();
+            }
             return await ReturnPage(work, work.Get<OrderDetail>().Get<OrderDetailSimpleView>(guid), viewMode: ViewMode.Detail);
         }
         catch (ModelValueInvalidException e)

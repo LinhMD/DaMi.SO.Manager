@@ -109,7 +109,7 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
             orderMaster.OrderStatusId = "OS10";
             orderMaster.OrderNo = (string)OrderNo.Value;
             orderMaster.SeqInMonth = (long)SeqInMonth.Value;
-
+            Validation.Validate(orderMaster);
             await work.Get<OrderMaster>().AddAsync(orderMaster);
             return Results.Redirect($"/OrderMaster/Edit/{orderMaster.RowUniqueId}");
         }
@@ -187,12 +187,8 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
                 TaxCodes = await work.Get<TaxCode>().GetAll().ToListAsync()
             },
             ErrorMessage = ErrorMessage,
-            ViewMode = viewMode
-
-        }, validation: new ValidationResponse()
-        {
-            Errors = validateError?.Select(f => f.Adapt<ValidationError>()).ToList() ?? [],
-            HasErrors = validateError is not null
+            ViewMode = viewMode,
+            Errors = validateError
         });
     }
 }

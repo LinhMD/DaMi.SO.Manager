@@ -68,7 +68,7 @@ public class OrderDetailSimpleView : IView<OrderDetail>, IDto, IUpdateRequest<Or
     public decimal? ConvertTaxAmount { get; set; }
 
     [DisplayName("Số tiền VND")]
-    public decimal? ConvertAmount { get; set; }
+    public decimal? ConvertAmount { get { return (decimal?)(ConvertPrice * Quantity); } }
 
     [DisplayName("Tổng số tiền")]
     public decimal? ConvertTotalAmount { get; set; }

@@ -17,7 +17,6 @@
                             hx-swap='beforeend' id='add-new-btn'>+ @L["Thêm Dòng"]</button>
                     </div>
                 </div>
-
             </div>
         </div>
         <div class="card-body">
@@ -25,7 +24,7 @@
                 <table class="table table-hover table-bordered table-responsive text-black w-auto" hx-boost="true">
                     <thead>
                         <tr class="text-black">
-                            <th>@L["Mã sản phẩm"]</th>
+                            <th style='min-width: 200px;'>@L["Mã sản phẩm"]</th>
                             <th>@L["Tên sản phẩm"]</th>
                             <th>@L["Đơn vị tính"]</th>
                             <th>@L["Số lượng"]</th>
@@ -59,7 +58,6 @@
         </div>
     </div>
 </div>
-
 @code {
     [Parameter] public ViewMode ViewMode { get; set; } = ViewMode.Detail;
 

@@ -57,7 +57,7 @@
                             {
                                 var boolValue = (bool)value;
                                 <td>
-                                    <Switch Disabled @bind-Value="boolValue" />
+                                    <input disabled type="checkbox" class="form-control" checked='@value'>
                                 </td>
                             }
                             catch (Exception)
@@ -68,12 +68,18 @@
                                     switch (dataType.DataType)
                                     {
                                         case DataType.Currency:
-                                            <td class="text-right">@(((decimal)value).ToString("C", CultureInfo.CurrentCulture))</td>
+                                            if (value.GetType() == typeof(decimal))
+                                            {
+                                                <td class="text-right">@(((decimal)value).ToString("C", CultureInfo.CurrentCulture))</td>
+                                            }
+                                            else if (value.GetType() == typeof(double))
+                                            {
+                                                <td class="text-right">@(((double)value).ToString("C", CultureInfo.CurrentCulture))</td>
+                                            }
                                             break;
                                         case DataType.Date:
                                             <td class="date">
-                                                <input data-provide="datepicker" disabled type="date"
-                                                    value="@(((DateTime)value).ToString("yyyy-MM-dd"))" class="form-control">
+                                                @(((DateTime)value).ToString(CultureInfo.CurrentCulture))
                                             </td>
                                             break;
                                         default:

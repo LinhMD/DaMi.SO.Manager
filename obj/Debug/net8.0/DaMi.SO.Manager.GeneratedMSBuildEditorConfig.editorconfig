@@ -37,8 +37,8 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXExvZ2luc1xQYWdlc1xOZXdQYXNzd29yZC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Project/DaMi.SO.Manager/Endpoints/OrderDetails/OrderDetailRow.razor]
-build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXE9yZGVyRGV0YWlsc1xPcmRlckRldGFpbFJvdy5yYXpvcg==
+[D:/Project/DaMi.SO.Manager/Endpoints/OrderDetails/Pages/ItemOOB.razor]
+build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXE9yZGVyRGV0YWlsc1xQYWdlc1xJdGVtT09CLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Project/DaMi.SO.Manager/Endpoints/OrderDetails/Pages/SS75.razor]
@@ -77,24 +77,8 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXE9yZGVyTWFzdGVyc1xQYWdlc1xUYWJDb250ZW50LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Project/DaMi.SO.Manager/Endpoints/Share/EnumField.razor]
-build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXFNoYXJlXEVudW1GaWVsZC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/Project/DaMi.SO.Manager/Endpoints/Share/ErrorMember.razor]
 build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXFNoYXJlXEVycm9yTWVtYmVyLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Project/DaMi.SO.Manager/Endpoints/Share/Form.razor]
-build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXFNoYXJlXEZvcm0ucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Project/DaMi.SO.Manager/Endpoints/Share/FormField.razor]
-build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXFNoYXJlXEZvcm1GaWVsZC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Project/DaMi.SO.Manager/Endpoints/Share/GenericField.razor]
-build_metadata.AdditionalFiles.TargetPath = RW5kcG9pbnRzXFNoYXJlXEdlbmVyaWNGaWVsZC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Project/DaMi.SO.Manager/Endpoints/Share/Table.razor]

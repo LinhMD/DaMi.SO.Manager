@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using DaMi.SO.Manager.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -60,6 +61,8 @@ public partial class DaMiSoManagerContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Procedure>().HasNoKey();
+
         modelBuilder.Entity<ComputerItemMap>(entity =>
         {
             entity.Property(e => e.RowUniqueId).HasDefaultValueSql("(newid())");
@@ -260,6 +263,7 @@ public partial class DaMiSoManagerContext : DbContext
         modelBuilder.Entity<OrderMaster>(entity =>
         {
             entity.Property(e => e.RowUniqueId).HasDefaultValueSql("(newid())");
+
             entity.Property(e => e.Accepted).HasComment("Đã duyệt");
             entity.Property(e => e.AcceptedDate).HasComment("Ngày duyệt");
             entity.Property(e => e.AccepterId).HasComment("Người duyệt");

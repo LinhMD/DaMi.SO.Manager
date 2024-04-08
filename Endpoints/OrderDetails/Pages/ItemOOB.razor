@@ -1,0 +1,24 @@
+@using DaMi.SO.Manager.Data.Models
+@using DaMi.SO.Manager.Endpoints.OrderDetails.DTO
+@using System.Globalization
+<div name='ItemName' hx-swap-oob="true" id="ItemName_@(DetailID)">
+    @Item.ItemName
+</div>
+<div name='InvUnitOfMeasr' hx-swap-oob="true" id="InvUnitOfMeasr_@(DetailID)">
+    @Item.InvUnitOfMeasr
+</div>
+<div class="currency" hx-swap-oob="true" name='@nameof(OrderDetailSimpleView.ConvertPrice)'
+    id="@nameof(OrderDetailSimpleView.ConvertPrice)_@(DetailID)">
+    @((Item?.ConvertPrice ?? 0).ToString("C", CultureInfo.CurrentCulture))
+</div>
+
+<div class="currency" hx-swap-oob="true" name='@nameof(OrderDetailSimpleView.TaxRate)'
+    id="@nameof(OrderDetailSimpleView.TaxRate)_@(DetailID)">
+    @((Item?.TaxRate ?? 0).ToString("C", CultureInfo.CurrentCulture))
+</div>
+@code {
+    [Parameter] public Guid? DetailID { get; set; }
+
+    [Parameter]
+    public ViwItem Item { get; set; }
+}

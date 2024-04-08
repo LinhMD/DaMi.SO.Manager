@@ -72,7 +72,7 @@ table thead th {
     text-transform: none !important;
 }
 
-tr.no-padding td {
+tr.no-padding td:has(input) {
     padding: 0 !important;
     margin: 0 !important;
 }
