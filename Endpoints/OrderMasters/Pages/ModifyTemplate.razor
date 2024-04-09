@@ -1,5 +1,6 @@
 ﻿@using BlazorBootstrap
 @using DaMi.SO.Manager.Endpoints.OrderDetails.Pages
+@using System.Globalization
 @inherits XComponent<OrderMasterEditModel>
 @inject IStringLocalizer<ShareResource> L
 
@@ -106,32 +107,33 @@
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.BeginExecDate)" />
                     </div>
                     <div class="form-group row">
-                        <label for="EndExecDate" class="col-form-label col-2">@L["Ngày KT triển khai"]</label>
+                        <label for="BeginExecDate" class="col-form-label col-2">@L["Ngày KT triển khai"]</label>
                         <div class="col-10">
                             <DateInput TValue="DateTime?" @bind-Value="@Model.OrderMaster.EndExecDate"
                                 Placeholder="Ngày KT triển khai" name="EndExecDate" id="EndExecDate" />
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.EndExecDate)" />
                     </div>
-                    <div class="form-group row">
-                        <label for="SalesManId" class="col-form-label col-2">@L["Nhân viên bán hàng"]</label>
-                        <div class="col-10">
-                            <select class="form-control selectpicker" id="SalesManId" disabled name="SalesManId"
-                                value="@Model.OrderMaster.SalesManId">
-                                @foreach (var employee in Model.Employees)
-                                {
-                                    <option value="@employee.EmployeeId"
-                                        selected="@(Model.OrderMaster.SalesManId == employee.EmployeeId)">
-                                        @employee.EmployeeName</option>
-                                }
-                            </select>
-                        </div>
-                        <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.SalesManId)" />
+                    <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.EndExecDate)" />
+                </div>
+                <div class="form-group row">
+                    <label for="SalesManId" class="col-form-label col-2">@L["Nhân viên bán hàng"]</label>
+                    <div class="col-10">
+                        <select class="form-control selectpicker" id="SalesManId" disabled name="SalesManId"
+                            value="@Model.OrderMaster.SalesManId">
+                            @foreach (var employee in Model.Employees)
+                            {
+                                <option value="@employee.EmployeeId"
+                                    selected="@(Model.OrderMaster.SalesManId == employee.EmployeeId)">
+                                    @employee.EmployeeName</option>
+                            }
+                        </select>
                     </div>
-                    <div class="form-group row">
-                        <label for="SalesManId" class="col-form-label col-2"></label>
-                        <div class="col-10">
-                        </div>
+                    <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.SalesManId)" />
+                </div>
+                <div class="form-group row">
+                    <label for="SalesManId" class="col-form-label col-2"></label>
+                    <div class="col-10">
                     </div>
                 </div>
             </div>
@@ -181,8 +183,8 @@
                             <span class="mdi mdi-reload htmx-indicator"></span>
                         </label>
                         <div class="col-sm-10">
-                            <InputText id="CustomerTax" name="TaxCode" disabled class="form-control"
-                                @bind-Value=Model.OrderMaster.TaxCode />
+                            <input type="text" id="CustomerTax" name="TaxCode" readonly class="form-control"
+                                value="@Model.OrderMaster.TaxCode" />
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.TaxCode)" />
                     </div>
@@ -267,25 +269,26 @@
                         <label for="ExchangeRate" class="col-form-label col-2"> @L["Tỉ giá"]</label>
                         <div class="col-10">
 
-                            <CurrencyInput type="text" @bind-Value="@Model.OrderMaster.ExchangeRate"
-                                class="form-control currency" name="ExchangeRate" placeholder="Tỉ giá" />
+                            <input type="text" value="@Convert.ToInt16(@Model.OrderMaster.ExchangeRate)"
+                                class="form-control  name=" ExchangeRate" placeholder="Tỉ giá" />
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.ExchangeRate)" />
                     </div>
                     <div class="form-group row">
                         <label for="OriginalTotalAmount" class="col-form-label col-2"> @L["Cộng thành tiền"]</label>
                         <div class="col-10">
-                            <input type="text" value="@Convert.ToInt64(Model.OrderMaster.ConvertTotalAmount)"
-                                class="form-control currency" readonly id='ConvertTotalAmount'
-                                name="@nameof(Model.OrderMaster.ConvertTotalAmount)" placeholder="Cộng thành tiền" />
+                            <input type="text"
+                                value="@(Model.OrderMaster.TotalAmount is not null ? Model.OrderMaster.TotalAmount.Value.ToString("C", CultureInfo.CurrentCulture) : "")"
+                                class="form-control currency" readonly id='TotalAmount'
+                                name="@nameof(Model.OrderMaster.TotalAmount)" placeholder="Cộng thành tiền" />
                         </div>
-                        <ErrorMember Errors="@Model.Errors"
-                            MemberName="@nameof(Model.OrderMaster.ConvertTotalAmount)" />
+                        <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.TotalAmount)" />
                     </div>
                     <div class="form-group row">
                         <label for="ConvertTaxAmount" class="col-form-label col-2"> @L["Cộng tiền thuế VAT"]</label>
                         <div class="col-10">
-                            <input type="text" value="@Convert.ToInt64(Model.OrderMaster.ConvertTaxAmount)"
+                            <input type="text"
+                                value="@(Model.OrderMaster.ConvertTaxAmount is not null ? Model.OrderMaster.ConvertTaxAmount.Value.ToString("C", CultureInfo.CurrentCulture) : "")"
                                 class="form-control currency" readonly
                                 name="@nameof(Model.OrderMaster.ConvertTaxAmount)"
                                 id='@nameof(Model.OrderMaster.ConvertTaxAmount)' placeholder="Cộng tiền thuế VAT" />
@@ -295,7 +298,8 @@
                     <div class="form-group row">
                         <label for="ConvertDiscAmount" class="col-form-label col-2"> @L["Cộng tiền CK"]</label>
                         <div class="col-10">
-                            <input type="text" value="@Convert.ToInt64(Model.OrderMaster.ConvertDiscAmount)"
+                            <input type="text"
+                                value="@(Model.OrderMaster.ConvertDiscAmount is not null ? Model.OrderMaster.ConvertDiscAmount.Value.ToString("C", CultureInfo.CurrentCulture) : "")"
                                 class="form-control currency" readonly
                                 name="@nameof(Model.OrderMaster.ConvertDiscAmount)" id='ConvertDiscAmount'
                                 placeholder="Cộng tiền CK" />
@@ -305,11 +309,14 @@
                     <div class="form-group row">
                         <label for="TotalAmount" class="col-form-label col-2"> @L["Tổng tiền thanh toán"]</label>
                         <div class="col-10">
-                            <input type="text" value="@Convert.ToInt64(Model.OrderMaster.TotalAmount)"
-                                id='@nameof(Model.OrderMaster.TotalAmount)' class="form-control currency" readonly
-                                name="@nameof(Model.OrderMaster.TotalAmount)" placeholder="Tổng tiền thanh toán" />
+                            <input type="text"
+                                value="@(Model.OrderMaster.ConvertTotalAmount is not null ? Model.OrderMaster.ConvertTotalAmount.Value.ToString("C", CultureInfo.CurrentCulture) : "")"
+                                id='@nameof(Model.OrderMaster.ConvertTotalAmount)' class="form-control currency"
+                                readonly name="@nameof(Model.OrderMaster.ConvertTotalAmount)"
+                                placeholder="Tổng tiền thanh toán" />
                         </div>
-                        <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.TotalAmount)" />
+                        <ErrorMember Errors="@Model.Errors"
+                            MemberName="@nameof(Model.OrderMaster.ConvertTotalAmount)" />
                     </div>
                     <div class="form-group row">
                         <label for="OverDate" class="col-form-label col-2"> @L["Hạn thanh toán"]</label>
@@ -388,6 +395,6 @@
 @if (Model.ErrorMessage is not null)
 {
     <script>
-        window.document.onload = () => { console.log('@Model.ErrorMessage') }
+        toastr.error('@Model.ErrorMessage')
     </script>
 }

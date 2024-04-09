@@ -85,7 +85,7 @@ namespace DaMi.SO.Manager.Endpoints.OrderMasters.DTO
 
         public static void InitMapper()
         {
-            TypeAdapterConfig<OrderMaster, OrderMasterDetailView>.NewConfig();
+            TypeAdapterConfig<OrderMaster, OrderMasterDetailView>.NewConfig().Map(view => view.TotalAmount, src => src.OrderDetails.Select(f => Convert.ToDecimal(f.ConvertPrice * f.Quantity)).Sum());
 
             TypeAdapterConfig<OrderMasterDetailView, OrderMaster>.NewConfig();
         }

@@ -30,10 +30,10 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
         return await ReturnPage(work, work.Get<OrderDetail>().Get<OrderDetailSimpleView>(guid), null, ViewMode.Detail);
     }
 
-    [HttpGet("Create/{OrderId}")]
-    public async Task<IResult> GetNewRow(Guid OrderId)
+    [HttpGet("Create")]
+    public async Task<IResult> GetNewRow([FromQuery] Guid OrderId, [FromQuery] string? ItemIdSelect)
     {
-        return await ReturnPage(work, new OrderDetailSimpleView() { OrderId = OrderId }, null, ViewMode.Create);
+        return await ReturnPage(work, new OrderDetailSimpleView() { OrderId = OrderId, ItemId = ItemIdSelect }, null, ViewMode.Create);
     }
     [HttpGet("Item")]
     public async Task<IResult> GetItem(Guid? OrderDetailId, string? FormID, string ItemIdSelect)
@@ -63,9 +63,17 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
         }
     }
     [HttpGet("Edit/{guid}")]
-    public async Task<IResult> GetEdit(Guid guid)
+    public async Task<IResult> GetEdit(Guid guid, [FromQuery] string? ItemIdSelect)
     {
-        return await ReturnPage(work, work.Get<OrderDetail>().Get<OrderDetailSimpleView>(guid), null, ViewMode.Edit);
+        OrderDetailSimpleView? orderDetail = await work.Get<OrderDetail>().GetAsync<OrderDetailSimpleView>(guid);
+        ViwItem? item = await work.Get<ViwItem>().Find(x => x.ItemId == ItemIdSelect).FirstOrDefaultAsync();
+        if (item is not null && orderDetail is not null)
+        {
+            orderDetail.ItemId = item.ItemId;
+            orderDetail.ConvertPrice = item.ConvertPrice;
+            orderDetail.TaxRate = item.TaxRate;
+        }
+        return await ReturnPage(work, orderDetail, null, ViewMode.Edit);
     }
 
     [HttpPost("Edit/{guid}")]
@@ -73,6 +81,12 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
     {
         try
         {
+            ViwItem? item = await work.Get<ViwItem>().Find(f => f.ItemId == orderDetailNew.ItemId).FirstOrDefaultAsync();
+            if (item is not null)
+            {
+                orderDetailNew.ConvertPrice = item.ConvertPrice;
+                orderDetailNew.TaxRate = item.TaxRate;
+            }
             await service.UpdateAsync(orderDetailNew, guid);
             OrderMaster? orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Where(f => f.RowUniqueId == orderDetailNew.OrderId!).FirstOrDefaultAsync();
             if (orderMaster != null)
@@ -99,11 +113,12 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
                 OrderDetails = [],
                 Items = await work.Get<ViwItem>().GetAll().ToDictionaryAsync(i => i.ItemId),
                 ItemTypes = await work.Get<ViwItemType>().GetAll().ToListAsync(),
-                TaxCodes = await work.Get<TaxCode>().GetAll().ToListAsync()
+                TaxCodes = await work.Get<TaxCode>().GetAll().ToListAsync(),
             },
             ViewMode = viewMode,
             detail = orderDetail,
-            Errors = e
+            Errors = e,
+            FullItem = await work.Get<ViwFullItem>().Find(i => orderDetail != null && i.ItemId == orderDetail.ItemId).FirstOrDefaultAsync()
         });
     }
 }
@@ -114,6 +129,6 @@ public class OrderDetailModifyModel
     public Dictionary<string, ViwItem> Items { get; set; } = [];
     public Dictionary<string, string>? Errors { get; set; }
     public IEnumerable<ViwItemType> ItemTypes { get; set; } = [];
-
+    public Dictionary<string, ViwFullItem>? FullItemMap { get; set; }
     public IEnumerable<TaxCode> TaxCodes { get; set; } = [];
 }

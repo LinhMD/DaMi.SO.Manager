@@ -39,7 +39,7 @@ public class LoginController(IUnitOfWork work) : ControllerBase
     public async Task<IResult> Logout()
     {
         await HttpContext.SignOutAsync();
-        return this.Page<Login, LoginRequest>(new LoginRequest());
+        return Results.Redirect("Login");
     }
     [HttpPost]
     public async Task<IResult> LoginWithPassword([FromForm] LoginRequest request)
@@ -98,7 +98,7 @@ public class LoginController(IUnitOfWork work) : ControllerBase
 
         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         await HttpContext.SignInAsync(new ClaimsPrincipal([claimsIdentity]));
-        return Results.Redirect("/");
+        return Results.Redirect("/Index");
     }
 
     [Authorize]
@@ -140,7 +140,7 @@ public class LoginController(IUnitOfWork work) : ControllerBase
         {
             e.Dump();
         }
-        return Results.Redirect("/");
+        return Results.Redirect("/Index");
     }
 
     private static class LoginHelper

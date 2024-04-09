@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace DaMi.SO.Manager.Endpoints.Homes;
 
 [ApiController]
-[Route("")]
+[Route("index")]
 public class HomeController : ControllerBase
 {
-    [HttpGet("index")]
+    [HttpGet("")]
     public IResult Get()
     {
         if (HttpContext.User?.Identity?.IsAuthenticated ?? false)

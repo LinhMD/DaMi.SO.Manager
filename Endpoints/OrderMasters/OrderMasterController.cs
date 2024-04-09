@@ -18,6 +18,7 @@ using BlazorMinimalApis.Lib.Views;
 using DaMi.SO.Manager.Components;
 using DaMi.SO.Manager.Data;
 using Microsoft.Data.SqlClient;
+using System.Text.Json;
 
 namespace DaMi.SO.Manager.Endpoints.OrderMasters;
 
@@ -120,7 +121,7 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
         catch (Exception e)
         {
             e.Dump();
-            return await ReturnPage<CreatePage>(work, orderMasterCreate, ViewMode.Create, null, e.Message);
+            return await ReturnPage<CreatePage>(work, orderMasterCreate, ViewMode.Create, null, $"Create Error: {e.Message}");
         }
     }
 
@@ -140,18 +141,23 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
     {
         try
         {
-            await service.UpdateAsync(orderMaster, guid);
+            List<OrderDetail> orderDetails = await work.Get<OrderDetail>().Find(f => f.OrderId == guid).ToListAsync();
+            orderMaster.TotalAmount = orderDetails.Select(x => Convert.ToDecimal(x.ConvertPrice * x.Quantity)).Sum();
+            orderMaster.ConvertTaxAmount = orderDetails.Select(x => x.ConvertTaxAmount).Sum();
+            orderMaster.ConvertDiscAmount = orderDetails.Select(x => x.ConvertDiscAmount).Sum();
+            orderMaster.ConvertTotalAmount = orderMaster.ConvertTotalAmount + orderMaster.ConvertTaxAmount - orderMaster.ConvertDiscAmount;
+            Console.WriteLine(orderMaster);
+            OrderMaster save = await service.UpdateAsync(orderMaster, guid);
             return await Task.FromResult(Results.Redirect($"/OrderMaster/Details/{guid}"));
         }
         catch (ModelValueInvalidException e)
         {
-            return await ReturnPage<EditPage>(work, orderMaster, ViewMode.Edit, e.MemberErrors);
+            return await ReturnPage<EditPage>(work, work.Get<OrderMaster>().Find<OrderMasterDetailView>(f => f.RowUniqueId == guid).FirstOrDefault()!, ViewMode.Edit, e.MemberErrors);
         }
         catch (Exception e)
         {
             e.Dump();
-
-            return await ReturnPage<EditPage>(work, orderMaster, ViewMode.Edit, null, e.Message);
+            return await ReturnPage<EditPage>(work, work.Get<OrderMaster>().Find<OrderMasterDetailView>(f => f.RowUniqueId == guid).FirstOrDefault()!, ViewMode.Edit, null, $"Edit Error: {e.Message}");
         }
 
     }
@@ -184,7 +190,9 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
                 OrderDetails = orderMaster.OrderDetails,
                 Items = await work.Get<ViwItem>().GetAll().ToDictionaryAsync(i => i.ItemId),
                 ItemTypes = await work.Get<ViwItemType>().GetAll().ToListAsync(),
-                TaxCodes = await work.Get<TaxCode>().GetAll().ToListAsync()
+                TaxCodes = await work.Get<TaxCode>().GetAll().ToListAsync(),
+
+                FullItemMap = await work.Get<ViwFullItem>().GetAll().ToDictionaryAsync(i => i.ItemId),
             },
             ErrorMessage = ErrorMessage,
             ViewMode = viewMode,

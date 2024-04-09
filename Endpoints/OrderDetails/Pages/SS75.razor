@@ -49,7 +49,8 @@
                     <tbody id='table-body'>
                         @foreach (var detail in Model.OrderDetails)
                         {
-                            <SS75Row detail="@detail" Model="@Model" ViewMode="@ViewMode" OrderID="@OrderID">
+                            <SS75Row detail="@detail" Model="@Model" ViewMode="@ViewMode" OrderID="@OrderID"
+                                FullItem="@Model.FullItemMap?[detail?.ItemId ?? ""]">
                             </SS75Row>
                         }
                     </tbody>

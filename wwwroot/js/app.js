@@ -72,8 +72,8 @@ function calculateTotal() {
     var totalConvert = Array.from($(`table [name='ConvertAmount']`)).map(f => toNumber(f.innerText)).reduce((prev, curr) => prev + curr);
     var totaltax = Array.from($(`table [name='ConvertTaxAmount']`)).map(f => toNumber(f.innerText)).reduce((prev, curr) => prev + curr);
     var totaldisc = Array.from($(`table [name='ConvertDiscAmount']`)).map(f => toNumber(f.value)).reduce((prev, curr) => prev + curr);
-    $(`#ConvertTotalAmount`).val(toCurrency(totalConvert));
+    $(`#TotalAmount`).val(toCurrency(totalConvert));
     $(`#ConvertTaxAmount`).val(toCurrency(totaltax));
     $(`#ConvertDiscAmount`).val(toCurrency(totaldisc));
-    $(`#TotalAmount`).val(toCurrency(totalConvert + totaltax - totaldisc));
+    $(`#ConvertTotalAmount`).val(toCurrency(totalConvert + totaltax - totaldisc));
 }

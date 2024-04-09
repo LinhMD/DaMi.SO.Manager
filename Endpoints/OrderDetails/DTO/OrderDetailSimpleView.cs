@@ -65,13 +65,13 @@ public class OrderDetailSimpleView : IView<OrderDetail>, IDto, IUpdateRequest<Or
     public decimal? TaxRate { get; set; }
 
     [DisplayName("Tiền thuế")]
-    public decimal? ConvertTaxAmount { get; set; }
+    public decimal? ConvertTaxAmount => this.TaxRate * Convert.ToDecimal(this.Quantity * this.ConvertPrice) / 100;
 
     [DisplayName("Số tiền VND")]
-    public decimal? ConvertAmount { get { return (decimal?)(ConvertPrice * Quantity); } }
+    public decimal? ConvertAmount => Convert.ToDecimal(ConvertPrice * Quantity);
 
     [DisplayName("Tổng số tiền")]
-    public decimal? ConvertTotalAmount { get; set; }
+    public decimal? ConvertTotalAmount => ConvertAmount + ConvertTaxAmount - ConvertDiscAmount;
 
     [DisplayName("Loại tiền")]
     public string? CurrencyId { get; set; } = null!;
