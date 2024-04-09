@@ -3,64 +3,43 @@
 @using System.Globalization
 @inherits XComponent<OrderDetailModifyModel>
 @inject IStringLocalizer<ShareResource> L
-<div class="col-lg-12">
-    <div class="card">
-        <div class="card-header">
-            <div class=" container-fluid mx-0 my-0">
-                <div class="row">
-                    <div class="col-sm-6 p-md-0 justify-content-sm-start mt-2 mt-sm-0 d-flex">
-                        <h4>@L["Đơn Hàng chi tiết"]</h4>
-                    </div>
-                    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
-                        <button class="btn btn-round btn-success" hx-get="/OrderDetail/Create/@OrderID"
-                            hx-on:click="$('#add-new-btn').attr('disabled','disabled');" hx-target="#table-body"
-                            hx-swap='beforeend' id='add-new-btn'>+ @L["Thêm Dòng"]</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card-body">
-            <div class="overflow-auto">
-                <table class="table table-hover table-bordered table-responsive text-black w-auto" hx-boost="true">
-                    <thead>
-                        <tr class="text-black">
-                            <th style='min-width: 200px;'>@L["Mã sản phẩm"]</th>
-                            <th>@L["Tên sản phẩm"]</th>
-                            <th>@L["Đơn vị tính"]</th>
-                            <th>@L["Số lượng"]</th>
-                            <th>@L["Đơn giá"]</th>
-                            <th>@L["Thành tiền"]</th>
-                            <th>@L["% VAT"]</th>
-                            <th>@L["Tiền thuế VAT"]</th>
-                            <th>@L["% Chiết khấu"]</th>
-                            <th>@L["Số tiền CK"]</th>
-                            <th>@L["MST sử dụng"]</th>
-                            <th>@L["Số máy"]</th>
-                            <th>@L["Số hệ thống"]</th>
-                            <th>@L["Số User"]</th>
-                            <th>@L["Ngày sử dụng"]</th>
-                            <th>@L["Số tháng SD"]</th>
-                            @if (ViewMode == ViewMode.Edit)
-                            {
-                                <th></th>
-                            }
-                        </tr>
-                    </thead>
-                    <tbody id='table-body'>
-                        @foreach (var detail in Model.OrderDetails)
-                        {
-                            <SS75Row detail="@detail" Model="@Model" ViewMode="@ViewMode" OrderID="@OrderID"
-                                FullItem="@Model.FullItemMap?[detail?.ItemId ?? ""]">
-                            </SS75Row>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
+
+<table class="table table-hover table-bordered table-responsive text-black w-auto" hx-boost="true">
+    <thead>
+        <tr class="text-black">
+            <th style='min-width: 200px;'>@L["Mã sản phẩm"]</th>
+            <th>@L["Tên sản phẩm"]</th>
+            <th>@L["Đơn vị tính"]</th>
+            <th>@L["Số lượng"]</th>
+            <th>@L["Đơn giá"]</th>
+            <th>@L["Thành tiền"]</th>
+            <th>@L["% VAT"]</th>
+            <th>@L["Tiền thuế VAT"]</th>
+            <th>@L["% Chiết khấu"]</th>
+            <th>@L["Số tiền CK"]</th>
+            <th>@L["MST sử dụng"]</th>
+            <th>@L["Số máy"]</th>
+            <th>@L["Số hệ thống"]</th>
+            <th>@L["Số User"]</th>
+            <th>@L["Ngày sử dụng"]</th>
+            <th>@L["Số tháng SD"]</th>
+            @if (ViewMode != ViewMode.Detail && Action == true)
+            {
+                <th></th>
+            }
+        </tr>
+    </thead>
+    <tbody id='table-body'>
+        @foreach (var detail in Model.OrderDetails)
+        {
+            <SS75Row detail="@detail" Model="@Model" ViewMode="@ViewMode" OrderID="@OrderID" Action="@Action"
+                FullItem="@Model.FullItemMap?[detail?.ItemId ?? ""]">
+            </SS75Row>
+        }
+    </tbody>
+</table>
 @code {
     [Parameter] public ViewMode ViewMode { get; set; } = ViewMode.Detail;
-
     [Parameter] public Guid? OrderID { get; set; } = null!;
+    [Parameter] public bool? Action { get; set; } = true;
 }

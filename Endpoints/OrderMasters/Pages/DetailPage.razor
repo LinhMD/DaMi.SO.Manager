@@ -1,4 +1,7 @@
-﻿@using DaMi.SO.Manager.Endpoints.OrderDetails.DTO
+﻿@using DaMi.SO.Manager.Components
+@using DaMi.SO.Manager.Endpoints.OrderDetails
+@using DaMi.SO.Manager.Endpoints.OrderDetails.DTO
+@using DaMi.SO.Manager.Endpoints.OrderDetails.Pages
 @inherits XComponent<OrderMasterDetailModel>
 @layout _Layout
 @inject IStringLocalizer<ShareResource> L
@@ -218,19 +221,22 @@
                         <div class="form-group row">
                             <label for="" class="col-form-label col-3"> @L["Có xuất hóa đơn"]</label>
                             <div class="col-sm-9">
-                                <div class="form-control"></div>
+                                <div class="form-control">
+                                    <input type="checkbox" readonly id="HasInvoiceVat" value="true" name="HasInvoiceVat"
+                                        class="form-control" checked='@Model.OrderMaster.HasInvoiceVat'>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="" class="col-form-label col-3"> @L["Hình thức thanh toán"]</label>
                             <div class="col-sm-9">
-                                <div class="form-control"></div>
+                                <div class="form-control">@Model.OrderMaster.PaymentMethodId</div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label for="" class="col-form-label col-3"> @L["Điều khoản thanh toán"]</label>
                             <div class="col-sm-9">
-                                <div class="form-control"></div>
+                                <div class="form-control">@Model.OrderMaster.PaymentTerms</div>
                             </div>
                         </div>
                     </div>
@@ -246,8 +252,8 @@
                 <hr>
                 <div class="card-body">
                     <div class="form-group">
-                        <textarea type="text" class="form-control" id="Description" name="Description"
-                            rows="6">@Model.OrderMaster.Description</textarea>
+                        <textarea type="text" class="form-control" id="Description" rows="6"
+                            name="Description">@Model.OrderMaster.Description</textarea>
                     </div>
                 </div>
             </div>
@@ -258,38 +264,25 @@
                 <hr>
                 <div class="card-body">
                     <div class="form-group">
-                        <textarea type="text" class="form-control" id="Notes" name="Notes"
-                            rows="6">@Model.OrderMaster.Notes</textarea>
+                        <textarea type="text" class="form-control" id="Notes" rows="6"
+                            name="Notes">@Model.OrderMaster.Notes</textarea>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <h4 class="card-header text-bold">Chi tiết đơn hàng</h4>
-                <hr />
-                <div class="card-body">
-                    <div class="overflow-auto">
-                        <Table Models="@Model.OrderMaster.OrderDetails" TItem="OrderDetailSimpleView">
-                            <NavLabel>
-                                Mã đơn đặt hàng
-                            </NavLabel>
-                            <NavKey Context="o">
-                                <a href="/OrderDetail/@o.RowUniqueId">@o.OrderId</a>
-                            </NavKey>
-                            <ActionLabel></ActionLabel>
-                            <Action Context="o">
-                                <div>
-                                    <a href="/OrderDetail/Edit/@o.RowUniqueId"><i
-                                            class="mdi mdi-pencil-box i-warning"></i></a>
-                                    <a href="/OrderDetail/Details/@o.RowUniqueId"><i
-                                            class="mdi mdi-magnify i-primary"></i></a>
-                                </div>
-                            </Action>
-                        </Table>
-                    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>@L["Đơn Hàng chi tiết"]</h4>
+            </div>
+            <div class="card-body">
+                <div class="overflow-auto">
+                    <SS75 Model="@Modify" ViewMode='@Components.ViewMode.Detail' Action='false'
+                        OrderID="@Model.OrderMaster.RowUniqueId">
+                    </SS75>
                 </div>
             </div>
         </div>
@@ -320,3 +313,14 @@
         </a>
     </div>
 </div>
+@code {
+    public OrderDetailModifyModel? Modify { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        Modify = new OrderDetailModifyModel()
+            {
+                OrderDetails = Model.OrderMaster.OrderDetails
+            };
+    }
+}

@@ -6,28 +6,21 @@
 
 <div class="card">
     <div class="card-body">
-        <ul class="nav nav-pills" id="pills-tab" role="tablist">
+        <ul class="nav nav-tabs" id="pills-tab" role="tablist">
             <li class="nav-item mx-2" role="presentation">
-                <button class="nav-link active" id="pills-all-tab" data-bs-toggle="pill" data-bs-target="#pills-all"
-                    type="button" role="tab" aria-controls="pills-all" aria-selected="true">Tất cả đơn hàng</button>
+                <a href="#pills-all" class="btn" data-toggle="tab">Tất cả đơn hàng</a>
             </li>
             <li class="nav-item mx-2" role="presentation">
-                <button class="nav-link" id="pills-wait-for-approve-tab" data-bs-toggle="pill"
-                    data-bs-target="#pills-wait-for-approve" type="button" role="tab"
-                    aria-controls="pills-wait-for-approve" aria-selected="false">Chưa duyệt</button>
+                <a href="#pills-wait-for-approve" class="btn" data-toggle="tab">Chưa duyệt</a>
             </li>
             <li class="nav-item mx-2" role="presentation">
-                <button class="nav-link " id="pills-unfinish-tab" data-bs-toggle="pill" data-bs-target="#pills-unfinish"
-                    type="button" role="tab" aria-controls="pills-unfinish" aria-selected="false">Chưa hoàn
-                    thành</button>
+                <a href="#pills-unfinish" class="btn" data-toggle="tab">Chưa hoàn thành</a>
             </li>
             <li class="nav-item mx-2" role="presentation">
-                <button class="nav-link " id="pills-finish-tab" data-bs-toggle="pill" data-bs-target="#pills-finish"
-                    type="button" role="tab" aria-controls="pills-finish" aria-selected="false">Đã hoàn thành</button>
+                <a href="#pills-finish" class="btn" data-toggle="tab">Đã hoàn thành</a>
             </li>
             <li class="nav-item mx-2" role="presentation">
-                <button class="nav-link" id="pills-cancel-tab" data-bs-toggle="pill" data-bs-target="#pills-cancel"
-                    type="button" role="tab" aria-controls="pills-cancel" aria-selected="false">Đơn bị hủy</button>
+                <a href="#pills-cancel" class="btn" data-toggle="tab">Đơn bị hủy</a>
             </li>
         </ul>
     </div>
@@ -54,14 +47,7 @@
     </div>
 </div>
 <script>
-    var triggerTabList = [].slice.call(document.querySelectorAll('#pills-tab a'))
-    triggerTabList.forEach(function (triggerEl) {
-        var tabTrigger = new bootstrap.Tab(triggerEl)
-        triggerEl.addEventListener('click', function (event) {
-            event.preventDefault()
-            tabTrigger.show()
-        })
-    })
+
 </script>
 @* <Tabs EnableFadeEffect="true" NavStyle="NavStyle.Underline">
 <Tab Title="@L["Tất cả đơn hàng"]" IsActive="true">
