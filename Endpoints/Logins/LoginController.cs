@@ -116,13 +116,12 @@ public class LoginController(IUnitOfWork work) : ControllerBase
 
     [Authorize]
     [HttpPost("Reset")]
-    public async Task<IResult> CreatePassword([FromForm] string newPassword)
+    public async Task<IResult> CreatePassword([FromForm] string newPassword, [FromForm] string UserName)
     {
-        string? EmployeeUID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "";
         var user = await work.Get<Employee>().IncludeAll()
                         .Include(e => e.Department)
                         .ThenInclude(d => d.Permision)
-                        .Where(user => user.RowUniqueId == new Guid(EmployeeUID)).FirstOrDefaultAsync();
+                        .Where(user => user.EmployeeId == UserName).FirstOrDefaultAsync();
 
         if (user is null)
         {
