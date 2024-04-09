@@ -8,7 +8,7 @@ namespace DaMi.SO.Manager.Endpoints.Homes;
 [Route("")]
 public class HomeController : ControllerBase
 {
-    [HttpGet]
+    [HttpGet("index")]
     public IResult Get()
     {
         if (HttpContext.User?.Identity?.IsAuthenticated ?? false)
