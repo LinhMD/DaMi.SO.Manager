@@ -49,34 +49,3 @@
 <script>
 
 </script>
-@* <Tabs EnableFadeEffect="true" NavStyle="NavStyle.Underline">
-<Tab Title="@L["Tất cả đơn hàng"]" IsActive="true">
-<Content>
-<TabContent Model="Model.OrderMasters"></TabContent>
-</Content>
-</Tab>
-<Tab Title="@L["Chưa duyệt"]">
-<Content>
-<TabContent Model="Model.OrderMasters.Where(o => o.OrderStatus.IsAcceptStatus)"></TabContent>
-</Content>
-</Tab>
-<Tab Title="@L["Chưa hoàn thành"]">
-<Content>
-<TabContent Model='Model.OrderMasters
-.Where(o => o.OrderStatus.OrderStatusId != "OS99"
-&& o.OrderStatus.IsCancelStatus
-&& o.OrderStatus.IsSuspendStatus)'>
-</TabContent>
-</Content>
-</Tab>
-<Tab Title="@L["Đã hoàn thành"]">
-<Content>
-<TabContent Model='Model.OrderMasters.Where(o => o.OrderStatus.OrderStatusId == "OS99")'></TabContent>
-</Content>
-</Tab>
-<Tab Title="@L["Đơn bị hủy"]">
-<Content>
-<TabContent Model="Model.OrderMasters.Where(o => o.OrderStatus.IsCancelStatus)"></TabContent>
-</Content>
-</Tab>
-</Tabs> *@

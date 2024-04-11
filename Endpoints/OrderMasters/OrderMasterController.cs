@@ -42,10 +42,8 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
         if (orderMaster is null)
             return new RazorComponentResult(typeof(_404));
 
-        var customer = await work.Get<ViwCustomer>().Find(c => c.CustomerId == orderMaster.CustomerId).FirstOrDefaultAsync() ?? new ViwCustomer();
-        orderMaster.TaxCode = customer.TaxCode;
-        orderMaster.Phone = customer.Phone;
-        return this.Page<DetailPage, OrderMasterDetailModel>(new() { OrderMaster = orderMaster });
+
+        return await ReturnPage<DetailPage>(work, orderMaster, ViewMode.Detail);
     }
     [HttpGet("Edit/Customer")]
     public async Task<IResult> GetCustomerInfo([FromQuery] string CustomerIdSelect)
@@ -66,7 +64,7 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
             ExchangeRate = 1
             //TODO: mặc định current user
         };
-        return await ReturnPage<CreatePage>(work, orderMaster);
+        return await ReturnPage<CreatePage>(work, orderMaster, ViewMode.Create);
     }
     [HttpPost("New")]
     public async Task<IResult> PostNew([FromForm] OrderMasterDetailView orderMasterCreate)
@@ -133,7 +131,7 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
         if (orderMaster is null)
             return new RazorComponentResult(typeof(_404));
 
-        return await ReturnPage<EditPage>(work, orderMaster);
+        return await ReturnPage<EditPage>(work, orderMaster, ViewMode.Edit);
     }
 
     [HttpPost("Edit/{guid}")]

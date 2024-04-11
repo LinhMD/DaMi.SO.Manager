@@ -13,62 +13,110 @@
                     <div class="form-group row">
                         <label for="OrderFormId" class="col-form-label col-2">@L["Kiểu đơn hàng"]</label>
                         <div class="col-sm-10">
-                            <select name="OrderFormId" class="form-control selectpicker" id="OrderFormId"
-                                value="@Model.OrderMaster.OrderFormId">
-                                @foreach (var orderFrom in Model.OrderForms)
-                                {
-                                    <option value="@orderFrom.OrderFormId">@orderFrom.OrderFormName</option>
-                                }
-                            </select>
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <div class="form-control">
+                                    @Model.OrderForms.FirstOrDefault(f =>
+                                            f.OrderFormId == Model.OrderMaster.OrderFormId)?.OrderFormName
+                                </div>
+                            }
+                            else
+                            {
+                                <select name="OrderFormId" class="form-control selectpicker" id="OrderFormId"
+                                    value="@Model.OrderMaster.OrderFormId">
+                                    @foreach (var orderFrom in Model.OrderForms)
+                                    {
+                                        <option value="@orderFrom.OrderFormId">@orderFrom.OrderFormName</option>
+                                    }
+                                </select>
+                            }
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.OrderFormId)" />
                     </div>
                     <div class="form-group row">
                         <label for="OrderTypeId" class="col-form-label col-2">@L["Loại đơn hàng"]</label>
                         <div class="col-sm-10">
-                            <select name="OrderTypeId" class="form-control selectpicker" id="OrderTypeId"
-                                value="@Model.OrderMaster.OrderTypeId">
-                                @foreach (var orderType in Model.OrderTypes)
-                                {
-                                    <option value="@orderType.OrderTypeId"
-                                        selected="@(Model.OrderMaster.OrderTypeId==orderType.OrderTypeId)">
-                                        @orderType.OrderTypeName
-                                    </option>
-                                }
-                            </select>
-
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <div class="form-control">
+                                    @(Model.OrderTypes.FirstOrDefault(f => f.OrderTypeId ==
+                                        Model.OrderMaster.OrderTypeId)?.OrderTypeName)
+                                </div>
+                            }
+                            else
+                            {
+                                <select name="OrderTypeId" class="form-control selectpicker" id="OrderTypeId"
+                                    value="@Model.OrderMaster.OrderTypeId">
+                                    @foreach (var orderType in Model.OrderTypes)
+                                    {
+                                        <option value="@orderType.OrderTypeId"
+                                            selected="@(Model.OrderMaster.OrderTypeId==orderType.OrderTypeId)">
+                                            @orderType.OrderTypeName
+                                        </option>
+                                    }
+                                </select>
+                            }
                             <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.OrderTypeId)" />
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="Guid" class="col-form-label col-2">@L["Số đơn hàng"]</label>
                         <div class="col-sm-10">
-                            <InputText id="Guid" name="OrderNo" class="form-control" disabled
-                                @bind-Value=Model.OrderMaster.OrderNo />
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <div class="form-control">
+                                    @Model.OrderMaster.OrderNo
+                                </div>
+                            }
+                            else
+                            {
+                                <InputText id="Guid" name="OrderNo" class="form-control" disabled
+                                    @bind-Value=Model.OrderMaster.OrderNo />
+                            }
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.OrderNo)" />
                     </div>
                     <div class="form-group row">
                         <label for="OrderDate" class="col-form-label col-2">@L["Ngày tạo"]</label>
                         <div class="col-sm-10">
-                            <DateInput TValue="DateTime?" @bind-Value="@Model.OrderMaster.OrderDate"
-                                Placeholder="Enter Date" name="OrderDate" id="OrderDate" />
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <div class="form-control">
+                                    @(Model.OrderMaster.OrderDate is not null ?
+                                        Model.OrderMaster.OrderDate.Value.ToString(CultureInfo.CurrentCulture) : "")
+                                </div>
+                            }
+                            else
+                            {
+                                <DateInput TValue="DateTime?" @bind-Value="@Model.OrderMaster.OrderDate"
+                                    Placeholder="Enter Date" name="OrderDate" id="OrderDate" />
+                            }
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.OrderDate)" />
                     </div>
                     <div class="form-group row">
                         <label for="OrderStatusId" class="col-form-label col-2">@L["Trạng thái ĐH"]</label>
                         <div class="col-sm-10">
-                            <select name="OrderStatusId" class="form-control selectpicker" disabled id="OrderStatusId"
-                                value="@Model.OrderMaster.OrderStatusId">
-                                @foreach (var orderStatus in Model.OrderStatuses)
-                                {
-                                    <option value="@orderStatus.OrderStatusId"
-                                        selected="@(Model.OrderMaster.OrderStatusId == orderStatus.OrderStatusId)">
-                                        @orderStatus.OrderStatusName
-                                    </option>
-                                }
-                            </select>
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <div class="form-control">
+                                    @(Model.OrderStatuses.FirstOrDefault(f => f.OrderStatusId ==
+                                        Model.OrderMaster.OrderStatusId)?.OrderStatusName)
+                                </div>
+                            }
+                            else
+                            {
+                                <select name="OrderStatusId" class="form-control selectpicker" disabled id="OrderStatusId"
+                                    value="@Model.OrderMaster.OrderStatusId">
+                                    @foreach (var orderStatus in Model.OrderStatuses)
+                                    {
+                                        <option value="@orderStatus.OrderStatusId"
+                                            selected="@(Model.OrderMaster.OrderStatusId == orderStatus.OrderStatusId)">
+                                            @orderStatus.OrderStatusName
+                                        </option>
+                                    }
+                                </select>
+                            }
                             <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.OrderStatusId)" />
                         </div>
                     </div>
@@ -79,38 +127,68 @@
     <div class="col-6">
         <div class="card">
             <h4 class="card-header text-bold">@L["Thông tin khác"]</h4>
-
             <div class="card-body">
                 <div class="basic-form">
                     <div class="form-group row">
                         <label for="ExecutorId" class="col-form-label col-2">@L["Nhân viên triển khai"]</label>
                         <div class="col-10">
-                            <select class="form-control selectpicker" id="ExecutorId" name="ExecutorId"
-                                @bind="Model.OrderMaster.ExecutorId">
-                                @foreach (var employee in Model.Employees.Where(e => e.Department.IsInstall))
-                                {
-                                    <option value="@employee.EmployeeId"
-                                        selected="@(Model.OrderMaster.ExecutorId == employee.EmployeeId)">
-                                        @employee.EmployeeName
-                                    </option>
-                                }
-                            </select>
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <div class="form-control">
+                                    @(Model.Employees.FirstOrDefault(employee => Model.OrderMaster.ExecutorId ==
+                                        employee.EmployeeId)?.EmployeeName)
+                                </div>
+                            }
+                            else
+                            {
+                                <select class="form-control selectpicker" id="ExecutorId" name="ExecutorId"
+                                    @bind="Model.OrderMaster.ExecutorId">
+                                    @foreach (var employee in Model.Employees.Where(e => e.Department.IsInstall))
+                                    {
+                                        <option value="@employee.EmployeeId"
+                                            selected="@(Model.OrderMaster.ExecutorId == employee.EmployeeId)">
+                                            @employee.EmployeeName
+                                        </option>
+                                    }
+                                </select>
+                            }
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.ExecutorId)" />
                     </div>
                     <div class="form-group row">
                         <label for="BeginExecDate" class="col-form-label col-2">@L["Ngày BĐ triển khai"]</label>
                         <div class="col-10">
-                            <DateInput TValue="DateTime?" @bind-Value="@Model.OrderMaster.BeginExecDate"
-                                Placeholder="Ngày BĐ triển khai" name="BeginExecDate" id="BeginExecDate" />
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <div class="form-control">
+                                    @(Model.OrderMaster.BeginExecDate is not null ?
+                                        Model.OrderMaster.BeginExecDate.Value.ToString(CultureInfo.CurrentCulture) : "")
+                                </div>
+                            }
+                            else
+                            {
+                                <DateInput TValue="DateTime?" @bind-Value="@Model.OrderMaster.BeginExecDate"
+                                    Placeholder="Ngày BĐ triển khai" name="BeginExecDate" id="BeginExecDate" />
+                            }
+
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.BeginExecDate)" />
                     </div>
                     <div class="form-group row">
                         <label for="BeginExecDate" class="col-form-label col-2">@L["Ngày KT triển khai"]</label>
                         <div class="col-10">
-                            <DateInput TValue="DateTime?" @bind-Value="@Model.OrderMaster.EndExecDate"
-                                Placeholder="Ngày KT triển khai" name="EndExecDate" id="EndExecDate" />
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <div class="form-control">
+                                    @(Model.OrderMaster.EndExecDate is not null ?
+                                        Model.OrderMaster.EndExecDate.Value.ToString(CultureInfo.CurrentCulture) : "")
+                                </div>
+                            }
+                            else
+                            {
+                                <DateInput TValue="DateTime?" @bind-Value="@Model.OrderMaster.EndExecDate"
+                                    Placeholder="Ngày KT triển khai" name="EndExecDate" id="EndExecDate" />
+                            }
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.EndExecDate)" />
                     </div>
@@ -119,15 +197,26 @@
                 <div class="form-group row">
                     <label for="SalesManId" class="col-form-label col-2">@L["Nhân viên bán hàng"]</label>
                     <div class="col-10">
-                        <select class="form-control selectpicker" id="SalesManId" disabled name="SalesManId"
-                            value="@Model.OrderMaster.SalesManId">
-                            @foreach (var employee in Model.Employees)
-                            {
-                                <option value="@employee.EmployeeId"
-                                    selected="@(Model.OrderMaster.SalesManId == employee.EmployeeId)">
-                                    @employee.EmployeeName</option>
-                            }
-                        </select>
+                        @if (Model.ViewMode == ViewMode.Detail)
+                        {
+                            <div class="form-control">
+                                @(Model.Employees.FirstOrDefault(employee => Model.OrderMaster.SalesManId ==
+                                    employee.EmployeeId)?.EmployeeName)
+                            </div>
+                        }
+                        else
+                        {
+                            <select class="form-control selectpicker" id="SalesManId" disabled name="SalesManId"
+                                value="@Model.OrderMaster.SalesManId">
+                                @foreach (var employee in Model.Employees)
+                                {
+                                    <option value="@employee.EmployeeId"
+                                        selected="@(Model.OrderMaster.SalesManId == employee.EmployeeId)">
+                                        @employee.EmployeeName</option>
+                                }
+                            </select>
+                        }
+
                     </div>
                     <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.SalesManId)" />
                 </div>
@@ -152,29 +241,39 @@
                             <span class="mdi mdi-reload htmx-indicator"></span>
                         </label>
                         <div class="col-sm-10">
-                            <InputText type="hidden" id="CustomerId" name="CustomerId"
-                                @bind-Value="Model.OrderMaster.CustomerId" />
-                            <select class="form-control selectpicker" hx-indicator=".htmx-indicator"
-                                hx-get="/OrderMaster/Edit/Customer" id="CustomerIdSelect" name="CustomerIdSelect"
-                                value="@Model.OrderMaster.CustomerId">
-                                <option></option>
-                                @foreach (var customer in Model.Customers)
-                                {
-                                    <option value="@customer.CustomerId">@customer.CustomerName</option>
-                                }
-                            </select>
-                            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.CustomerId)" />
-                            <script>
-                                var select = new SlimSelect({
-                                    select: '#CustomerIdSelect',
-                                    events: {
-                                        afterChange: (newVal) => {
-                                            console.log(newVal);
-                                            $("#CustomerId").val(newVal[0]?.value ?? "");
-                                        }
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <div class="form-control">
+                                    @(Model.Customers.FirstOrDefault(customer => Model.OrderMaster.CustomerId ==
+                                        customer.CustomerId)?.CustomerName)
+                                </div>
+                            }
+                            else
+                            {
+                                <InputText type="hidden" id="CustomerId" name="CustomerId"
+                                    @bind-Value="Model.OrderMaster.CustomerId" />
+                                <select class="form-control selectpicker" hx-indicator=".htmx-indicator"
+                                    hx-get="/OrderMaster/Edit/Customer" id="CustomerIdSelect" name="CustomerIdSelect"
+                                    value="@Model.OrderMaster.CustomerId">
+                                    <option></option>
+                                    @foreach (var customer in Model.Customers)
+                                    {
+                                        <option value="@customer.CustomerId">@customer.CustomerName</option>
                                     }
-                                });
-                            </script>
+                                </select>
+                                <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.CustomerId)" />
+                                <script>
+                                    var select = new SlimSelect({
+                                        select: '#CustomerIdSelect',
+                                        events: {
+                                            afterChange: (newVal) => {
+                                                console.log(newVal);
+                                                $("#CustomerId").val(newVal[0]?.value ?? "");
+                                            }
+                                        }
+                                    });
+                                </script>
+                            }
                         </div>
                     </div>
                     <div class="form-group row">
@@ -194,8 +293,17 @@
                             <span class="mdi mdi-reload customer-info htmx-indicator"></span>
                         </label>
                         <div class="col-sm-10">
-                            <InputText id="CustomerPhone" class="form-control" name="Phone"
-                                @bind-Value=Model.OrderMaster.Phone />
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <div class="form-control">
+                                    @(Model.OrderMaster.Phone)
+                                </div>
+                            }
+                            else
+                            {
+                                <InputText id="CustomerPhone" class="form-control" name="Phone" 
+                                    @bind-Value=Model.OrderMaster.Phone />
+                            }
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.Phone)" />
                     </div>
@@ -204,8 +312,17 @@
                             @L["Người đại điện"]
                         </label>
                         <div class="col-sm-10">
-                            <InputText id="RefPerson" name="RefPerson" class="form-control"
-                                @bind-Value=Model.OrderMaster.RefPerson />
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <div class="form-control">
+                                    @(Model.OrderMaster.RefPerson)
+                                </div>
+                            }
+                            else
+                            {
+                                <InputText id="RefPerson" name="RefPerson" class="form-control"
+                                    @bind-Value=Model.OrderMaster.RefPerson />
+                            }
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.RefPerson)" />
                     </div>
@@ -214,8 +331,17 @@
                             @L["Chức vụ"]
                         </label>
                         <div class="col-sm-10">
-                            <InputText id="RefPos" name="RefPos" class="form-control"
-                                @bind-Value=Model.OrderMaster.RefPos />
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <div class="form-control">
+                                    @(Model.OrderMaster.RefPos)
+                                </div>
+                            }
+                            else
+                            {
+                                <InputText id="RefPos" name="RefPos" class="form-control"
+                                    @bind-Value=Model.OrderMaster.RefPos />
+                            }
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.RefPos)" />
                     </div>
@@ -224,8 +350,17 @@
                             @L["Số hợp đồng"]
                         </label>
                         <div class="col-sm-10">
-                            <InputText id="ContractNo" name="ContractNo" class="form-control"
-                                @bind-Value=Model.OrderMaster.ContractNo />
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <div class="form-control">
+                                    @(Model.OrderMaster.ContractNo)
+                                </div>
+                            }
+                            else
+                            {
+                                <InputText id="ContractNo" name="ContractNo" class="form-control"
+                                    @bind-Value=Model.OrderMaster.ContractNo />
+                            }
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.ContractNo)" />
                     </div>
@@ -234,8 +369,18 @@
                             @L["Ngày hợp đồng"]
                         </label>
                         <div class="col-sm-10">
-                            <DateInput TValue="DateOnly?" @bind-Value="@Model.OrderMaster.ContractDate"
-                                Placeholder="Ngày hợp đồng" name="ContractDate" id="ContractDate" />
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <div class="form-control">
+                                    @(Model.OrderMaster.ContractDate is not null ?
+                                        Model.OrderMaster.ContractDate.Value.ToString(CultureInfo.CurrentCulture) : "")
+                                </div>
+                            }
+                            else
+                            {
+                                <DateInput TValue="DateOnly?" @bind-Value="@Model.OrderMaster.ContractDate"
+                                    Placeholder="Ngày hợp đồng" name="ContractDate" id="ContractDate" />
+                            }
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.ContractDate)" />
                     </div>
@@ -246,74 +391,136 @@
     <div class="col-6">
         <div class="card">
             <h4 class="card-header text-bold"> @L["Thông tin thanh toán"]</h4>
-
             <div class="card-body">
                 <div class="basic-form">
                     <div class="form-group row">
                         <label for="CurrencyId" class="col-form-label col-2"> @L["Loại tiền"]</label>
                         <div class="col-10">
-                            <InputSelect class="form-control selectpicker" id="CurrencyId" name="CurrencyId"
-                                @bind-Value="Model.OrderMaster.CurrencyId">
-                                @foreach (var currency in Model.Currencies)
-                                {
-                                    <option value="@currency.CurrencyId"
-                                        selected="@(Model.OrderMaster.CurrencyId == currency.CurrencyId)">
-                                        @currency.CurrencyName
-                                    </option>
-                                }
-                            </InputSelect>
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <div class="form-control">
+                                    @(Model.Currencies.FirstOrDefault(currency => Model.OrderMaster.CustomerId ==
+                                        currency.CurrencyId)?.CurrencyName)
+                                </div>
+                            }
+                            else
+                            {
+                                <InputSelect class="form-control selectpicker" id="CurrencyId" name="CurrencyId"
+                                    @bind-Value="Model.OrderMaster.CurrencyId">
+                                    @foreach (var currency in Model.Currencies)
+                                    {
+                                        <option value="@currency.CurrencyId"
+                                            selected="@(Model.OrderMaster.CurrencyId == currency.CurrencyId)">
+                                            @currency.CurrencyName
+                                        </option>
+                                    }
+                                </InputSelect>
+                            }
                             <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.CurrencyId)" />
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="ExchangeRate" class="col-form-label col-2"> @L["Tỉ giá"]</label>
                         <div class="col-10">
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <div class="form-control">
+                                    @Convert.ToInt16(Model.OrderMaster.ExchangeRate)
+                                </div>
+                            }
+                            else
+                            {
 
-                            <input type="text" value="@Convert.ToInt16(@Model.OrderMaster.ExchangeRate)"
-                                class="form-control  name=" ExchangeRate" placeholder="Tỉ giá" />
+                                <input type="text" value="@Convert.ToInt16(Model.OrderMaster.ExchangeRate)"
+                                    class="form-control  name=" ExchangeRate" placeholder="Tỉ giá" />
+                            }
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.ExchangeRate)" />
                     </div>
                     <div class="form-group row">
                         <label for="OriginalTotalAmount" class="col-form-label col-2"> @L["Cộng thành tiền"]</label>
                         <div class="col-10">
-                            <input type="text"
-                                value="@(Model.OrderMaster.TotalAmount is not null ? Model.OrderMaster.TotalAmount.Value.ToString("C", CultureInfo.CurrentCulture) : "")"
-                                class="form-control currency" readonly id='TotalAmount'
-                                name="@nameof(Model.OrderMaster.TotalAmount)" placeholder="Cộng thành tiền" />
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <div class="form-control currency">
+                                    @(Model.OrderMaster.TotalAmount is not null ?
+                                        Model.OrderMaster.TotalAmount.Value.ToString("C", CultureInfo.CurrentCulture) : "")
+                                </div>
+                            }
+                            else
+                            {
+                                <input type="text"
+                                    value="@(Model.OrderMaster.TotalAmount is not null ? Model.OrderMaster.TotalAmount.Value.ToString("C", CultureInfo.CurrentCulture) : "")"
+                                    class="form-control currency" readonly id='TotalAmount'
+                                    name="@nameof(Model.OrderMaster.TotalAmount)" placeholder="Cộng thành tiền" />
+                            }
+
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.TotalAmount)" />
                     </div>
                     <div class="form-group row">
                         <label for="ConvertTaxAmount" class="col-form-label col-2"> @L["Cộng tiền thuế VAT"]</label>
                         <div class="col-10">
-                            <input type="text"
-                                value="@(Model.OrderMaster.ConvertTaxAmount is not null ? Model.OrderMaster.ConvertTaxAmount.Value.ToString("C", CultureInfo.CurrentCulture) : "")"
-                                class="form-control currency" readonly
-                                name="@nameof(Model.OrderMaster.ConvertTaxAmount)"
-                                id='@nameof(Model.OrderMaster.ConvertTaxAmount)' placeholder="Cộng tiền thuế VAT" />
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <div class="form-control currency">
+                                    @(Model.OrderMaster.ConvertTaxAmount is not null ?
+                                        Model.OrderMaster.ConvertTaxAmount.Value.ToString("C", CultureInfo.CurrentCulture) : "")
+                                </div>
+                            }
+                            else
+                            {
+                                <input type="text"
+                                    value="@(Model.OrderMaster.ConvertTaxAmount is not null ? Model.OrderMaster.ConvertTaxAmount.Value.ToString("C", CultureInfo.CurrentCulture) : "")"
+                                    class="form-control currency" readonly
+                                    name="@nameof(Model.OrderMaster.ConvertTaxAmount)"
+                                    id='@nameof(Model.OrderMaster.ConvertTaxAmount)' placeholder="Cộng tiền thuế VAT" />
+                            }
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.ConvertTaxAmount)" />
                     </div>
                     <div class="form-group row">
                         <label for="ConvertDiscAmount" class="col-form-label col-2"> @L["Cộng tiền CK"]</label>
                         <div class="col-10">
-                            <input type="text"
-                                value="@(Model.OrderMaster.ConvertDiscAmount is not null ? Model.OrderMaster.ConvertDiscAmount.Value.ToString("C", CultureInfo.CurrentCulture) : "")"
-                                class="form-control currency" readonly
-                                name="@nameof(Model.OrderMaster.ConvertDiscAmount)" id='ConvertDiscAmount'
-                                placeholder="Cộng tiền CK" />
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <div class="form-control currency">
+                                    @(Model.OrderMaster.ConvertDiscAmount is not null ?
+                                        Model.OrderMaster.ConvertDiscAmount.Value.ToString("C", CultureInfo.CurrentCulture) :
+                                        "")
+                                </div>
+                            }
+                            else
+                            {
+
+                                <input type="text"
+                                    value="@(Model.OrderMaster.ConvertDiscAmount is not null ? Model.OrderMaster.ConvertDiscAmount.Value.ToString("C", CultureInfo.CurrentCulture) : "")"
+                                    class="form-control currency" readonly
+                                    name="@nameof(Model.OrderMaster.ConvertDiscAmount)" id='ConvertDiscAmount'
+                                    placeholder="Cộng tiền CK" />
+                            }
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.ConvertDiscAmount)" />
                     </div>
                     <div class="form-group row">
                         <label for="TotalAmount" class="col-form-label col-2"> @L["Tổng tiền thanh toán"]</label>
                         <div class="col-10">
-                            <input type="text"
-                                value="@(Model.OrderMaster.ConvertTotalAmount is not null ? Model.OrderMaster.ConvertTotalAmount.Value.ToString("C", CultureInfo.CurrentCulture) : "")"
-                                id='@nameof(Model.OrderMaster.ConvertTotalAmount)' class="form-control currency"
-                                readonly name="@nameof(Model.OrderMaster.ConvertTotalAmount)"
-                                placeholder="Tổng tiền thanh toán" />
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <div class="form-control currency">
+                                    @(Model.OrderMaster.ConvertTotalAmount is not null ?
+                                        Model.OrderMaster.ConvertTotalAmount.Value.ToString("C", CultureInfo.CurrentCulture) :
+                                        "")
+                                </div>
+                            }
+                            else
+                            {
+                                <input type="text"
+                                    value="@(Model.OrderMaster.ConvertTotalAmount is not null ? Model.OrderMaster.ConvertTotalAmount.Value.ToString("C", CultureInfo.CurrentCulture) : "")"
+                                    id='@nameof(Model.OrderMaster.ConvertTotalAmount)' class="form-control currency"
+                                    readonly name="@nameof(Model.OrderMaster.ConvertTotalAmount)"
+                                    placeholder="Tổng tiền thanh toán" />
+                            }
                         </div>
                         <ErrorMember Errors="@Model.Errors"
                             MemberName="@nameof(Model.OrderMaster.ConvertTotalAmount)" />
@@ -321,8 +528,18 @@
                     <div class="form-group row">
                         <label for="OverDate" class="col-form-label col-2"> @L["Hạn thanh toán"]</label>
                         <div class="col-10">
-                            <DateInput TValue="DateOnly?" @bind-Value="@Model.OrderMaster.OverDate"
-                                Placeholder="Hạn thanh toán" name="OverDate" id="OverDate" />
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <div class="form-control">
+                                    @(Model.OrderMaster.OverDate is not null ?
+                                        Model.OrderMaster.OverDate.Value.ToString(CultureInfo.CurrentCulture) : "")
+                                </div>
+                            }
+                            else
+                            {
+                                <DateInput TValue="DateOnly?" @bind-Value="@Model.OrderMaster.OverDate"
+                                    Placeholder="Hạn thanh toán" name="OverDate" id="OverDate" />
+                            }
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.OverDate)" />
                     </div>
@@ -330,31 +547,51 @@
                         <label for="PublishedInvoice" class="col-form-label col-2"> @L["Có xuất hóa đơn"]</label>
                         <div class="col-10">
                             <input type="checkbox" id="HasInvoiceVat" value="true" name="HasInvoiceVat"
-                                class="form-control" checked='@Model.OrderMaster.HasInvoiceVat'>
+                                readonly='@(Model.ViewMode == ViewMode.Detail)' class="form-control"
+                                checked='@Model.OrderMaster.HasInvoiceVat'>
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.HasInvoiceVat)" />
                     </div>
                     <div class="form-group row">
                         <label for="PaymentMethodId" class="col-form-label col-2"> @L["Hình thức thanh toán"]</label>
                         <div class="col-10">
-                            <select class="form-control selectpicker" id="PaymentMethodId" name="PaymentMethodId"
-                                value="@Model.OrderMaster.PaymentMethodId">
-                                @foreach (var paymentMethod in Model.PaymentMethods)
-                                {
-                                    <option value="@paymentMethod.PaymentMethodId"
-                                        selected="@(Model.OrderMaster.PaymentMethodId == paymentMethod.PaymentMethodId)">
-                                        @paymentMethod.PaymentMethodName
-                                    </option>
-                                }
-                            </select>
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <div class="form-control">
+                                    @(Model.PaymentMethods.FirstOrDefault(paymentMethod => Model.OrderMaster.PaymentMethodId ==
+                                    paymentMethod.PaymentMethodId)?.PaymentMethodName)
+                                </div>
+                            }
+                            else
+                            {
+                                <select class="form-control selectpicker" id="PaymentMethodId" name="PaymentMethodId"
+                                    value="@Model.OrderMaster.PaymentMethodId">
+                                    @foreach (var paymentMethod in Model.PaymentMethods)
+                                    {
+                                        <option value="@paymentMethod.PaymentMethodId"
+                                            selected="@(Model.OrderMaster.PaymentMethodId == paymentMethod.PaymentMethodId)">
+                                            @paymentMethod.PaymentMethodName
+                                        </option>
+                                    }
+                                </select>
+                            }
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.PaymentMethodId)" />
                     </div>
                     <div class="form-group row">
                         <label for="PaymentTerms" class="col-form-label col-2"> @L["Điều khoản thanh toán"]</label>
                         <div class="col-10">
-                            <InputText type="text" id="PaymentTerms" name="PaymentTerms" class="form-control"
-                                @bind-Value=Model.OrderMaster.PaymentTerms />
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <div class="form-control">
+                                    @(Model.OrderMaster.PaymentTerms)
+                                </div>
+                            }
+                            else
+                            {
+                                <InputText type="text" id="PaymentTerms" name="PaymentTerms" class="form-control"
+                                    @bind-Value=Model.OrderMaster.PaymentTerms />
+                            }
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.PaymentTerms)" />
                     </div>
@@ -370,6 +607,7 @@
             <div class="card-body">
                 <div class="form-group">
                     <textarea type="text" class="form-control" id="Description" name="Description"
+                        readonly='@(Model.ViewMode == ViewMode.Detail)'
                         rows="6">@Model.OrderMaster.Description</textarea>
                     <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.Description)" />
                 </div>
@@ -382,7 +620,7 @@
             <div class="card-body">
                 <div class="form-group">
                     <textarea type="text" class="form-control" id="Notes" name="Notes"
-                        rows="6">@Model.OrderMaster.Notes</textarea>
+                        readonly='@(Model.ViewMode == ViewMode.Detail)' rows="6">@Model.OrderMaster.Notes</textarea>
                     <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.Notes)" />
                 </div>
             </div>
