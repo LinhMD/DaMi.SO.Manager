@@ -34,6 +34,7 @@ builder.Services.AddAuthentication(o =>
 }).AddCookie(o =>
 {
     o.LoginPath = "/Login";
+    o.AccessDeniedPath = "/Login";
 });
 builder.Services.AddAuthorization(o =>
 {
