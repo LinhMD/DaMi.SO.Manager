@@ -13,17 +13,20 @@ using DaMi.SO.Manager.Data.Models;
 using DaMi.SO.Manager.Endpoints.OrderDetails.DTO;
 using DaMi.SO.Manager.Endpoints.OrderDetails.Pages;
 using Mapster;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DaMi.SO.Manager.Endpoints.OrderDetails;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> service) : ControllerBase
 {
 
+    [Authorize(policy: "ViewOrder")]
     [HttpGet("Detail/{guid}")]
     public async Task<IResult> GetDetailsAsync(Guid guid, [FromQuery] string? FormID)
     {
@@ -31,6 +34,7 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
         return await ReturnPage(work, work.Get<OrderDetail>().Get<OrderDetailSimpleView>(guid), orderForm, null, ViewMode.Detail);
     }
 
+    [Authorize(policy: nameof(Permision.AddNewOrder))]
     [HttpGet("Create")]
     public async Task<IResult> GetNewRow([FromQuery] Guid OrderId, [FromQuery] string? ItemIdSelect, [FromQuery] string? FormID)
     {
@@ -40,6 +44,7 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
         return await ReturnPage(work, new OrderDetailSimpleView() { OrderId = OrderId, ItemId = ItemIdSelect }, orderForm, null, ViewMode.Create, orderMaster?.CustomerId);
     }
 
+    [Authorize(policy: nameof(Permision.AddNewOrder))]
     [HttpPost("Create")]
     public async Task<IResult> PostNew([FromForm] OrderDetailSimpleView orderDetailNew)
     {
@@ -57,6 +62,8 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
             return await ReturnPage(work, null, orderForm, e.MemberErrors, ViewMode.Create, orderMaster?.CustomerId);
         }
     }
+
+    [Authorize(policy: nameof(Permision.UpdateOrder))]
     [HttpGet("Edit/{guid}")]
     public async Task<IResult> GetEdit(Guid guid, [FromQuery] string? ItemIdSelect, [FromQuery] string? FormID)
     {
@@ -75,6 +82,7 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
         return await ReturnPage(work, orderDetail, orderForm, null, ViewMode.Edit, orderMaster?.CustomerId);
     }
 
+    [Authorize(policy: nameof(Permision.UpdateOrder))]
     [HttpPost("Edit/{guid}")]
     public async Task<IResult> PostEdit([FromForm] OrderDetailSimpleView orderDetailNew, Guid guid)
     {

@@ -82,6 +82,9 @@ public class LoginController(IUnitOfWork work) : ControllerBase
             new (ClaimTypes.NameIdentifier, user.RowUniqueId.ToString()),
             new (ClaimTypes.Role, user.DepartmentId),
             new (ClaimTypes.Email, user?.Email ?? ""),
+
+        ];
+        List<Claim> Permissions = [
             new (nameof(user.Department.Permision.View), user?.Department.Permision.View.ToString() ?? ""),
             new (nameof(user.Department.Permision.AddNew), user?.Department.Permision.AddNew.ToString()?? ""),
             new (nameof(user.Department.Permision.Delete), user?.Department.Permision.Delete.ToString()?? ""),
@@ -96,7 +99,7 @@ public class LoginController(IUnitOfWork work) : ControllerBase
             new (nameof(user.Department.Permision.SuspendOrder), user?.Department.Permision.SuspendOrder.ToString()?? ""),
             new (nameof(user.Department.Permision.ChangeStatusOrder), user?.Department.Permision.ChangeStatusOrder.ToString()?? "")
         ];
-
+        claims.AddRange(Permissions.Where(x => x.Value == "true").ToList());
         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         await HttpContext.SignInAsync(new ClaimsPrincipal([claimsIdentity]));
         return Results.Redirect("/Index");

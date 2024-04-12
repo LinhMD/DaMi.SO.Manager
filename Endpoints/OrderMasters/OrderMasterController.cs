@@ -29,6 +29,7 @@ namespace DaMi.SO.Manager.Endpoints.OrderMasters;
 [Route("[controller]")]
 public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> service, DaMiSoManagerContext context) : ControllerBase
 {
+    [Authorize(policy: "ViewOrder")]
     [HttpGet]
     public async Task<IResult> GetAsync()
     {
@@ -38,17 +39,17 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
         return this.Page<IndexPage, OrderMasterTableModel>(new() { OrderMasters = orderMasters });
     }
 
+    [Authorize(policy: "ViewOrder")]
     [HttpGet("Details/{guid}")]
     public async Task<IResult> GetDetailsAsync(Guid guid)
     {
         var orderMaster = await work.Get<OrderMaster>().Find<OrderMasterDetailView>(f => f.RowUniqueId == guid).FirstOrDefaultAsync();
-
         if (orderMaster is null)
             return new RazorComponentResult(typeof(_404));
-
-
         return await ReturnPage<DetailPage>(work, orderMaster, ViewMode.Detail);
     }
+
+    [Authorize(policy: nameof(Permision.UpdateOrder))]
     [HttpGet("Edit/Customer")]
     public async Task<IResult> GetCustomerInfo([FromQuery] string CustomerIdSelect)
     {
@@ -57,6 +58,7 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
         return new RazorComponentResult(typeof(OOBCustomerInfo), new { customer.TaxCode, customer.Phone });
     }
 
+    [Authorize(policy: nameof(Permision.AddNewOrder))]
     [HttpGet("New")]
     public async Task<IResult> GetNew([FromClaim(ClaimTypes.Sid)] string? employeeID)
     {
@@ -70,6 +72,8 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
         };
         return await ReturnPage<CreatePage>(work, orderMaster, ViewMode.Create);
     }
+
+    [Authorize(policy: nameof(Permision.AddNewOrder))]
     [HttpPost("New")]
     public async Task<IResult> PostNew([FromForm] OrderMasterDetailView orderMasterCreate)
     {
@@ -127,6 +131,7 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
         }
     }
 
+    [Authorize(policy: nameof(Permision.UpdateOrder))]
     [HttpGet("Edit/{guid}")]
     public async Task<IResult> GetEditAsync(Guid guid)
     {
@@ -138,6 +143,7 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
         return await ReturnPage<EditPage>(work, orderMaster, ViewMode.Edit);
     }
 
+    [Authorize(policy: nameof(Permision.UpdateOrder))]
     [HttpPost("Edit/{guid}")]
     public async Task<IResult> EditAsync(Guid guid, [FromForm] OrderMasterDetailView orderMaster)
     {

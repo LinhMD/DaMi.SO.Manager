@@ -1,32 +1,21 @@
 @using DaMi.SO.Manager.Endpoints.OrderMasters.DTO
 @inject IStringLocalizer<ShareResource> L
 @inherits XComponent<IEnumerable<OrderMasterSimpleView>>
-<div class="col-12 mx-0 px-0">
-    <div class="card">
-        <div class="card-header">
-            <div class="card-title">@L["Đơn Hàng"]</div>
+<Table Models="@Model" TItem="OrderMasterSimpleView" RowStyleColor="Color">
+    <NavLabel>
+        @L["Số đơn hàng"]
+    </NavLabel>
+    <NavKey Context="o">
+        <a href="/OrderMaster/Details/@o.RowUniqueId">@o.OrderNo</a>
+    </NavKey>
+    <ActionLabel></ActionLabel>
+    <Action Context="o">
+        <div>
+            <a href="/OrderMaster/Edit/@o.RowUniqueId"><span class="mdi mdi-pencil-box"></span></a>
+            <a href="/OrderMaster/Details/@o.RowUniqueId"><span class="mdi mdi-magnify"></span></a>
         </div>
-        <div class="card-body">
-            <div class="overflow-auto">
-                <Table Models="@Model" TItem="OrderMasterSimpleView" RowStyleColor="Color">
-                    <NavLabel>
-                        @L["Số đơn hàng"]
-                    </NavLabel>
-                    <NavKey Context="o">
-                        <a href="/OrderMaster/Details/@o.RowUniqueId">@o.OrderNo</a>
-                    </NavKey>
-                    <ActionLabel></ActionLabel>
-                    <Action Context="o">
-                        <div>
-                            <a href="/OrderMaster/Edit/@o.RowUniqueId"><span class="mdi mdi-pencil-box"></span></a>
-                            <a href="/OrderMaster/Details/@o.RowUniqueId"><span class="mdi mdi-magnify"></span></a>
-                        </div>
-                    </Action>
-                </Table>
-            </div>
-        </div>
-    </div>
-</div>
+    </Action>
+</Table>
 @code {
     public static Func<OrderMasterSimpleView, string> Color = (o) => o.OrderStatusName switch
     {

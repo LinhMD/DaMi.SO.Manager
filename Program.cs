@@ -5,10 +5,12 @@ using CrudApiTemplate.ExceptionFilter;
 using CrudApiTemplate.Repository;
 using CrudApiTemplate.Services;
 using DaMi.SO.Manager.Data;
+using DaMi.SO.Manager.Data.Models;
 using DaMi.SO.Manager.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,7 +35,20 @@ builder.Services.AddAuthentication(o =>
 {
     o.LoginPath = "/Login";
 });
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(o =>
+{
+    o.AddPolicy("ViewOrder", policy => policy.RequireAssertion((context) =>
+        context.User.HasClaim(c => c.Type == nameof(Permision.ViewLimitOrder))
+        || context.User.HasClaim(c => c.Type == nameof(Permision.ViewFullOrder))));
+
+    o.AddPolicy(nameof(Permision.AddNewOrder), policy => policy.RequireClaim(nameof(Permision.AddNewOrder)));
+    o.AddPolicy(nameof(Permision.UpdateOrder), policy => policy.RequireClaim(nameof(Permision.UpdateOrder)));
+    o.AddPolicy(nameof(Permision.DeleteOrder), policy => policy.RequireClaim(nameof(Permision.DeleteOrder)));
+    o.AddPolicy(nameof(Permision.AcceptOrder), policy => policy.RequireClaim(nameof(Permision.AcceptOrder)));
+    o.AddPolicy(nameof(Permision.CancelOrder), policy => policy.RequireClaim(nameof(Permision.CancelOrder)));
+    o.AddPolicy(nameof(Permision.SuspendOrder), policy => policy.RequireClaim(nameof(Permision.SuspendOrder)));
+    o.AddPolicy(nameof(Permision.ChangeStatusOrder), policy => policy.RequireClaim(nameof(Permision.ChangeStatusOrder)));
+});
 builder.Services.AddLogging(c =>
 {
 
