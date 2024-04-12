@@ -168,10 +168,8 @@
                             else
                             {
                                 <input type="hidden" name="SalesManId" class="form-control" readonly id="SalesManId" value="@Model.OrderMaster.SalesManId"/>
-                                <div class="form-control" id="SalesManId">
-                                    @(Model.Employees.FirstOrDefault(employee => Model.OrderMaster.SalesManId ==
-                                        employee.EmployeeId)?.EmployeeName)
-                                </div>
+                                <input class="form-control" readonly value="@(Model.Employees.FirstOrDefault(employee => Model.OrderMaster.SalesManId ==
+                                        employee.EmployeeId)?.EmployeeName)"/>
                             }
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.SalesManId)" />
@@ -212,8 +210,6 @@
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.EndExecDate)" />
                     </div>
-                    
-                    
                 </div>
             </div>
         </div>
@@ -270,8 +266,17 @@
                             @L["MST/CCCD"]
                         </label>
                         <div >
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <div class="form-control" id="CustomerPhone">
+                                    @(Model.OrderMaster.TaxCode)
+                                </div>
+                            }
+                            else
+                            {
                             <input type="text" id="CustomerTax" name="TaxCode" readonly class="form-control"
                                 value="@Model.OrderMaster.TaxCode" />
+                            }
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.TaxCode)" />
                     </div>

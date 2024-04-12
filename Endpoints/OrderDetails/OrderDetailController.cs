@@ -122,7 +122,7 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
             {
                 OrderDetails = [],
                 ItemTypes = await work.Get<ViwItemType>().GetAll().ToListAsync(),
-                TaxCodes = await work.Get<TaxCode>().Find(t => true).ToListAsync(),
+                TaxCodes = await work.Get<TaxCode>().Find(t => t.CustomerId == customerId).ToListAsync(),
                 FullItemMap = fullItems
             },
             ViewMode = viewMode,
@@ -132,6 +132,7 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
             Form = form
         });
     }
+
 }
 public class OrderDetailModifyModel
 {

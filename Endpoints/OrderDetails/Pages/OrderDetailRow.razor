@@ -76,7 +76,7 @@
         else
         {
             <input type="text" readonly="@(ViewMode == ViewMode.Detail)" value="@detail?.Quantity" class="form-control"
-                oninput="calculatePrice('@detail?.RowUniqueId')"
+                oninput="calculatePrice('@detail?.RowUniqueId')" min="0"
                 form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")" name="@nameof(detail.Quantity)"
                 id="@nameof(detail.Quantity)_@(detail?.RowUniqueId)" />
             <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.Quantity)" />
@@ -84,9 +84,18 @@
 
     </td>
     <td>
-        <div class="currency" name='ConvertPrices' id="@nameof(detail.ConvertPrice)_@(detail?.RowUniqueId)">
+        @if (ViewMode == ViewMode.Detail)
+        {
             @((detail?.ConvertPrice ?? 0).ToString("N0", CultureInfo.CurrentCulture))
-        </div>
+        }
+        else
+        {
+            <input type="text" readonly="@(FullItem?.AllowEditItemAmount ?? false)" value="@detail?.ConvertPrice"
+                class="form-control" oninput="calculatePrice('@detail?.RowUniqueId')" min="0"
+                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                name="@nameof(detail.ConvertPrice)" id="@nameof(detail.ConvertPrice)_@(detail?.RowUniqueId)" />
+            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.ConvertPrice)" />
+        }
     </td>
     <td class="currency">
         <div class="currency" name='ConvertAmount' id="@nameof(detail.ConvertAmount)_@(detail?.RowUniqueId)">
