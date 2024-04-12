@@ -248,7 +248,7 @@
                             {
                                 <InputText type="hidden" id="CustomerId" name="CustomerId"
                                     @bind-Value="Model.OrderMaster.CustomerId" />
-                                <select class="form-control selectpicker" hx-indicator=".htmx-indicator"
+                                <select class="form-control selectpicker"  hx-indicator=".htmx-indicator"
                                     hx-get="/OrderMaster/Edit/Customer" id="CustomerIdSelect" name="CustomerIdSelect"
                                     value="@Model.OrderMaster.CustomerId">
                                     <option></option>
@@ -631,6 +631,7 @@
     </div>
 </div>
 
+<div id="empty"></div>
 
 @if (Model.ErrorMessage is not null)
 {

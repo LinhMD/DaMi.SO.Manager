@@ -38,7 +38,6 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
     [HttpGet("Create")]
     public async Task<IResult> GetNewRow([FromQuery] Guid OrderId, [FromQuery] string? ItemIdSelect, [FromQuery] string? FormID)
     {
-
         OrderMaster? orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Where(f => f.RowUniqueId == OrderId).FirstOrDefaultAsync();
         OrderForm orderForm = await work.Get<OrderForm>().Find(f => f.OrderFormId == FormID).FirstOrDefaultAsync() ?? new OrderForm();
         return await ReturnPage(work, new OrderDetailSimpleView() { OrderId = OrderId, ItemId = ItemIdSelect }, orderForm, null, ViewMode.Create, orderMaster?.CustomerId);

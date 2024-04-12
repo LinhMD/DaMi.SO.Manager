@@ -10,8 +10,9 @@
     }
     else
     {
+
         <form action="/OrderDetail/@ViewMode/@detail?.RowUniqueId" hx-boost="true" hx-swap='outerHTML'
-            onsubmit="calculateTotal();ModifyInput($(`input[form='form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")'].currency`));"
+            onsubmit="setSelectValue('@detail?.RowUniqueId');calculateTotal();ModifyInput($(`input[form='form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")'].currency`));"
             hx-target='#row_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")'
             id="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")" method="post">
         </form>
@@ -162,27 +163,34 @@
             <input type="hidden" id="@nameof(detail.TaxCode)_@(detail?.RowUniqueId)"
                 form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")" name="@nameof(detail.TaxCode)"
                 value="@detail?.TaxCode" />
-            <select name="@nameof(detail.TaxCode)_select" class="form-control selectpicker"
-                id="@nameof(detail.TaxCode)_@(detail?.RowUniqueId)_select"
-                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")" value="@detail?.TaxCode">
+            <select style="height: 80%;" name="@nameof(detail.TaxCode)_select" class="form-control selectpicker"
+                id="@nameof(detail.TaxCode)_@(detail?.RowUniqueId)_select" multiple="multiple"
+                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")">
                 @foreach (var item in Model.TaxCodes)
                 {
-                    <option value="@item.TaxCodeId">
+                    <option value="@item.TaxCodeId" selected=@(detail?.TaxCode?.Contains(item.TaxCodeId))>
                         @item.TaxCodeId
                     </option>
                 }
             </select>
             <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.TaxCode)" />
             <script>
-                var select = new SlimSelect({
+                new SlimSelect({
                     select: '#@nameof(detail.TaxCode)_@(detail?.RowUniqueId)_select',
                     events: {
+                        search: (search, currentData) => {
+                            return new Promise((resolve, reject) => {
+                                resolve([{
+                                    text: search,
+                                    value: search,
+                                }])
+                            })
+                        },
                         afterChange: (newVal) => {
-                            console.log(newVal);
-                            $("#@nameof(detail.TaxCode)_@(detail?.RowUniqueId)").val(newVal.map(f => f.value).join(","));
+                            $("#@nameof(detail.TaxCode)_@(detail?.RowUniqueId)").val(newVal.map(f => f.value).join(','));
                         }
                     }
-                });
+                })
             </script>
         }
 
