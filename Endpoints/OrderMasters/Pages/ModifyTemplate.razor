@@ -152,7 +152,6 @@
                                     }
                                 </select>
                             }
-
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.ExecutorId)" />
                     </div>
@@ -168,17 +167,12 @@
                             }
                             else
                             {
-                                <select class="form-control selectpicker" id="SalesManId" disabled name="SalesManId"
-                                    value="@Model.OrderMaster.SalesManId">
-                                    @foreach (var employee in Model.Employees)
-                                    {
-                                        <option value="@employee.EmployeeId"
-                                            selected="@(Model.OrderMaster.SalesManId == employee.EmployeeId)">
-                                            @employee.EmployeeName</option>
-                                    }
-                                </select>
+                                <input type="hidden" name="SalesManId" class="form-control" readonly id="SalesManId" value="@Model.OrderMaster.SalesManId"/>
+                                <div class="form-control" id="SalesManId">
+                                    @(Model.Employees.FirstOrDefault(employee => Model.OrderMaster.SalesManId ==
+                                        employee.EmployeeId)?.EmployeeName)
+                                </div>
                             }
-
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.SalesManId)" />
                     </div>
@@ -197,7 +191,6 @@
                                 <DateInput TValue="DateTime?" @bind-Value="@Model.OrderMaster.BeginExecDate"
                                     Placeholder="Ngày BĐ triển khai" name="BeginExecDate" id="BeginExecDate" />
                             }
-
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.BeginExecDate)" />
                     </div>
