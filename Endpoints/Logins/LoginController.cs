@@ -99,7 +99,7 @@ public class LoginController(IUnitOfWork work) : ControllerBase
             new (nameof(user.Department.Permision.SuspendOrder), user?.Department.Permision.SuspendOrder.ToString()?? ""),
             new (nameof(user.Department.Permision.ChangeStatusOrder), user?.Department.Permision.ChangeStatusOrder.ToString()?? "")
         ];
-        claims.AddRange(Permissions.Where(x => x.Value == "true").ToList());
+        claims.AddRange(Permissions.Where(x => x.Value == "True").ToList());
         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         await HttpContext.SignInAsync(new ClaimsPrincipal([claimsIdentity]));
         return Results.Redirect("/Index");
