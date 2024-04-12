@@ -40,14 +40,15 @@
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header">
-
                 <div class="card-title">@L["Đơn Hàng chi tiết"]</div>
             </div>
             <div class="card-body">
                 <div class="overflow-auto">
-                    <SS75 Model="@Model.OrderDetailModify" ViewMode='@Components.ViewMode.Detail' Action="false"
+                    <OrderDetailTable Model="@Model.OrderDetailModify" ViewMode='@Components.ViewMode.Detail'
+                        Action="false"
+                        Form="@Model.OrderForms.FirstOrDefault(f => f.OrderFormId == Model.OrderMaster.OrderFormId)"
                         OrderID="@Model.OrderMaster.RowUniqueId">
-                    </SS75>
+                    </OrderDetailTable>
                 </div>
             </div>
         </div>

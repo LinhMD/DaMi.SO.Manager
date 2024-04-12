@@ -3,49 +3,52 @@
 @inherits XComponent<OrderMasterTableModel>
 @layout _Layout
 @inject IStringLocalizer<ShareResource> L
-
 <div class="card">
-    <div class="card-body">
+    <div class="card-header">
         <ul class="nav nav-tabs" id="pills-tab" role="tablist">
             <li class="nav-item mx-2" role="presentation">
-                <a href="#pills-all" class="btn" data-toggle="tab">Tất cả đơn hàng</a>
+                <a href="#pills-all" class="btn btn-outline-primary" data-toggle="tab">Tất cả đơn hàng</a>
             </li>
             <li class="nav-item mx-2" role="presentation">
-                <a href="#pills-wait-for-approve" class="btn" data-toggle="tab">Chưa duyệt</a>
+                <a href="#pills-wait-for-approve" class="btn btn btn-outline-info" data-toggle="tab">Chưa duyệt</a>
             </li>
             <li class="nav-item mx-2" role="presentation">
-                <a href="#pills-unfinish" class="btn" data-toggle="tab">Chưa hoàn thành</a>
+                <a href="#pills-unfinish" class="btn btn-outline-warning" data-toggle="tab">Chưa hoàn thành</a>
             </li>
             <li class="nav-item mx-2" role="presentation">
-                <a href="#pills-finish" class="btn" data-toggle="tab">Đã hoàn thành</a>
+                <a href="#pills-finish" class="btn btn-outline-success" data-toggle="tab">Đã hoàn thành</a>
             </li>
             <li class="nav-item mx-2" role="presentation">
-                <a href="#pills-cancel" class="btn" data-toggle="tab">Đơn bị hủy</a>
+                <a href="#pills-cancel" class="btn btn-outline-danger" data-toggle="tab">Đơn bị hủy</a>
             </li>
         </ul>
     </div>
+    <div class="card-body">
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab">
+                <TabContent Model="Model.OrderMasters"></TabContent>
+            </div>
+            <div class="tab-pane fade" id="pills-wait-for-approve" role="tabpanel"
+                aria-labelledby="pills-wait-for-approve-tab">
+                <TabContent Model="Model.OrderMasters.Where(o => o.OrderStatus.IsAcceptStatus)"></TabContent>
+            </div>
+            <div class="tab-pane fade" id="pills-unfinish" role="tabpanel" aria-labelledby="pills-unfinish-tab">
+                <TabContent Model='Model.OrderMasters
+                                        .Where(o => o.OrderStatus.OrderStatusId != "OS99"
+                                                && o.OrderStatus.IsCancelStatus
+                                                && o.OrderStatus.IsSuspendStatus)'>
+                </TabContent>
+            </div>
+            <div class="tab-pane fade" id="pills-finish" role="tabpanel" aria-labelledby="pills-finish-tab">
+                <TabContent Model='Model.OrderMasters.Where(o => o.OrderStatus.OrderStatusId == "OS99")'></TabContent>
+            </div>
+            <div class="tab-pane fade" id="pills-cancel" role="tabpanel" aria-labelledby="pills-cancel-tab">
+                <TabContent Model="Model.OrderMasters.Where(o => o.OrderStatus.IsCancelStatus)"></TabContent>
+            </div>
+        </div>
+    </div>
 </div>
-<div class="tab-content" id="pills-tabContent">
-    <div class="tab-pane fade show active" id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab">
-        <TabContent Model="Model.OrderMasters"></TabContent>
-    </div>
-    <div class="tab-pane fade" id="pills-wait-for-approve" role="tabpanel" aria-labelledby="pills-wait-for-approve-tab">
-        <TabContent Model="Model.OrderMasters.Where(o => o.OrderStatus.IsAcceptStatus)"></TabContent>
-    </div>
-    <div class="tab-pane fade" id="pills-unfinish" role="tabpanel" aria-labelledby="pills-unfinish-tab">
-        <TabContent Model='Model.OrderMasters
-            .Where(o => o.OrderStatus.OrderStatusId != "OS99"
-                && o.OrderStatus.IsCancelStatus
-                && o.OrderStatus.IsSuspendStatus)'>
-        </TabContent>
-    </div>
-    <div class="tab-pane fade" id="pills-finish" role="tabpanel" aria-labelledby="pills-finish-tab">
-        <TabContent Model='Model.OrderMasters.Where(o => o.OrderStatus.OrderStatusId == "OS99")'></TabContent>
-    </div>
-    <div class="tab-pane fade" id="pills-cancel" role="tabpanel" aria-labelledby="pills-cancel-tab">
-        <TabContent Model="Model.OrderMasters.Where(o => o.OrderStatus.IsCancelStatus)"></TabContent>
-    </div>
-</div>
+
 <script>
 
 </script>

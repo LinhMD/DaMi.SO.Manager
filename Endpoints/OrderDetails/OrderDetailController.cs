@@ -25,47 +25,44 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
 {
 
     [HttpGet("Detail/{guid}")]
-    public async Task<IResult> GetDetailsAsync(Guid guid)
+    public async Task<IResult> GetDetailsAsync(Guid guid, [FromQuery] string? FormID)
     {
-        return await ReturnPage(work, work.Get<OrderDetail>().Get<OrderDetailSimpleView>(guid), null, ViewMode.Detail);
+        OrderForm orderForm = await work.Get<OrderForm>().Find(f => f.OrderFormId == FormID).FirstOrDefaultAsync() ?? new OrderForm();
+        return await ReturnPage(work, work.Get<OrderDetail>().Get<OrderDetailSimpleView>(guid), orderForm, null, ViewMode.Detail);
     }
 
     [HttpGet("Create")]
-    public async Task<IResult> GetNewRow([FromQuery] Guid OrderId, [FromQuery] string? ItemIdSelect)
+    public async Task<IResult> GetNewRow([FromQuery] Guid OrderId, [FromQuery] string? ItemIdSelect, [FromQuery] string? FormID)
     {
-        return await ReturnPage(work, new OrderDetailSimpleView() { OrderId = OrderId, ItemId = ItemIdSelect }, null, ViewMode.Create);
-    }
-    [HttpGet("Item")]
-    public async Task<IResult> GetItem(Guid? OrderDetailId, string? FormID, string ItemIdSelect)
-    {
-        ViwItem? item = await work.Get<ViwItem>().Find(x => x.ItemId == ItemIdSelect).FirstOrDefaultAsync();
-        Console.WriteLine(JsonSerializer.Serialize(item));
-        return new RazorComponentResult(typeof(ItemOOB), new
-        {
-            DetailID = OrderDetailId,
-            Item = item
-        });
+
+        OrderMaster? orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Where(f => f.RowUniqueId == OrderId).FirstOrDefaultAsync();
+        OrderForm orderForm = await work.Get<OrderForm>().Find(f => f.OrderFormId == FormID).FirstOrDefaultAsync() ?? new OrderForm();
+        return await ReturnPage(work, new OrderDetailSimpleView() { OrderId = OrderId, ItemId = ItemIdSelect }, orderForm, null, ViewMode.Create, orderMaster?.CustomerId);
     }
 
     [HttpPost("Create")]
     public async Task<IResult> PostNew([FromForm] OrderDetailSimpleView orderDetailNew)
     {
+        OrderMaster? orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Where(f => f.RowUniqueId == orderDetailNew.OrderId!).FirstOrDefaultAsync();
+        OrderForm orderForm = await work.Get<OrderForm>().Find(f => orderMaster != null && f.OrderFormId == orderMaster.OrderFormId).FirstOrDefaultAsync() ?? new OrderForm();
         try
         {
             OrderDetail orderDetail = orderDetailNew.Adapt<OrderDetail>();
             orderDetail.Dump();
             await work.Get<OrderDetail>().AddAsync(orderDetail);
-            return await ReturnPage(work, work.Get<OrderDetail>().Get<OrderDetailSimpleView>(orderDetail.RowUniqueId), viewMode: ViewMode.Detail);
+            return await ReturnPage(work, work.Get<OrderDetail>().Get<OrderDetailSimpleView>(orderDetail.RowUniqueId), orderForm, null, ViewMode.Detail, orderMaster?.CustomerId);
         }
         catch (ModelValueInvalidException e)
         {
-            return await ReturnPage(work, null, e.MemberErrors, ViewMode.Create);
+            return await ReturnPage(work, null, orderForm, e.MemberErrors, ViewMode.Create, orderMaster?.CustomerId);
         }
     }
     [HttpGet("Edit/{guid}")]
-    public async Task<IResult> GetEdit(Guid guid, [FromQuery] string? ItemIdSelect)
+    public async Task<IResult> GetEdit(Guid guid, [FromQuery] string? ItemIdSelect, [FromQuery] string? FormID)
     {
         OrderDetailSimpleView? orderDetail = await work.Get<OrderDetail>().GetAsync<OrderDetailSimpleView>(guid);
+
+        OrderMaster? orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Where(f => orderDetail != null && f.RowUniqueId == orderDetail.OrderId).FirstOrDefaultAsync();
         ViwItem? item = await work.Get<ViwItem>().Find(x => x.ItemId == ItemIdSelect).FirstOrDefaultAsync();
         if (item is not null && orderDetail is not null)
         {
@@ -73,12 +70,17 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
             orderDetail.ConvertPrice = item.ConvertPrice;
             orderDetail.TaxRate = item.TaxRate;
         }
-        return await ReturnPage(work, orderDetail, null, ViewMode.Edit);
+
+        OrderForm orderForm = await work.Get<OrderForm>().Find(f => f.OrderFormId == FormID).FirstOrDefaultAsync() ?? new OrderForm();
+        return await ReturnPage(work, orderDetail, orderForm, null, ViewMode.Edit, orderMaster?.CustomerId);
     }
 
     [HttpPost("Edit/{guid}")]
     public async Task<IResult> PostEdit([FromForm] OrderDetailSimpleView orderDetailNew, Guid guid)
     {
+
+        OrderMaster? orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Where(f => f.RowUniqueId == orderDetailNew.OrderId!).FirstOrDefaultAsync();
+        OrderForm orderForm = await work.Get<OrderForm>().Find(f => orderMaster != null && f.OrderFormId == orderMaster.OrderFormId).FirstOrDefaultAsync() ?? new OrderForm();
         try
         {
             ViwItem? item = await work.Get<ViwItem>().Find(f => f.ItemId == orderDetailNew.ItemId).FirstOrDefaultAsync();
@@ -88,7 +90,6 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
                 orderDetailNew.TaxRate = item.TaxRate;
             }
             await service.UpdateAsync(orderDetailNew, guid);
-            OrderMaster? orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Where(f => f.RowUniqueId == orderDetailNew.OrderId!).FirstOrDefaultAsync();
             if (orderMaster != null)
             {
                 orderMaster.ConvertDiscAmount = orderMaster.OrderDetails.Select(f => f.ConvertDiscAmount).Sum();
@@ -96,39 +97,40 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
                 orderMaster.ConvertTotalAmount = orderMaster.OrderDetails.Select(f => f.ConvertAmount + f.ConvertTaxAmount - f.ConvertDiscAmount).Sum();
                 await work.CompleteAsync();
             }
-            return await ReturnPage(work, work.Get<OrderDetail>().Get<OrderDetailSimpleView>(guid), viewMode: ViewMode.Detail);
+            return await ReturnPage(work, work.Get<OrderDetail>().Get<OrderDetailSimpleView>(guid), orderForm, null, ViewMode.Detail, orderMaster?.CustomerId);
         }
         catch (ModelValueInvalidException e)
         {
-            return await ReturnPage(work, work.Get<OrderDetail>().Get<OrderDetailSimpleView>(guid), e.MemberErrors, ViewMode.Edit);
+            OrderDetailSimpleView? orderDetailSimpleView = await work.Get<OrderDetail>().GetAsync<OrderDetailSimpleView>(guid);
+            return await ReturnPage(work, orderDetailSimpleView, orderForm, e.MemberErrors, ViewMode.Edit, orderMaster?.CustomerId);
         }
     }
 
-    private static async Task<IResult> ReturnPage(IUnitOfWork work, OrderDetailSimpleView? orderDetail, Dictionary<string, string>? e = null, ViewMode viewMode = ViewMode.Detail)
+    private static async Task<IResult> ReturnPage(IUnitOfWork work, OrderDetailSimpleView? orderDetail, OrderForm form, Dictionary<string, string>? e = null, ViewMode viewMode = ViewMode.Detail, string? customerId = null)
     {
-        return new RazorComponentResult(typeof(SS75Row), new
+        Dictionary<string, ViwFullItem> fullItems = await work.Get<ViwFullItem>().Find(f => f.OrderFormId == form.OrderFormId).ToDictionaryAsync(f => f.ItemId);
+        return new RazorComponentResult(typeof(OrderDetailRow), new
         {
             Model = new OrderDetailModifyModel
             {
                 OrderDetails = [],
-                Items = await work.Get<ViwItem>().GetAll().ToDictionaryAsync(i => i.ItemId),
                 ItemTypes = await work.Get<ViwItemType>().GetAll().ToListAsync(),
-                TaxCodes = await work.Get<TaxCode>().GetAll().ToListAsync(),
+                TaxCodes = await work.Get<TaxCode>().Find(t => true).ToListAsync(),
+                FullItemMap = fullItems
             },
             ViewMode = viewMode,
             detail = orderDetail,
             Errors = e,
-            FullItem = await work.Get<ViwFullItem>().Find(i => orderDetail != null && i.ItemId == orderDetail.ItemId).FirstOrDefaultAsync()
+            FullItem = fullItems.ContainsKey(orderDetail?.ItemId ?? "") ? fullItems[orderDetail?.ItemId ?? ""] : new ViwFullItem(),
+            Form = form
         });
     }
 }
 public class OrderDetailModifyModel
 {
     public IEnumerable<OrderDetailSimpleView> OrderDetails { get; set; } = [];
-
-    public Dictionary<string, ViwItem> Items { get; set; } = [];
     public Dictionary<string, string>? Errors { get; set; }
     public IEnumerable<ViwItemType> ItemTypes { get; set; } = [];
-    public Dictionary<string, ViwFullItem>? FullItemMap { get; set; }
+    public Dictionary<string, ViwFullItem> FullItemMap { get; set; } = new();
     public IEnumerable<TaxCode> TaxCodes { get; set; } = [];
 }

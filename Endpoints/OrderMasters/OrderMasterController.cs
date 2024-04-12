@@ -19,6 +19,8 @@ using DaMi.SO.Manager.Components;
 using DaMi.SO.Manager.Data;
 using Microsoft.Data.SqlClient;
 using System.Text.Json;
+using CrudApiTemplate.CustomBinding;
+using System.Security.Claims;
 
 namespace DaMi.SO.Manager.Endpoints.OrderMasters;
 
@@ -31,6 +33,8 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
     public async Task<IResult> GetAsync()
     {
         var orderMasters = await work.Get<OrderMaster>().GetAll<OrderMasterSimpleView>().ToListAsync();
+        Dictionary<string, ViwCustomer> customer = await work.Get<ViwCustomer>().GetAll().ToDictionaryAsync(f => f.CustomerId);
+        orderMasters.ForEach(m => m.CustomerId = customer[m.CustomerId].CustomerName);
         return this.Page<IndexPage, OrderMasterTableModel>(new() { OrderMasters = orderMasters });
     }
 
@@ -54,15 +58,15 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
     }
 
     [HttpGet("New")]
-    public async Task<IResult> GetNew()
+    public async Task<IResult> GetNew([FromClaim(ClaimTypes.Sid)] string? employeeID)
     {
         var orderMaster = new OrderMasterDetailView
         {
             OrderDate = DateTime.Now,
             OrderStatusId = "OS10", //Mới tạo
             CurrencyId = "VND",
-            ExchangeRate = 1
-            //TODO: mặc định current user
+            ExchangeRate = 1,
+            SalesManId = employeeID
         };
         return await ReturnPage<CreatePage>(work, orderMaster, ViewMode.Create);
     }
@@ -186,11 +190,9 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
             OrderDetailModify = new OrderDetailModifyModel()
             {
                 OrderDetails = orderMaster.OrderDetails,
-                Items = await work.Get<ViwItem>().GetAll().ToDictionaryAsync(i => i.ItemId),
                 ItemTypes = await work.Get<ViwItemType>().GetAll().ToListAsync(),
-                TaxCodes = await work.Get<TaxCode>().GetAll().ToListAsync(),
-
-                FullItemMap = await work.Get<ViwFullItem>().GetAll().ToDictionaryAsync(i => i.ItemId),
+                TaxCodes = await work.Get<TaxCode>().Find(t => orderMaster.CustomerId == null || t.CustomerId == orderMaster.CustomerId).ToListAsync(),
+                FullItemMap = await work.Get<ViwFullItem>().Find(f => orderMaster.OrderFormId == null || f.OrderFormId == orderMaster.OrderFormId).ToDictionaryAsync(i => i.ItemId),
             },
             ErrorMessage = ErrorMessage,
             ViewMode = viewMode,

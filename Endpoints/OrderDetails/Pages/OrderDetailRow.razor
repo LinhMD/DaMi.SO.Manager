@@ -32,12 +32,12 @@
                 form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
                 id="@nameof(detail.ItemId)_@(detail?.RowUniqueId)">
             <select
-                hx-get="/OrderDetail/@(ViewMode == ViewMode.Edit? $"{ViewMode}/{detail?.RowUniqueId}": ViewMode)?FormID=SS75&OrderId=@(detail?.OrderId ?? OrderID)"
+                hx-get="/OrderDetail/@(ViewMode == ViewMode.Edit? $"{ViewMode}/{detail?.RowUniqueId}": ViewMode)?FormID=@(Form.OrderFormId)&OrderId=@(detail?.OrderId ?? OrderID)"
                 hx-target='#row_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")' hx-swap='outerHTML'
                 form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
                 name="@nameof(detail.ItemId)Select" class="form-control selectpicker "
                 id="@nameof(detail.ItemId)_@(detail?.RowUniqueId)_select" value="@(detail?.ItemId ?? "")">
-                @foreach (var item in Model.Items.Keys)
+                @foreach (var item in Model.FullItemMap.Keys)
                 {
                     <option value="@item" selected='@(item == detail?.ItemId)'>
                         @item
@@ -84,12 +84,12 @@
     </td>
     <td>
         <div class="currency" name='ConvertPrices' id="@nameof(detail.ConvertPrice)_@(detail?.RowUniqueId)">
-            @((detail?.ConvertPrice ?? 0).ToString("C", CultureInfo.CurrentCulture))
+            @((detail?.ConvertPrice ?? 0).ToString("N0", CultureInfo.CurrentCulture))
         </div>
     </td>
     <td class="currency">
         <div class="currency" name='ConvertAmount' id="@nameof(detail.ConvertAmount)_@(detail?.RowUniqueId)">
-            @((detail?.ConvertAmount ?? 0).ToString("C", CultureInfo.CurrentCulture))
+            @((detail?.ConvertAmount ?? 0).ToString("N0", CultureInfo.CurrentCulture))
         </div>
     </td>
     <td>
@@ -99,7 +99,7 @@
     </td>
     <td class="currency">
         <div class="currency" name='ConvertTaxAmount' id="@nameof(detail.ConvertTaxAmount)_@(detail?.RowUniqueId)">
-            @((detail?.ConvertTaxAmount ?? 0).ToString("C", CultureInfo.CurrentCulture))
+            @((detail?.ConvertTaxAmount ?? 0).ToString("N0", CultureInfo.CurrentCulture))
         </div>
     </td>
     <td class="currency">
@@ -121,7 +121,7 @@
         @if (ViewMode == ViewMode.Detail)
         {
             <div class="currency" name='ConvertDiscAmount' id="@nameof(detail.ConvertDiscAmount)_@(detail?.RowUniqueId)">
-                @((detail?.ConvertDiscAmount ?? 0).ToString("C", CultureInfo.CurrentCulture))
+                @((detail?.ConvertDiscAmount ?? 0).ToString("N0", CultureInfo.CurrentCulture))
             </div>
 
         }
@@ -134,19 +134,37 @@
             <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.ConvertDiscAmount)" />
         }
     </td>
+    @if (Form.HasByTaxCode)
+    {
+        <td>
+            @if (ViewMode == ViewMode.Detail)
+            {
+                @(FullItem?.AllowEditNumOfTaxCode ?? false ? detail?.NumOfTaxCode : FullItem?.DefNumOfTaxCode)
+            }
+            else
+            {
+                <input type="number" readonly="@(!FullItem?.AllowEditNumOfTaxCode ?? true)" class="form-control" min='0'
+                    value="@(FullItem?.AllowEditNumOfTaxCode ?? false ? detail?.NumOfTaxCode : FullItem?.DefNumOfTaxCode)"
+                    name="@nameof(detail.NumOfTaxCode)"
+                    form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                    id="@nameof(detail.NumOfTaxCode)_@(detail?.RowUniqueId)" />
+                <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.NumOfTaxCode)" />
+            }
+        </td>
+    }
     <td>
         @if (ViewMode == ViewMode.Detail)
         {
-            @(@detail?.NumOfTaxCode)
+            @(@detail?.TaxCode)
         }
         else
         {
-            <input type="hidden" id="@nameof(detail.NumOfTaxCode)_@(detail?.RowUniqueId)"
-                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
-                name="@nameof(detail.NumOfTaxCode)" value="@detail?.NumOfTaxCode" />
-            <select readonly="@(FullItem?.AllowEditNumOfTaxCode ?? true)" name="@nameof(detail.NumOfTaxCode)_select"
-                class="form-control selectpicker" id="@nameof(detail.NumOfTaxCode)_@(detail?.RowUniqueId)_select"
-                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")" value="@detail?.NumOfTaxCode">
+            <input type="hidden" id="@nameof(detail.TaxCode)_@(detail?.RowUniqueId)"
+                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")" name="@nameof(detail.TaxCode)"
+                value="@detail?.TaxCode" />
+            <select name="@nameof(detail.TaxCode)_select" class="form-control selectpicker"
+                id="@nameof(detail.TaxCode)_@(detail?.RowUniqueId)_select"
+                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")" value="@detail?.TaxCode">
                 @foreach (var item in Model.TaxCodes)
                 {
                     <option value="@item.TaxCodeId">
@@ -154,14 +172,14 @@
                     </option>
                 }
             </select>
-            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.NumOfTaxCode)" />
+            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.TaxCode)" />
             <script>
                 var select = new SlimSelect({
-                    select: '#@nameof(detail.NumOfTaxCode)_@(detail is not null ? detail.RowUniqueId.ToString() : "editing")',
+                    select: '#@nameof(detail.TaxCode)_@(detail?.RowUniqueId)_select',
                     events: {
                         afterChange: (newVal) => {
                             console.log(newVal);
-                            $("#@nameof(detail.NumOfTaxCode)_@(detail is not null ? detail.RowUniqueId.ToString() : "editing")").val(newVal.map(f => f.value).join(","));
+                            $("#@nameof(detail.TaxCode)_@(detail?.RowUniqueId)").val(newVal.map(f => f.value).join(","));
                         }
                     }
                 });
@@ -169,49 +187,95 @@
         }
 
     </td>
-    <td>
-        @if (ViewMode == ViewMode.Detail)
-        {
-            @(FullItem?.AllowEditNumOfUser ?? false ? detail?.NumOfPc : FullItem?.DefNumOfPc)
-        }
-        else
-        {
-            <input type="number" readonly="@(!FullItem?.AllowEditNumOfPc ?? true)" class="form-control" min='0'
-                value="@(FullItem?.AllowEditNumOfUser??false ? detail?.NumOfPc : FullItem?.DefNumOfPc)"
-                name="@nameof(detail.NumOfPc)" form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
-                id="@nameof(detail.NumOfPc)_@(detail?.RowUniqueId)" />
-            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.NumOfPc)" />
-        }
-    </td>
-    <td>
-        @if (ViewMode == ViewMode.Detail)
-        {
-            @(FullItem?.AllowEditNumOfUser ?? false ? detail?.NumOfData : FullItem?.DefNumOfData)
-        }
-        else
-        {
-            <input type="number" readonly="@(!FullItem?.AllowEditNumOfData ?? true)" class="form-control" min='0'
-                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
-                value="@(FullItem?.AllowEditNumOfUser??false ? detail?.NumOfData : FullItem?.DefNumOfData)"
-                name="@nameof(detail.NumOfData)" id="@nameof(detail.NumOfData)_@(detail?.RowUniqueId)" />
-            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.NumOfData)" />
-        }
-    </td>
-    <td>
-        @if (ViewMode == ViewMode.Detail)
-        {
-            @(FullItem?.AllowEditNumOfUser ?? false ? detail?.NumOfUser : FullItem?.DefNumOfUser)
-        }
-        else
-        {
-            <input type="number" class="form-control " readonly="@(!FullItem?.AllowEditNumOfUser ?? true)"
-                value="@(FullItem?.AllowEditNumOfUser??false ? detail?.NumOfUser : FullItem?.DefNumOfUser)"
-                name="@nameof(detail.NumOfUser)" min='0'
-                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
-                id="@nameof(detail.NumOfUser)_@(detail?.RowUniqueId)" />
-            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.NumOfUser)" />
-        }
-    </td>
+
+    @if (Form.HasByPc)
+    {
+        <td>
+            @if (ViewMode == ViewMode.Detail)
+            {
+                @(FullItem?.AllowEditNumOfUser ?? false ? detail?.NumOfPc : FullItem?.DefNumOfPc)
+            }
+            else
+            {
+                <input type="number" readonly="@(!FullItem?.AllowEditNumOfPc ?? true)" class="form-control" min='0'
+                    value="@(FullItem?.AllowEditNumOfUser??false ? detail?.NumOfPc : FullItem?.DefNumOfPc)"
+                    name="@nameof(detail.NumOfPc)" form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                    id="@nameof(detail.NumOfPc)_@(detail?.RowUniqueId)" />
+                <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.NumOfPc)" />
+            }
+        </td>
+    }
+    @if (Form.HasByNumData)
+    {
+        <td>
+            @if (ViewMode == ViewMode.Detail)
+            {
+                @(FullItem?.AllowEditNumOfData ?? false ? detail?.NumOfData : FullItem?.DefNumOfData)
+            }
+            else
+            {
+                <input type="number" readonly="@(!FullItem?.AllowEditNumOfData ?? true)" class="form-control" min='0'
+                    form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                    value="@(FullItem?.AllowEditNumOfData ??false ? detail?.NumOfData : FullItem?.DefNumOfData)"
+                    name="@nameof(detail.NumOfData)" id="@nameof(detail.NumOfData)_@(detail?.RowUniqueId)" />
+                <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.NumOfData)" />
+            }
+        </td>
+    }
+
+    @if (Form.HasByQtyInvc)
+    {
+        <td>
+            @if (ViewMode == ViewMode.Detail)
+            {
+                @(FullItem?.AllowEditNumOfInv ?? false ? detail?.NumOfInv : FullItem?.DefNumOfInv)
+            }
+            else
+            {
+                <input type="number" readonly="@(!FullItem?.AllowEditNumOfInv ?? true)" class="form-control" min='0'
+                    form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                    value="@(FullItem?.AllowEditNumOfInv ??false ? detail?.NumOfInv : FullItem?.DefNumOfInv)"
+                    name="@nameof(detail.NumOfInv)" id="@nameof(detail.NumOfInv)_@(detail?.RowUniqueId)" />
+                <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.NumOfInv)" />
+            }
+        </td>
+    }
+    @if (Form.HasByUser)
+    {
+        <td>
+            @if (ViewMode == ViewMode.Detail)
+            {
+                @(FullItem?.AllowEditNumOfUser ?? false ? detail?.NumOfUser : FullItem?.DefNumOfUser)
+            }
+            else
+            {
+                <input type="number" class="form-control " readonly="@(!FullItem?.AllowEditNumOfUser ?? true)"
+                    value="@(FullItem?.AllowEditNumOfUser??false ? detail?.NumOfUser : FullItem?.DefNumOfUser)"
+                    name="@nameof(detail.NumOfUser)" min='0'
+                    form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                    id="@nameof(detail.NumOfUser)_@(detail?.RowUniqueId)" />
+                <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.NumOfUser)" />
+            }
+        </td>
+    }
+    @if (Form.HasByDiskSize)
+    {
+        <td>
+            @if (ViewMode == ViewMode.Detail)
+            {
+                @(FullItem?.AllowEditiCloudDataSize ?? false ? detail?.ICloudDataSize : FullItem?.DefiCloudDataSize)
+            }
+            else
+            {
+                <input type="number" class="form-control " readonly="@(!FullItem?.AllowEditiCloudDataSize ?? true)"
+                    value="@(FullItem?.AllowEditiCloudDataSize??false ? detail?.ICloudDataSize : FullItem?.DefiCloudDataSize)"
+                    name="@nameof(detail.ICloudDataSize)" min='0'
+                    form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                    id="@nameof(detail.ICloudDataSize)_@(detail?.RowUniqueId)" />
+                <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.ICloudDataSize)" />
+            }
+        </td>
+    }
     <td>
         @if (ViewMode == ViewMode.Detail)
         {
@@ -227,27 +291,29 @@
                 class="form-control">
             <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.StartDate)" />
         }
-
     </td>
-    <td>
-        @if (ViewMode == ViewMode.Detail)
-        {
-            @(FullItem?.AllowEditNumOfMonth ?? false ? FullItem.DefNumOfMonth : detail?.NumOfMonth)
-        }
-        else
-        {
-            <input readonly="@(FullItem?.AllowEditNumOfMonth ?? false)" type="number" name="@nameof(detail.NumOfMonth)"
-                min='0' form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
-                id="@nameof(detail.NumOfMonth)_@(detail?.RowUniqueId)"
-                value="@(FullItem?.AllowEditNumOfMonth ?? false? FullItem.DefNumOfMonth: detail?.NumOfMonth)"
-                class="form-control">
-            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.NumOfMonth)" />
-        }
-    </td>
-    @if (ViewMode == ViewMode.Detail && Action == true)
+    @if (Form.HasByTime)
     {
         <td>
-            <a href="/OrderDetail/Edit/@detail?.RowUniqueId" hx-push-url="false"
+            @if (ViewMode == ViewMode.Detail)
+            {
+                @(FullItem?.AllowEditNumOfMonth ?? false ? FullItem.DefNumOfMonth : detail?.NumOfMonth)
+            }
+            else
+            {
+                <input readonly="@(FullItem?.AllowEditNumOfMonth ?? false)" type="number" name="@nameof(detail.NumOfMonth)"
+                    min='0' form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                    id="@nameof(detail.NumOfMonth)_@(detail?.RowUniqueId)"
+                    value="@(FullItem?.AllowEditNumOfMonth ?? false? FullItem.DefNumOfMonth: detail?.NumOfMonth)"
+                    class="form-control">
+                <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.NumOfMonth)" />
+            }
+        </td>
+    }
+    @if (ViewMode == ViewMode.Detail && Action == true)
+    {
+        <td class="px-0  justify-content-center">
+            <a href="/OrderDetail/Edit/@detail?.RowUniqueId?FormID=@(Form.OrderFormId)" hx-push-url="false"
                 hx-target="#row_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")" hx-swap="outerHTML">
                 <span class="mdi mdi-pencil"></span>
             </a>
@@ -259,20 +325,20 @@
     }
     @if (ViewMode == ViewMode.Edit && Action == true)
     {
-        <td>
+        <td class="px-0  justify-content-center">
             <input type="submit" class="btn btn-success" value="Lưu" hx-push-url="false"
                 form='form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")'>
-            <button class="btn btn-dark" hx-get='/OrderDetail/Detail/@detail?.RowUniqueId' hx-swap='outerHTML'
-                hx-push-url="false"
+            <button class="btn btn-dark" hx-get='/OrderDetail/Detail/@detail?.RowUniqueId?FormID=@(Form.OrderFormId)'
+                hx-swap='outerHTML' hx-push-url="false"
                 hx-target='#row_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")'>Hủy</button>
         </td>
     }
     @if (ViewMode == ViewMode.Create && Action == true)
     {
-        <td>
-            <input type="submit" class="btn btn-success" value="Lưu" hx-on:click="$('#add-new-btn').removeAttr('readonly');"
+        <td class="px-0  justify-content-center">
+            <input type="submit" class="btn btn-success" value="Lưu" hx-on:click="$('#add-new-btn').removeAttr('disabled');"
                 hx-push-url="false" form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")">
-            <button onclick="$('#add-new-btn').removeAttr('readonly');document.getElementById('row_').remove();"
+            <button onclick="$('#add-new-btn').removeAttr('disabled');document.getElementById('row_').remove();"
                 hx-push-url="false" class="btn btn-dark">Hủy</button>
         </td>
     }
@@ -283,8 +349,8 @@
     [Parameter] public OrderDetailModifyModel Model { get; set; } = null!;
     [Parameter] public OrderDetailSimpleView? detail { get; set; } = null!;
     [Parameter] public Dictionary<string, string>? Errors { get; set; }
-    [Parameter] public ViwFullItem? FullItem { get; set; }
+    [Parameter] public ViwFullItem FullItem { get; set; } = new();
     [Parameter] public Guid? OrderID { get; set; } = null!;
-
+    [Parameter] public OrderForm Form { get; set; } = null!;
     [Parameter] public bool? Action { get; set; } = true;
 }

@@ -40,8 +40,12 @@ toastr.options = {
 }
 document.body.addEventListener('htmx:responseError', function (evt) {
     if (evt.detail.xhr.status !== 200) {
-        var response = JSON.parse(evt.detail.xhr.response);
-        toastr.error(response.message || response.errorMessages);
+        try {
+            var response = JSON.parse(evt.detail.xhr.response);
+            toastr.error(response.message || response.errorMessages);
+        } catch (e) {
+            toastr.error("Internal Server Error");
+        }
     }
 });
 function ModifyInput(elements) {

@@ -9,12 +9,12 @@
 </div>
 <div class="currency" hx-swap-oob="true" name='@nameof(OrderDetailSimpleView.ConvertPrice)'
     id="@nameof(OrderDetailSimpleView.ConvertPrice)_@(DetailID)">
-    @((Item?.ConvertPrice ?? 0).ToString("C", CultureInfo.CurrentCulture))
+    @((Item?.ConvertPrice ?? 0).ToString("N0", CultureInfo.CurrentCulture))
 </div>
 
 <div class="currency" hx-swap-oob="true" name='@nameof(OrderDetailSimpleView.TaxRate)'
     id="@nameof(OrderDetailSimpleView.TaxRate)_@(DetailID)">
-    @((Item?.TaxRate ?? 0).ToString("C", CultureInfo.CurrentCulture))
+    @((Item?.TaxRate ?? 0).ToString("N0", CultureInfo.CurrentCulture))
 </div>
 @code {
     [Parameter] public Guid? DetailID { get; set; }

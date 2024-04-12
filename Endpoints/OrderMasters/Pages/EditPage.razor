@@ -43,7 +43,7 @@
                         </div>
                         <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                             <button class="btn btn-round btn-success"
-                                hx-get="/OrderDetail/Create/@Model.OrderMaster.RowUniqueId"
+                                hx-get="/OrderDetail/Create?OrderId=@Model.OrderMaster.RowUniqueId&FormID=@Model.OrderMaster.OrderFormId"
                                 hx-on:click="$('#add-new-btn').attr('disabled','disabled');" hx-target="#table-body"
                                 hx-swap='beforeend' id='add-new-btn'>+ @L["Thêm Dòng"]</button>
                         </div>
@@ -52,9 +52,10 @@
             </div>
             <div class="card-body">
                 <div class="overflow-auto">
-                    <SS75 Model="@Model.OrderDetailModify" ViewMode='@Components.ViewMode.Detail'
+                    <OrderDetailTable Model="@Model.OrderDetailModify" ViewMode='@Components.ViewMode.Detail'
+                        Form="@Model.OrderForms.FirstOrDefault(f => f.OrderFormId == Model.OrderMaster.OrderFormId)"
                         OrderID="@Model.OrderMaster.RowUniqueId">
-                    </SS75>
+                    </OrderDetailTable>
                 </div>
             </div>
         </div>

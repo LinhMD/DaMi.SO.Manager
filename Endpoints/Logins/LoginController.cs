@@ -78,6 +78,7 @@ public class LoginController(IUnitOfWork work) : ControllerBase
 
         List<Claim> claims = [
             new (ClaimTypes.Name, user.EmployeeName.ToString()),
+            new (ClaimTypes.Sid, user.EmployeeId.ToString()),
             new (ClaimTypes.NameIdentifier, user.RowUniqueId.ToString()),
             new (ClaimTypes.Role, user.DepartmentId),
             new (ClaimTypes.Email, user?.Email ?? ""),

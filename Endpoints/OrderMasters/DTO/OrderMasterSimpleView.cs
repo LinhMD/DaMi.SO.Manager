@@ -39,18 +39,33 @@ public class OrderMasterSimpleView : IView<OrderMaster>
     [DisplayName("Ngày triển khai")]
     public DateTime? BeginExecDate { get; set; }
 
+    [DisplayName("Kiểu đơn hàng")]
+    public string OrderForm { get; set; } = string.Empty;
+    [HiddenInput]
     [DisplayName("Tên sản phẩm")]
     public string ItemNames { get; set; } = null!;
+
+    [HiddenInput]
     [DisplayName("Số máy")]
     public int NumOfPC { get; set; }
+
+    [HiddenInput]
     [DisplayName("Số hệ thống")]
     public int NumOfData { get; set; }
+
+    [HiddenInput]
     [DisplayName("Số MST")]
     public int NumOfTaxCode { get; set; }
+
+    [HiddenInput]
     [DisplayName("Số hóa đơn")]
     public int NumOfInv { get; set; }
+
+    [HiddenInput]
     [DisplayName("Số User")]
     public int NumOfUser { get; set; }
+
+    [HiddenInput]
     [DisplayName("Số iCloudData")]
     public int NoICloudData { get; set; }
 
@@ -73,10 +88,11 @@ public class OrderMasterSimpleView : IView<OrderMaster>
         TypeAdapterConfig<OrderMaster, OrderMasterSimpleView>.NewConfig()
             .Map(view => view.ExecutorName, order => order.Executor != null ? order.Executor.EmployeeName : "")
             .Map(view => view.OrderStatusName, order => order.OrderStatus.OrderStatusName)
-            .Map(view => view.NumOfPC, order => order.OrderDetails.Sum(d => d.NumOfPc))
-            .Map(view => view.NumOfData, order => order.OrderDetails.Sum(d => d.NumOfData))
-            .Map(view => view.NumOfInv, order => order.OrderDetails.Sum(d => d.NumOfInv))
-            .Map(view => view.NumOfTaxCode, order => order.OrderDetails.Sum(d => d.NumOfTaxCode))
-            .Map(view => view.NumOfUser, order => order.OrderDetails.Sum(d => d.NumOfUser));
+            .Map(view => view.OrderForm, order => order.OrderForm.OrderFormName);
+        // .Map(view => view.NumOfPC, order => order.OrderDetails.Sum(d => d.NumOfPc))
+        // .Map(view => view.NumOfData, order => order.OrderDetails.Sum(d => d.NumOfData))
+        // .Map(view => view.NumOfInv, order => order.OrderDetails.Sum(d => d.NumOfInv))
+        // .Map(view => view.NumOfTaxCode, order => order.OrderDetails.Sum(d => d.NumOfTaxCode))
+        // .Map(view => view.NumOfUser, order => order.OrderDetails.Sum(d => d.NumOfUser));
     }
 }

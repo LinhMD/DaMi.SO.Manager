@@ -5,17 +5,17 @@
 @inject IStringLocalizer<ShareResource> L
 
 <div class="row">
-    <div class="col-6">
+    <div class="col-12 col-xl-6">
         <div class="card">
             <h4 class="card-header text-bold">@L["Thông tin đơn hàng"]</h4>
             <div class="card-body">
-                <div class="basic-form">
-                    <div class="form-group row">
-                        <label for="OrderFormId" class="col-form-label col-2">@L["Kiểu đơn hàng"]</label>
-                        <div class="col-sm-10">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="OrderFormId" >@L["Kiểu đơn hàng"]</label>
+                        <div >
                             @if (Model.ViewMode == ViewMode.Detail)
                             {
-                                <div class="form-control">
+                                <div class="form-control"  id="OrderFormId">
                                     @Model.OrderForms.FirstOrDefault(f =>
                                             f.OrderFormId == Model.OrderMaster.OrderFormId)?.OrderFormName
                                 </div>
@@ -23,7 +23,7 @@
                             else
                             {
                                 <select name="OrderFormId" class="form-control selectpicker" id="OrderFormId"
-                                    value="@Model.OrderMaster.OrderFormId">
+                                    value="@Model.OrderMaster.OrderFormId" disabled='@(Model.ViewMode != ViewMode.Create)'>
                                     @foreach (var orderFrom in Model.OrderForms)
                                     {
                                         <option value="@orderFrom.OrderFormId">@orderFrom.OrderFormName</option>
@@ -33,12 +33,12 @@
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.OrderFormId)" />
                     </div>
-                    <div class="form-group row">
-                        <label for="OrderTypeId" class="col-form-label col-2">@L["Loại đơn hàng"]</label>
-                        <div class="col-sm-10">
+                    <div class="form-group col-md-6">
+                        <label for="OrderTypeId" >@L["Loại đơn hàng"]</label>
+                        <div >
                             @if (Model.ViewMode == ViewMode.Detail)
                             {
-                                <div class="form-control">
+                                <div class="form-control"  id="OrderTypeId">
                                     @(Model.OrderTypes.FirstOrDefault(f => f.OrderTypeId ==
                                         Model.OrderMaster.OrderTypeId)?.OrderTypeName)
                                 </div>
@@ -59,29 +59,29 @@
                             <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.OrderTypeId)" />
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label for="Guid" class="col-form-label col-2">@L["Số đơn hàng"]</label>
-                        <div class="col-sm-10">
+                    <div class="form-group col-md-6">
+                        <label for="OrderNo" >@L["Số đơn hàng"]</label>
+                        <div >
                             @if (Model.ViewMode == ViewMode.Detail)
                             {
-                                <div class="form-control">
+                                <div class="form-control"  id="OrderNo">
                                     @Model.OrderMaster.OrderNo
                                 </div>
                             }
                             else
                             {
-                                <InputText id="Guid" name="OrderNo" class="form-control" disabled
+                                <InputText id="OrderNo" name="OrderNo" class="form-control" disabled
                                     @bind-Value=Model.OrderMaster.OrderNo />
                             }
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.OrderNo)" />
                     </div>
-                    <div class="form-group row">
-                        <label for="OrderDate" class="col-form-label col-2">@L["Ngày tạo"]</label>
-                        <div class="col-sm-10">
+                    <div class="form-group col-md-6">
+                        <label for="OrderDate" >@L["Ngày tạo"]</label>
+                        <div >
                             @if (Model.ViewMode == ViewMode.Detail)
                             {
-                                <div class="form-control">
+                                <div class="form-control"  id="OrderDate">
                                     @(Model.OrderMaster.OrderDate is not null ?
                                         Model.OrderMaster.OrderDate.Value.ToString(CultureInfo.CurrentCulture) : "")
                                 </div>
@@ -94,12 +94,12 @@
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.OrderDate)" />
                     </div>
-                    <div class="form-group row">
-                        <label for="OrderStatusId" class="col-form-label col-2">@L["Trạng thái ĐH"]</label>
-                        <div class="col-sm-10">
+                    <div class="form-group col-md-6">
+                        <label for="OrderStatusId" >@L["Trạng thái ĐH"]</label>
+                        <div >
                             @if (Model.ViewMode == ViewMode.Detail)
                             {
-                                <div class="form-control">
+                                <div class="form-control" id="OrderStatusId">
                                     @(Model.OrderStatuses.FirstOrDefault(f => f.OrderStatusId ==
                                         Model.OrderMaster.OrderStatusId)?.OrderStatusName)
                                 </div>
@@ -124,17 +124,17 @@
             </div>
         </div>
     </div>
-    <div class="col-6">
+    <div class="col-12 col-xl-6">
         <div class="card">
             <h4 class="card-header text-bold">@L["Thông tin khác"]</h4>
             <div class="card-body">
-                <div class="basic-form">
-                    <div class="form-group row">
-                        <label for="ExecutorId" class="col-form-label col-2">@L["Nhân viên triển khai"]</label>
-                        <div class="col-10">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="ExecutorId" >@L["Nhân viên triển khai"]</label>
+                        <div >
                             @if (Model.ViewMode == ViewMode.Detail)
                             {
-                                <div class="form-control">
+                                <div class="form-control" id="ExecutorId">
                                     @(Model.Employees.FirstOrDefault(employee => Model.OrderMaster.ExecutorId ==
                                         employee.EmployeeId)?.EmployeeName)
                                 </div>
@@ -152,15 +152,42 @@
                                     }
                                 </select>
                             }
+
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.ExecutorId)" />
                     </div>
-                    <div class="form-group row">
-                        <label for="BeginExecDate" class="col-form-label col-2">@L["Ngày BĐ triển khai"]</label>
-                        <div class="col-10">
+                    <div class="form-group col-md-6">
+                        <label for="SalesManId" >@L["Nhân viên bán hàng"]</label>
+                        <div >
                             @if (Model.ViewMode == ViewMode.Detail)
                             {
-                                <div class="form-control">
+                                <div class="form-control" id="SalesManId">
+                                    @(Model.Employees.FirstOrDefault(employee => Model.OrderMaster.SalesManId ==
+                                        employee.EmployeeId)?.EmployeeName)
+                                </div>
+                            }
+                            else
+                            {
+                                <select class="form-control selectpicker" id="SalesManId" disabled name="SalesManId"
+                                    value="@Model.OrderMaster.SalesManId">
+                                    @foreach (var employee in Model.Employees)
+                                    {
+                                        <option value="@employee.EmployeeId"
+                                            selected="@(Model.OrderMaster.SalesManId == employee.EmployeeId)">
+                                            @employee.EmployeeName</option>
+                                    }
+                                </select>
+                            }
+
+                        </div>
+                        <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.SalesManId)" />
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="BeginExecDate" >@L["Ngày BĐ triển khai"]</label>
+                        <div >
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <div class="form-control" id="BeginExecDate">
                                     @(Model.OrderMaster.BeginExecDate is not null ?
                                         Model.OrderMaster.BeginExecDate.Value.ToString(CultureInfo.CurrentCulture) : "")
                                 </div>
@@ -174,12 +201,12 @@
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.BeginExecDate)" />
                     </div>
-                    <div class="form-group row">
-                        <label for="BeginExecDate" class="col-form-label col-2">@L["Ngày KT triển khai"]</label>
-                        <div class="col-10">
+                    <div class="form-group col-md-6">
+                        <label for="BeginExecDate" >@L["Ngày KT triển khai"]</label>
+                        <div >
                             @if (Model.ViewMode == ViewMode.Detail)
                             {
-                                <div class="form-control">
+                                <div class="form-control" id="EndExecDate">
                                     @(Model.OrderMaster.EndExecDate is not null ?
                                         Model.OrderMaster.EndExecDate.Value.ToString(CultureInfo.CurrentCulture) : "")
                                 </div>
@@ -192,58 +219,27 @@
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.EndExecDate)" />
                     </div>
-                    <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.EndExecDate)" />
-                </div>
-                <div class="form-group row">
-                    <label for="SalesManId" class="col-form-label col-2">@L["Nhân viên bán hàng"]</label>
-                    <div class="col-10">
-                        @if (Model.ViewMode == ViewMode.Detail)
-                        {
-                            <div class="form-control">
-                                @(Model.Employees.FirstOrDefault(employee => Model.OrderMaster.SalesManId ==
-                                    employee.EmployeeId)?.EmployeeName)
-                            </div>
-                        }
-                        else
-                        {
-                            <select class="form-control selectpicker" id="SalesManId" disabled name="SalesManId"
-                                value="@Model.OrderMaster.SalesManId">
-                                @foreach (var employee in Model.Employees)
-                                {
-                                    <option value="@employee.EmployeeId"
-                                        selected="@(Model.OrderMaster.SalesManId == employee.EmployeeId)">
-                                        @employee.EmployeeName</option>
-                                }
-                            </select>
-                        }
-
-                    </div>
-                    <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.SalesManId)" />
-                </div>
-                <div class="form-group row">
-                    <label for="SalesManId" class="col-form-label col-2"></label>
-                    <div class="col-10">
-                    </div>
+                    
+                    
                 </div>
             </div>
         </div>
     </div>
 </div>
 <div class="row">
-    <div class="col-6">
+    <div class="col-12 col-xl-6">
         <div class="card">
             <h4 class="card-header">@L["Thông tin hợp đồng"]</h4>
             <div class="card-body">
-                <div class="basic-form">
-                    <div class="form-group row">
-                        <label for="CustomerId" class="col-form-label col-2">
+                <div class="form-row">
+                    <div class="form-group col-md-12">
+                        <label for="CustomerIdSelect" >
                             @L["Tên KH"]
-                            <span class="mdi mdi-reload htmx-indicator"></span>
                         </label>
-                        <div class="col-sm-10">
+                        <div >
                             @if (Model.ViewMode == ViewMode.Detail)
                             {
-                                <div class="form-control">
+                                <div class="form-control" id="CustomerId">
                                     @(Model.Customers.FirstOrDefault(customer => Model.OrderMaster.CustomerId ==
                                         customer.CustomerId)?.CustomerName)
                                 </div>
@@ -276,26 +272,24 @@
                             }
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label for="CustomerTax" class="col-form-label col-2">
+                    <div class="form-group col-md-6">
+                        <label for="CustomerTax" >
                             @L["MST/CCCD"]
-                            <span class="mdi mdi-reload htmx-indicator"></span>
                         </label>
-                        <div class="col-sm-10">
+                        <div >
                             <input type="text" id="CustomerTax" name="TaxCode" readonly class="form-control"
                                 value="@Model.OrderMaster.TaxCode" />
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.TaxCode)" />
                     </div>
-                    <div class="form-group row">
-                        <label for="CustomerPhone" class="col-form-label col-2">
+                    <div class="form-group col-md-6">
+                        <label for="CustomerPhone" >
                             @L["Điện thoại"]
-                            <span class="mdi mdi-reload customer-info htmx-indicator"></span>
                         </label>
-                        <div class="col-sm-10">
+                        <div >
                             @if (Model.ViewMode == ViewMode.Detail)
                             {
-                                <div class="form-control">
+                                <div class="form-control" id="CustomerPhone">
                                     @(Model.OrderMaster.Phone)
                                 </div>
                             }
@@ -307,14 +301,14 @@
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.Phone)" />
                     </div>
-                    <div class="form-group row">
-                        <label for="RefPerson" class="col-form-label col-2">
+                    <div class="form-group col-md-6">
+                        <label for="RefPerson" >
                             @L["Người đại điện"]
                         </label>
-                        <div class="col-sm-10">
+                        <div >
                             @if (Model.ViewMode == ViewMode.Detail)
                             {
-                                <div class="form-control">
+                                <div class="form-control" id="RefPerson">
                                     @(Model.OrderMaster.RefPerson)
                                 </div>
                             }
@@ -326,14 +320,14 @@
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.RefPerson)" />
                     </div>
-                    <div class="form-group row">
-                        <label for="RefPos" class="col-form-label col-2">
+                    <div class="form-group col-md-6">
+                        <label for="RefPos" >
                             @L["Chức vụ"]
                         </label>
-                        <div class="col-sm-10">
+                        <div >
                             @if (Model.ViewMode == ViewMode.Detail)
                             {
-                                <div class="form-control">
+                                <div class="form-control" id="RefPos">
                                     @(Model.OrderMaster.RefPos)
                                 </div>
                             }
@@ -345,14 +339,14 @@
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.RefPos)" />
                     </div>
-                    <div class="form-group row">
-                        <label for="ContractNo" class="col-form-label col-2">
+                    <div class="form-group col-md-6">
+                        <label for="ContractNo" >
                             @L["Số hợp đồng"]
                         </label>
-                        <div class="col-sm-10">
+                        <div >
                             @if (Model.ViewMode == ViewMode.Detail)
                             {
-                                <div class="form-control">
+                                <div class="form-control" id="ContractNo">
                                     @(Model.OrderMaster.ContractNo)
                                 </div>
                             }
@@ -364,14 +358,14 @@
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.ContractNo)" />
                     </div>
-                    <div class="form-group row">
-                        <label for="ContractDate" class="col-form-label col-2">
+                    <div class="form-group col-md-6">
+                        <label for="ContractDate" >
                             @L["Ngày hợp đồng"]
                         </label>
-                        <div class="col-sm-10">
+                        <div >
                             @if (Model.ViewMode == ViewMode.Detail)
                             {
-                                <div class="form-control">
+                                <div class="form-control" id="ContractDate">
                                     @(Model.OrderMaster.ContractDate is not null ?
                                         Model.OrderMaster.ContractDate.Value.ToString(CultureInfo.CurrentCulture) : "")
                                 </div>
@@ -388,25 +382,25 @@
             </div>
         </div>
     </div>
-    <div class="col-6">
+    <div class="col-12 col-xl-6">
         <div class="card">
             <h4 class="card-header text-bold"> @L["Thông tin thanh toán"]</h4>
             <div class="card-body">
-                <div class="basic-form">
-                    <div class="form-group row">
-                        <label for="CurrencyId" class="col-form-label col-2"> @L["Loại tiền"]</label>
-                        <div class="col-10">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="CurrencyId" > @L["Loại tiền"]</label>
+                        <div >
                             @if (Model.ViewMode == ViewMode.Detail)
                             {
-                                <div class="form-control">
-                                    @(Model.Currencies.FirstOrDefault(currency => Model.OrderMaster.CustomerId ==
+                                <div class="form-control" id="CurrencyId">
+                                    @(Model.Currencies.FirstOrDefault(currency => Model.OrderMaster.CurrencyId ==
                                         currency.CurrencyId)?.CurrencyName)
                                 </div>
                             }
                             else
                             {
-                                <InputSelect class="form-control selectpicker" id="CurrencyId" name="CurrencyId"
-                                    @bind-Value="Model.OrderMaster.CurrencyId">
+                                <select class="form-control selectpicker" id="CurrencyId" name="CurrencyId"
+                                    value="@Model.OrderMaster.CurrencyId">
                                     @foreach (var currency in Model.Currencies)
                                     {
                                         <option value="@currency.CurrencyId"
@@ -414,43 +408,42 @@
                                             @currency.CurrencyName
                                         </option>
                                     }
-                                </InputSelect>
+                                </select>
                             }
                             <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.CurrencyId)" />
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label for="ExchangeRate" class="col-form-label col-2"> @L["Tỉ giá"]</label>
-                        <div class="col-10">
+                    <div class="form-group col-md-6">
+                        <label for="ExchangeRate" > @L["Tỉ giá"]</label>
+                        <div >
                             @if (Model.ViewMode == ViewMode.Detail)
                             {
-                                <div class="form-control">
+                                <div class="form-control" id="ExchangeRate">
                                     @Convert.ToInt16(Model.OrderMaster.ExchangeRate)
                                 </div>
                             }
                             else
                             {
-
                                 <input type="text" value="@Convert.ToInt16(Model.OrderMaster.ExchangeRate)"
-                                    class="form-control  name=" ExchangeRate" placeholder="Tỉ giá" />
+                                    class="form-control" id="ExchangeRate" name="ExchangeRate" placeholder="Tỉ giá" />
                             }
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.ExchangeRate)" />
                     </div>
-                    <div class="form-group row">
-                        <label for="OriginalTotalAmount" class="col-form-label col-2"> @L["Cộng thành tiền"]</label>
-                        <div class="col-10">
+                    <div class="form-group col-md-6">
+                        <label for="OriginalTotalAmount" > @L["Cộng thành tiền"]</label>
+                        <div >
                             @if (Model.ViewMode == ViewMode.Detail)
                             {
-                                <div class="form-control currency">
+                                <div class="form-control currency" id='TotalAmount'>
                                     @(Model.OrderMaster.TotalAmount is not null ?
-                                        Model.OrderMaster.TotalAmount.Value.ToString("C", CultureInfo.CurrentCulture) : "")
+                                        Model.OrderMaster.TotalAmount.Value.ToString("N0", CultureInfo.CurrentCulture) : "")
                                 </div>
                             }
                             else
                             {
                                 <input type="text"
-                                    value="@(Model.OrderMaster.TotalAmount is not null ? Model.OrderMaster.TotalAmount.Value.ToString("C", CultureInfo.CurrentCulture) : "")"
+                                    value="@(Model.OrderMaster.TotalAmount is not null ? Model.OrderMaster.TotalAmount.Value.ToString("N0", CultureInfo.CurrentCulture) : "")"
                                     class="form-control currency" readonly id='TotalAmount'
                                     name="@nameof(Model.OrderMaster.TotalAmount)" placeholder="Cộng thành tiền" />
                             }
@@ -458,20 +451,20 @@
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.TotalAmount)" />
                     </div>
-                    <div class="form-group row">
-                        <label for="ConvertTaxAmount" class="col-form-label col-2"> @L["Cộng tiền thuế VAT"]</label>
-                        <div class="col-10">
+                    <div class="form-group col-md-6">
+                        <label for="ConvertTaxAmount" > @L["Cộng tiền thuế VAT"]</label>
+                        <div >
                             @if (Model.ViewMode == ViewMode.Detail)
                             {
-                                <div class="form-control currency">
+                                <div class="form-control currency" id='@nameof(Model.OrderMaster.ConvertTaxAmount)'>
                                     @(Model.OrderMaster.ConvertTaxAmount is not null ?
-                                        Model.OrderMaster.ConvertTaxAmount.Value.ToString("C", CultureInfo.CurrentCulture) : "")
+                                        Model.OrderMaster.ConvertTaxAmount.Value.ToString("N0", CultureInfo.CurrentCulture) : "")
                                 </div>
                             }
                             else
                             {
                                 <input type="text"
-                                    value="@(Model.OrderMaster.ConvertTaxAmount is not null ? Model.OrderMaster.ConvertTaxAmount.Value.ToString("C", CultureInfo.CurrentCulture) : "")"
+                                    value="@(Model.OrderMaster.ConvertTaxAmount is not null ? Model.OrderMaster.ConvertTaxAmount.Value.ToString("N0", CultureInfo.CurrentCulture) : "")"
                                     class="form-control currency" readonly
                                     name="@nameof(Model.OrderMaster.ConvertTaxAmount)"
                                     id='@nameof(Model.OrderMaster.ConvertTaxAmount)' placeholder="Cộng tiền thuế VAT" />
@@ -479,14 +472,14 @@
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.ConvertTaxAmount)" />
                     </div>
-                    <div class="form-group row">
-                        <label for="ConvertDiscAmount" class="col-form-label col-2"> @L["Cộng tiền CK"]</label>
-                        <div class="col-10">
+                    <div class="form-group col-md-6">
+                        <label for="ConvertDiscAmount" > @L["Cộng tiền CK"]</label>
+                        <div >
                             @if (Model.ViewMode == ViewMode.Detail)
                             {
-                                <div class="form-control currency">
+                                <div class="form-control currency" id='ConvertDiscAmount'>
                                     @(Model.OrderMaster.ConvertDiscAmount is not null ?
-                                        Model.OrderMaster.ConvertDiscAmount.Value.ToString("C", CultureInfo.CurrentCulture) :
+                                        Model.OrderMaster.ConvertDiscAmount.Value.ToString("N0", CultureInfo.CurrentCulture) :
                                         "")
                                 </div>
                             }
@@ -494,7 +487,7 @@
                             {
 
                                 <input type="text"
-                                    value="@(Model.OrderMaster.ConvertDiscAmount is not null ? Model.OrderMaster.ConvertDiscAmount.Value.ToString("C", CultureInfo.CurrentCulture) : "")"
+                                    value="@(Model.OrderMaster.ConvertDiscAmount is not null ? Model.OrderMaster.ConvertDiscAmount.Value.ToString("N0", CultureInfo.CurrentCulture) : "")"
                                     class="form-control currency" readonly
                                     name="@nameof(Model.OrderMaster.ConvertDiscAmount)" id='ConvertDiscAmount'
                                     placeholder="Cộng tiền CK" />
@@ -502,21 +495,21 @@
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.ConvertDiscAmount)" />
                     </div>
-                    <div class="form-group row">
-                        <label for="TotalAmount" class="col-form-label col-2"> @L["Tổng tiền thanh toán"]</label>
-                        <div class="col-10">
+                    <div class="form-group col-md-6">
+                        <label for="TotalAmount" > @L["Tổng tiền thanh toán"]</label>
+                        <div >
                             @if (Model.ViewMode == ViewMode.Detail)
                             {
-                                <div class="form-control currency">
+                                <div class="form-control currency"  id='@nameof(Model.OrderMaster.ConvertTotalAmount)'>
                                     @(Model.OrderMaster.ConvertTotalAmount is not null ?
-                                        Model.OrderMaster.ConvertTotalAmount.Value.ToString("C", CultureInfo.CurrentCulture) :
+                                        Model.OrderMaster.ConvertTotalAmount.Value.ToString("N0", CultureInfo.CurrentCulture) :
                                         "")
                                 </div>
                             }
                             else
                             {
                                 <input type="text"
-                                    value="@(Model.OrderMaster.ConvertTotalAmount is not null ? Model.OrderMaster.ConvertTotalAmount.Value.ToString("C", CultureInfo.CurrentCulture) : "")"
+                                    value="@(Model.OrderMaster.ConvertTotalAmount is not null ? Model.OrderMaster.ConvertTotalAmount.Value.ToString("N0", CultureInfo.CurrentCulture) : "")"
                                     id='@nameof(Model.OrderMaster.ConvertTotalAmount)' class="form-control currency"
                                     readonly name="@nameof(Model.OrderMaster.ConvertTotalAmount)"
                                     placeholder="Tổng tiền thanh toán" />
@@ -525,12 +518,12 @@
                         <ErrorMember Errors="@Model.Errors"
                             MemberName="@nameof(Model.OrderMaster.ConvertTotalAmount)" />
                     </div>
-                    <div class="form-group row">
-                        <label for="OverDate" class="col-form-label col-2"> @L["Hạn thanh toán"]</label>
-                        <div class="col-10">
+                    <div class="form-group col-md-6">
+                        <label for="OverDate" > @L["Hạn thanh toán"]</label>
+                        <div >
                             @if (Model.ViewMode == ViewMode.Detail)
                             {
-                                <div class="form-control">
+                                <div class="form-control" id="OverDate">
                                     @(Model.OrderMaster.OverDate is not null ?
                                         Model.OrderMaster.OverDate.Value.ToString(CultureInfo.CurrentCulture) : "")
                                 </div>
@@ -543,21 +536,31 @@
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.OverDate)" />
                     </div>
-                    <div class="form-group row">
-                        <label for="PublishedInvoice" class="col-form-label col-2"> @L["Có xuất hóa đơn"]</label>
-                        <div class="col-10">
-                            <input type="checkbox" id="HasInvoiceVat" value="true" name="HasInvoiceVat"
-                                readonly='@(Model.ViewMode == ViewMode.Detail)' class="form-control"
-                                checked='@Model.OrderMaster.HasInvoiceVat'>
+                    <div class="form-group col-md-6">
+                        <label for="PublishedInvoice" > @L["Có xuất hóa đơn"]</label>
+                        <div >
+                            @if (Model.ViewMode == ViewMode.Detail)
+                            {
+                                <input type="checkbox" id="HasInvoiceVat" value="true" name="HasInvoiceVat" onclick="return false;"
+                                    readonly='@(Model.ViewMode == ViewMode.Detail)' class="form-control form-control-sm "
+                                    checked='@Model.OrderMaster.HasInvoiceVat'>
+                            }
+                            else
+                            {
+                                <input type="checkbox" id="HasInvoiceVat" value="true" name="HasInvoiceVat"
+                                    readonly='@(Model.ViewMode == ViewMode.Detail)' class="form-control form-control-sm"
+                                    checked='@Model.OrderMaster.HasInvoiceVat'>
+                            }
+                            
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.HasInvoiceVat)" />
                     </div>
-                    <div class="form-group row">
-                        <label for="PaymentMethodId" class="col-form-label col-2"> @L["Hình thức thanh toán"]</label>
-                        <div class="col-10">
+                    <div class="form-group col-md-6">
+                        <label for="PaymentMethodId" > @L["Hình thức thanh toán"]</label>
+                        <div >
                             @if (Model.ViewMode == ViewMode.Detail)
                             {
-                                <div class="form-control">
+                                <div class="form-control" id="PaymentMethodId">
                                     @(Model.PaymentMethods.FirstOrDefault(paymentMethod => Model.OrderMaster.PaymentMethodId ==
                                     paymentMethod.PaymentMethodId)?.PaymentMethodName)
                                 </div>
@@ -578,12 +581,12 @@
                         </div>
                         <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.PaymentMethodId)" />
                     </div>
-                    <div class="form-group row">
-                        <label for="PaymentTerms" class="col-form-label col-2"> @L["Điều khoản thanh toán"]</label>
-                        <div class="col-10">
+                    <div class="form-group col-md-6">
+                        <label for="PaymentTerms" > @L["Điều khoản thanh toán"]</label>
+                        <div >
                             @if (Model.ViewMode == ViewMode.Detail)
                             {
-                                <div class="form-control">
+                                <div class="form-control" id="PaymentTerms">
                                     @(Model.OrderMaster.PaymentTerms)
                                 </div>
                             }
@@ -603,7 +606,7 @@
 <div class="row">
     <div class="col-6">
         <div class="card">
-            <h4 class="card-header">@L["Điễn giãi"]</h4>
+            <h4 class="card-header">@L["Diễn giải"]</h4>
             <div class="card-body">
                 <div class="form-group">
                     <textarea type="text" class="form-control" id="Description" name="Description"

@@ -1,4 +1,5 @@
 @using DaMi.SO.Manager.Components
+@using DaMi.SO.Manager.Data.Models
 @using DaMi.SO.Manager.Endpoints.OrderDetails.DTO
 @using System.Globalization
 @inherits XComponent<OrderDetailModifyModel>
@@ -11,30 +12,47 @@
             <th>@L["Tên sản phẩm"]</th>
             <th>@L["Đơn vị tính"]</th>
             <th>@L["Số lượng"]</th>
-            <th>@L["Đơn giá"]</th>
-            <th>@L["Thành tiền"]</th>
+            <th style='min-width: 120px;'>@L["Đơn giá"]</th>
+            <th style='min-width: 120px;'>@L["Thành tiền"]</th>
             <th>@L["% VAT"]</th>
-            <th>@L["Tiền thuế VAT"]</th>
+            <th style='min-width: 120px;'>@L["Tiền thuế VAT"]</th>
             <th>@L["% Chiết khấu"]</th>
-            <th>@L["Số tiền CK"]</th>
+            <th style='min-width: 120px;'>@L["Số tiền CK"]</th>
+            @if(Form.HasByTaxCode){
+            <th>@L["Số MST"]</th>
+            }
             <th>@L["MST sử dụng"]</th>
+            @if(Form.HasByPc){
             <th>@L["Số máy"]</th>
+            }
+            @if(Form.HasByNumData){
             <th>@L["Số hệ thống"]</th>
+            }
+            @if(Form.HasByQtyInvc){
+            <th>@L["Số lượng HĐ"]</th>
+            }
+            @if(Form.HasByUser){
             <th>@L["Số User"]</th>
+            }
+            @if(Form.HasByDiskSize){
+            <th>@L["Số Data (GB)"]</th>
+            }
             <th>@L["Ngày sử dụng"]</th>
+            @if(Form.HasByTime){
             <th>@L["Số tháng SD"]</th>
-            @if (ViewMode != ViewMode.Detail && Action == true)
+            }
+            @if ( Action == true)
             {
-                <th></th>
+                <th style='min-width: 50px;'></th>
             }
         </tr>
     </thead>
     <tbody id='table-body'>
         @foreach (var detail in Model.OrderDetails)
         {
-            <SS75Row detail="@detail" Model="@Model" ViewMode="@ViewMode" OrderID="@OrderID" Action="@Action"
+            <OrderDetailRow detail="@detail" Model="@Model" ViewMode="@ViewMode" OrderID="@OrderID" Action="@Action" Form="@Form"
                 FullItem="@Model.FullItemMap?[detail?.ItemId ?? ""]">
-            </SS75Row>
+            </OrderDetailRow>
         }
     </tbody>
 </table>
@@ -42,4 +60,5 @@
     [Parameter] public ViewMode ViewMode { get; set; } = ViewMode.Detail;
     [Parameter] public Guid? OrderID { get; set; } = null!;
     [Parameter] public bool? Action { get; set; } = true;
+    [Parameter] public OrderForm Form { get; set; } = null!;
 }
