@@ -1,6 +1,9 @@
-﻿<input id="CustomerTax" hx-swap-oob="true" disabled class="form-control" value="@TaxCode">
-<input id="CustomerPhone" hx-swap-oob="true" name="Phone" class="form-control" value="@Phone">
+﻿@using DaMi.SO.Manager.Data.Models
+<input id="CustomerTax" hx-swap-oob="true" readonly name="TaxCode" class="form-control" value="@Customer.TaxCode">
+<input id="CustomerPhone" hx-swap-oob="true" name="Phone" class="form-control" value="@Customer.Phone">
+<input type="text" id="RefPerson" hx-swap-oob="true" name="RefPerson" class="form-control"
+    value=@Customer.ContactPerson />
+<input id="RefPos" hx-swap-oob="true" name="RefPos" class="form-control" value="@Customer.ContactPersonPos">
 @code {
-    [Parameter] public string TaxCode { get; set; } = string.Empty;
-    [Parameter] public string Phone { get; set; } = string.Empty;
+    [Parameter] public ViwCustomer Customer { get; set; } = null!;
 }

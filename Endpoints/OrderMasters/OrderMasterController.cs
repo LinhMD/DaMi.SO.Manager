@@ -55,7 +55,7 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
     {
 
         var customer = await work.Get<ViwCustomer>().Find(c => c.CustomerId == CustomerIdSelect).FirstOrDefaultAsync() ?? new ViwCustomer();
-        return new RazorComponentResult(typeof(OOBCustomerInfo), new { customer.TaxCode, customer.Phone });
+        return new RazorComponentResult(typeof(OOBCustomerInfo), new { customer });
     }
 
     [Authorize(policy: nameof(Permision.AddNewOrder))]
@@ -136,10 +136,10 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
     public async Task<IResult> GetEditAsync(Guid guid)
     {
         var orderMaster = await work.Get<OrderMaster>().Find<OrderMasterDetailView>(f => f.RowUniqueId == guid).FirstOrDefaultAsync();
-
         if (orderMaster is null)
+        {
             return new RazorComponentResult(typeof(_404));
-
+        }
         return await ReturnPage<EditPage>(work, orderMaster, ViewMode.Edit);
     }
 
@@ -181,7 +181,7 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
 
         var customer = customers.FirstOrDefault(c => c.CustomerId == orderMaster.CustomerId);
         orderMaster.Phone = customer?.Phone ?? string.Empty;
-
+        orderMaster.TaxCode = customer?.TaxCode ?? string.Empty;
         var orderStatuses = await work.Get<OrderStatus>().GetAll().ToListAsync();
         return this.Page<TPage, OrderMasterEditModel>(new OrderMasterEditModel()
         {

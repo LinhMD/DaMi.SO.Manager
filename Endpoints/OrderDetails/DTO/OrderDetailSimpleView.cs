@@ -65,7 +65,7 @@ public class OrderDetailSimpleView : IView<OrderDetail>, IDto, IUpdateRequest<Or
     public decimal? TaxRate { get; set; }
 
     [DisplayName("Tiền thuế")]
-    public decimal? ConvertTaxAmount => this.TaxRate * Convert.ToDecimal(this.Quantity * this.ConvertPrice) / 100;
+    public decimal? ConvertTaxAmount { get; set; }
 
     [DisplayName("Số tiền VND")]
     public decimal? ConvertAmount => Convert.ToDecimal(ConvertPrice * Quantity);

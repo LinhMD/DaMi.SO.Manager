@@ -16,16 +16,11 @@ toastr.options = {
     "showMethod": "fadeIn",
     "hideMethod": "fadeOut"
 }
-document.body.addEventListener('htmx:responseError', function (evt) {
-    if (evt.detail.xhr.status !== 200) {
-        try {
-            var response = JSON.parse(evt.detail.xhr.response);
-            toastr.error(response.message || response.errorMessages);
-        } catch (e) {
-            toastr.error("Internal Server Error");
-        }
-    }
-});
+function rowSubmit(guid) {
+    calculateTotal();
+    ModifyInput($(`input[form='form_${guid}'].currency`));
+    return true;
+}
 function ModifyInput(elements) {
     Array.from(elements).forEach(e => {
         e.value = (e.value || '').toString().replace(/[^0-9-]+/g, '')
@@ -34,14 +29,13 @@ function ModifyInput(elements) {
 }
 function calculatePrice(guid) {
     var quantity = Number($(`#Quantity_${guid}`).val());
-    var price = toNumber($(`#ConvertPrice_${guid}`).text());
+    var price = toNumber($(`#ConvertPrice_${guid}`).text() || $(`#ConvertPrice_${guid}`).val());
     var totalPrice = quantity * price;
-    var formatOption = { style: 'currency', currency: 'VND' };
     $(`#ConvertAmount_${guid}`).text(toCurrency(totalPrice));
     var taxRate = toNumber($(`#TaxRate_${guid}`).text());
     $(`#ConvertTaxAmount_${guid}`).text(toCurrency(totalPrice * taxRate / 100));
     var discountRate = Number($(`#DiscountPercent_${guid}`).val());
-    $(`#ConvertDiscAmount_${guid}`).val(totalPrice * discountRate / 100);
+    $(`#ConvertDiscAmount_${guid}`).val(toCurrency(totalPrice * discountRate / 100));
     calculateTotal();
 }
 function toNumber(str) {

@@ -40,7 +40,12 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
     {
         OrderMaster? orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Where(f => f.RowUniqueId == OrderId).FirstOrDefaultAsync();
         OrderForm orderForm = await work.Get<OrderForm>().Find(f => f.OrderFormId == FormID).FirstOrDefaultAsync() ?? new OrderForm();
-        return await ReturnPage(work, new OrderDetailSimpleView() { OrderId = OrderId, ItemId = ItemIdSelect }, orderForm, null, ViewMode.Create, orderMaster?.CustomerId);
+        var orderDetailSimpleView = new OrderDetailSimpleView() { OrderId = OrderId, ItemId = ItemIdSelect };
+        if (ItemIdSelect is null)
+        {
+            orderDetailSimpleView.ItemId = (await work.Get<ViwFullItem>().Find(f => f.OrderFormId == orderForm.OrderFormId).FirstOrDefaultAsync())?.ItemId;
+        }
+        return await ReturnPage(work, orderDetailSimpleView, orderForm, null, ViewMode.Create, orderMaster?.CustomerId);
     }
 
     [Authorize(policy: nameof(Permision.AddNewOrder))]
@@ -49,11 +54,22 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
     {
         OrderMaster? orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Where(f => f.RowUniqueId == orderDetailNew.OrderId!).FirstOrDefaultAsync();
         OrderForm orderForm = await work.Get<OrderForm>().Find(f => orderMaster != null && f.OrderFormId == orderMaster.OrderFormId).FirstOrDefaultAsync() ?? new OrderForm();
+        if (orderDetailNew.TaxRate > 0 && (orderDetailNew.ConvertTaxAmount == 0 || orderDetailNew.ConvertTaxAmount is null))
+        {
+            orderDetailNew.ConvertTaxAmount = orderDetailNew.TaxRate * orderDetailNew.ConvertAmount / 100;
+        }
         try
         {
             OrderDetail orderDetail = orderDetailNew.Adapt<OrderDetail>();
             orderDetail.Dump();
             await work.Get<OrderDetail>().AddAsync(orderDetail);
+            if (orderMaster != null)
+            {
+                orderMaster.ConvertDiscAmount = orderMaster.OrderDetails.Select(f => f.ConvertDiscAmount).Sum();
+                orderMaster.ConvertTaxAmount = orderMaster.OrderDetails.Select(f => f.ConvertTaxAmount).Sum();
+                orderMaster.ConvertTotalAmount = orderMaster.OrderDetails.Select(f => f.ConvertAmount + f.ConvertTaxAmount - f.ConvertDiscAmount).Sum();
+                await work.CompleteAsync();
+            }
             return await ReturnPage(work, work.Get<OrderDetail>().Get<OrderDetailSimpleView>(orderDetail.RowUniqueId), orderForm, null, ViewMode.Detail, orderMaster?.CustomerId);
         }
         catch (ModelValueInvalidException e)
@@ -83,20 +99,23 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
 
     [Authorize(policy: nameof(Permision.UpdateOrder))]
     [HttpPost("Edit/{guid}")]
-    public async Task<IResult> PostEdit([FromForm] OrderDetailSimpleView orderDetailNew, Guid guid)
+    public async Task<IResult> PostEdit([FromForm] OrderDetailSimpleView orderDetail, Guid guid)
     {
 
-        OrderMaster? orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Where(f => f.RowUniqueId == orderDetailNew.OrderId!).FirstOrDefaultAsync();
-        OrderForm orderForm = await work.Get<OrderForm>().Find(f => orderMaster != null && f.OrderFormId == orderMaster.OrderFormId).FirstOrDefaultAsync() ?? new OrderForm();
+        var orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Where(f => f.RowUniqueId == orderDetail.OrderId!).FirstOrDefaultAsync();
+        var orderForm = await work.Get<OrderForm>().Find(f => orderMaster != null && f.OrderFormId == orderMaster.OrderFormId).FirstOrDefaultAsync() ?? new OrderForm();
         try
         {
-            ViwItem? item = await work.Get<ViwItem>().Find(f => f.ItemId == orderDetailNew.ItemId).FirstOrDefaultAsync();
+            var item = await work.Get<ViwItem>().Find(f => f.ItemId == orderDetail.ItemId).FirstOrDefaultAsync();
             if (item is not null)
             {
-                orderDetailNew.ConvertPrice = item.ConvertPrice;
-                orderDetailNew.TaxRate = item.TaxRate;
+                orderDetail.TaxRate = item.TaxRate;
+                if (orderDetail.TaxRate > 0 && (orderDetail.ConvertTaxAmount == 0 || orderDetail.ConvertTaxAmount is null))
+                {
+                    orderDetail.ConvertTaxAmount = orderDetail.TaxRate * orderDetail.ConvertAmount / 100;
+                }
             }
-            await service.UpdateAsync(orderDetailNew, guid);
+            await service.UpdateAsync(orderDetail, guid);
             if (orderMaster != null)
             {
                 orderMaster.ConvertDiscAmount = orderMaster.OrderDetails.Select(f => f.ConvertDiscAmount).Sum();
@@ -112,7 +131,12 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
             return await ReturnPage(work, orderDetailSimpleView, orderForm, e.MemberErrors, ViewMode.Edit, orderMaster?.CustomerId);
         }
     }
-
+    // [Authorize(policy: nameof(Permision.DeleteOrder))]
+    // [HttpPost("Delete/{guid}")]
+    // public async Task<IResult> Delete(Guid guid)
+    // {
+    //     work.Get<OrderDetail>().RemoveAsync(guid);
+    // }
     private static async Task<IResult> ReturnPage(IUnitOfWork work, OrderDetailSimpleView? orderDetail, OrderForm form, Dictionary<string, string>? e = null, ViewMode viewMode = ViewMode.Detail, string? customerId = null)
     {
         Dictionary<string, ViwFullItem> fullItems = await work.Get<ViwFullItem>().Find(f => f.OrderFormId == form.OrderFormId).ToDictionaryAsync(f => f.ItemId);

@@ -30,3 +30,13 @@ triggerTabList.forEach(function (triggerEl) {
         tabTrigger.show()
     })
 })
+document.body.addEventListener('htmx:responseError', function (evt) {
+    if (evt.detail.xhr.status !== 200) {
+        try {
+            var response = JSON.parse(evt.detail.xhr.response);
+            toastr.error(response.message || response.errorMessages);
+        } catch (e) {
+            toastr.error("Internal Server Error");
+        }
+    }
+});
