@@ -7,9 +7,9 @@
 <div name='InvUnitOfMeasr' hx-swap-oob="true" id="InvUnitOfMeasr_@(DetailID)">
     @Item.InvUnitOfMeasr
 </div>
-<div class="currency" hx-swap-oob="true" name='@nameof(OrderDetailSimpleView.ConvertPrice)'
-    id="@nameof(OrderDetailSimpleView.ConvertPrice)_@(DetailID)">
-    @((Item?.ConvertPrice ?? 0).ToString("N0", CultureInfo.CurrentCulture))
+<div class="currency" hx-swap-oob="true" name='@nameof(OrderDetailSimpleView.OriginalPrice)'
+    id="@nameof(OrderDetailSimpleView.OriginalPrice)_@(DetailID)">
+    @((Item?.OriginalPrice ?? 0).ToString("N0", CultureInfo.CurrentCulture))
 </div>
 
 <div class="currency" hx-swap-oob="true" name='@nameof(OrderDetailSimpleView.TaxRate)'
@@ -20,5 +20,5 @@
     [Parameter] public Guid? DetailID { get; set; }
 
     [Parameter]
-    public ViwItem Item { get; set; }
+    public ViwItem Item { get; set; } = null!;
 }

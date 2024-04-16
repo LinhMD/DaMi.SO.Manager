@@ -33,9 +33,9 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
     [HttpGet]
     public async Task<IResult> GetAsync()
     {
-        var orderMasters = await work.Get<OrderMaster>().GetAll<OrderMasterSimpleView>().ToListAsync();
+        var orderMasters = await work.Get<OrderMaster>().GetAll<OrderMasterSimpleView>().OrderByDescending(f => f.OrderNo).ToListAsync();
         Dictionary<string, ViwCustomer> customer = await work.Get<ViwCustomer>().GetAll().ToDictionaryAsync(f => f.CustomerId);
-        orderMasters.ForEach(m => m.CustomerId = customer[m.CustomerId].CustomerName);
+        orderMasters.ForEach(m => m.CustomerId = customer[m.CustomerId].TradeName);
         return this.Page<IndexPage, OrderMasterTableModel>(new() { OrderMasters = orderMasters });
     }
 
@@ -151,9 +151,9 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
         {
             List<OrderDetail> orderDetails = await work.Get<OrderDetail>().Find(f => f.OrderId == guid).ToListAsync();
             orderMaster.TotalAmount = orderDetails.Select(x => Convert.ToDecimal(x.ConvertPrice * x.Quantity)).Sum();
-            orderMaster.ConvertTaxAmount = orderDetails.Select(x => x.ConvertTaxAmount).Sum();
-            orderMaster.ConvertDiscAmount = orderDetails.Select(x => x.ConvertDiscAmount).Sum();
-            orderMaster.ConvertTotalAmount = orderMaster.ConvertTotalAmount + orderMaster.ConvertTaxAmount - orderMaster.ConvertDiscAmount;
+            orderMaster.OriginalTaxAmount = orderDetails.Select(x => x.OriginalTaxAmount).Sum();
+            orderMaster.OriginalDiscAmount = orderDetails.Select(x => x.OriginalDiscAmount).Sum();
+            orderMaster.OriginalTotalAmount = orderMaster.TotalAmount.Value + orderMaster.OriginalTaxAmount - orderMaster.OriginalDiscAmount;
             Console.WriteLine(orderMaster);
             OrderMaster save = await service.UpdateAsync(orderMaster, guid);
             return await Task.FromResult(Results.Redirect($"/OrderMaster/Details/{guid}"));

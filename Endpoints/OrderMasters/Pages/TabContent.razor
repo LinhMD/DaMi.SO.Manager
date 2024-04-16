@@ -1,7 +1,7 @@
 @using DaMi.SO.Manager.Endpoints.OrderMasters.DTO
 @inject IStringLocalizer<ShareResource> L
 @inherits XComponent<IEnumerable<OrderMasterSimpleView>>
-<Table Models="@Model" TItem="OrderMasterSimpleView" RowStyleColor="Color">
+<Table Models="@Model" TItem="OrderMasterSimpleView" RowStyleColor="Color" TableId="@TableId">
     <NavLabel>
         @L["Số đơn hàng"]
     </NavLabel>
@@ -20,10 +20,12 @@
     public static Func<OrderMasterSimpleView, string> Color = (o) => o.OrderStatusName switch
     {
         "Hủy" => "bg-danger",
-        "Mới tạo" => "bg-gray",
-        "Tạm ngưng" => "bg-pink",
+        "Mới tạo" => "bg-secondary",
+        "Tạm ngưng" => "bg-warning",
         "Đã duyệt" => "bg-primary",
-        "Đã hoàn thành" => "bg-success",
-        _ => "bg-orange"
+        "Đã hoàn thành" => "bg-info",
+        _ => "bg-light"
     };
+
+    [Parameter] public string? TableId { get; set; }
 }

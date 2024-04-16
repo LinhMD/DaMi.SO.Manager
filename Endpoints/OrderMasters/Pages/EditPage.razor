@@ -1,9 +1,11 @@
+@using DaMi.SO.Manager.Data.Models
 @using DaMi.SO.Manager.Endpoints.OrderDetails.Pages
 @using DaMi.SO.Manager.Endpoints.OrderMasters
 @inherits XComponent<OrderMasterEditModel>
 @layout _Layout
 @inject IStringLocalizer<ShareResource> L
 @using System.Text.Json
+@using Mapster
 
 
 <div class="row page-titles mx-0">
@@ -53,14 +55,16 @@
             <div class="card-body">
                 <div class="overflow-auto">
                     <OrderDetailTable Model="@Model.OrderDetailModify" ViewMode='@Components.ViewMode.Detail'
-                        Form="@Model.OrderForms.FirstOrDefault(f => f.OrderFormId == Model.OrderMaster.OrderFormId)"
-                        OrderID="@Model.OrderMaster.RowUniqueId">
-                    </OrderDetailTable>
+                        OrderID="@Model.OrderMaster.RowUniqueId"
+                        Form="@Model.OrderForms.FirstOrDefault(f => f.OrderFormId == Model.OrderMaster.OrderFormId)" />
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    setInterval(calculateTotal, 500);
+</script>
 
 
 <div class="row page-titles mx-0">

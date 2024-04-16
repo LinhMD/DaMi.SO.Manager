@@ -11,6 +11,9 @@ public static class MappingConfig
 {
     public static void ConfigMapping(this IServiceCollection services)
     {
+
+        TypeAdapterConfig.GlobalSettings.Default.IgnoreNullValues(true);
+        TypeAdapterConfig.GlobalSettings.RequireDestinationMemberSource = false;
         OrderMasterSimpleView.InitMapper();
         OrderMasterDetailView.InitMapper();
         OrderStatusSView.InitMapper();

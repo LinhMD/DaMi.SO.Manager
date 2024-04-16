@@ -29,29 +29,29 @@ function ModifyInput(elements) {
 }
 function calculatePrice(guid) {
     var quantity = Number($(`#Quantity_${guid}`).val());
-    var price = toNumber($(`#ConvertPrice_${guid}`).text() || $(`#ConvertPrice_${guid}`).val());
+    var price = toNumber($(`#OriginalPrice_${guid}`).text() || $(`#OriginalPrice_${guid}`).val());
     var totalPrice = quantity * price;
-    $(`#ConvertAmount_${guid}`).text(toCurrency(totalPrice));
+    $(`#OriginalAmount_${guid}`).text(toCurrency(totalPrice));
     var taxRate = toNumber($(`#TaxRate_${guid}`).text());
-    $(`#ConvertTaxAmount_${guid}`).text(toCurrency(totalPrice * taxRate / 100));
+    $(`#OriginalTaxAmount_${guid}`).text(toCurrency(totalPrice * taxRate / 100));
     var discountRate = Number($(`#DiscountPercent_${guid}`).val());
-    $(`#ConvertDiscAmount_${guid}`).val(toCurrency(totalPrice * discountRate / 100));
+    $(`#OriginalDiscAmount_${guid}`).val(toCurrency(totalPrice * discountRate / 100));
     calculateTotal();
 }
 function toNumber(str) {
-    return Number((str || 0).toString().replace(/[^0-9-]+/g, ""));
+    return +Number((str || 0).toString().replace(/[^0-9-]+/g, ""));
 }
 function toCurrency(num) {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(num);
 }
 function calculateTotal() {
-    var totalConvert = Array.from($(`table [name='ConvertAmount']`)).map(f => toNumber(f.value || f.innerText)).reduce((prev, curr) => prev + curr);
-    var totaltax = Array.from($(`table [name='ConvertTaxAmount']`)).map(f => toNumber(f.value || f.innerText)).reduce((prev, curr) => prev + curr);
-    var totaldisc = Array.from($(`table [name='ConvertDiscAmount']`)).map(f => toNumber(f.value || f.innerText)).reduce((prev, curr) => prev + curr);
-    $(`#TotalAmount`).val(toCurrency(totalConvert));
-    $(`#ConvertTaxAmount`).val(toCurrency(totaltax));
-    $(`#ConvertDiscAmount`).val(toCurrency(totaldisc));
-    $(`#ConvertTotalAmount`).val(toCurrency(totalConvert + totaltax - totaldisc));
+    var total = Array.from($(`table [name='OriginalAmount']`)).map(f => toNumber(f.value || f.innerText)).reduce((prev, curr) => prev + curr);
+    var totaltax = Array.from($(`table [name='OriginalTaxAmount']`)).map(f => toNumber(f.value || f.innerText)).reduce((prev, curr) => prev + curr);
+    var totaldisc = Array.from($(`table [name='OriginalDiscAmount']`)).map(f => toNumber(f.value || f.innerText)).reduce((prev, curr) => prev + curr);
+
+    $(`#OriginalTaxAmount`).val(toCurrency(totaltax));
+    $(`#OriginalDiscAmount`).val(toCurrency(totaldisc));
+    $(`#OriginalTotalAmount`).val(toCurrency(total + totaltax - totaldisc));
 }
 function matchAny(params, data) {
     // If there are no search terms, return all of the data

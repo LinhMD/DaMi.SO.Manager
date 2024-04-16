@@ -31,12 +31,18 @@ triggerTabList.forEach(function (triggerEl) {
     })
 })
 document.body.addEventListener('htmx:responseError', function (evt) {
-    if (evt.detail.xhr.status !== 200) {
-        try {
-            var response = JSON.parse(evt.detail.xhr.response);
-            toastr.error(response.message || response.errorMessages);
-        } catch (e) {
-            toastr.error("Internal Server Error");
-        }
+    var response = {};
+    try {
+        response = JSON.parse(evt.detail.xhr.response);
+    } catch (e) {
+    }
+    if (evt.detail.xhr.status == 500) {
+        toastr.error(response.message || response.errorMessages || "Internal Server Error");
+    } else if (evt.detail.xhr.status == 404) {
+        toastr.warning(response.message || response.errorMessages || "Content Not Found");
+    } else if (evt.detail.xhr.status == 403) {
+        toastr.warning(response.message || response.errorMessages || "Forbidden");
+    } else if (evt.detail.xhr.status == 400) {
+        toastr.warning(response.message || response.errorMessages || "Bad Request:");
     }
 });

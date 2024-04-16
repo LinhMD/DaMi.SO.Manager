@@ -77,6 +77,11 @@ tr.no-padding td:has(input) {
     margin: 0 !important;
 }
 
+tr.no-padding td:has(select) {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
 input:read-only {
     border-color: white;
 }

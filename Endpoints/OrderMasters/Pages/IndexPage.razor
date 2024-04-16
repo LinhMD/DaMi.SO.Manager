@@ -37,24 +37,28 @@
     <div class="card-body">
         <div class="tab-content" id="pills-tabContent">
             <div class="tab-pane fade show active" id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab">
-                <TabContent Model="Model.OrderMasters"></TabContent>
+                <TabContent TableId="all" Model="Model.OrderMasters"></TabContent>
             </div>
             <div class="tab-pane fade" id="pills-wait-for-approve" role="tabpanel"
                 aria-labelledby="pills-wait-for-approve-tab">
-                <TabContent Model="Model.OrderMasters.Where(o => o.OrderStatus.IsAcceptStatus)"></TabContent>
+                <TabContent TableId="wait-for-approve"
+                    Model="Model.OrderMasters.Where(o => !o.OrderStatus.IsAcceptStatus)">
+                </TabContent>
             </div>
             <div class="tab-pane fade" id="pills-unfinish" role="tabpanel" aria-labelledby="pills-unfinish-tab">
-                <TabContent Model='Model.OrderMasters
+                <TabContent TableId="unfinish" Model='Model.OrderMasters
                                         .Where(o => o.OrderStatus.OrderStatusId != "OS99"
-                                                && o.OrderStatus.IsCancelStatus
-                                                && o.OrderStatus.IsSuspendStatus)'>
+                                                && !o.OrderStatus.IsCancelStatus
+                                                && !o.OrderStatus.IsSuspendStatus)'>
                 </TabContent>
             </div>
             <div class="tab-pane fade" id="pills-finish" role="tabpanel" aria-labelledby="pills-finish-tab">
-                <TabContent Model='Model.OrderMasters.Where(o => o.OrderStatus.OrderStatusId == "OS99")'></TabContent>
+                <TabContent TableId="finish"
+                    Model='Model.OrderMasters.Where(o => o.OrderStatus.OrderStatusId == "OS99")'></TabContent>
             </div>
             <div class="tab-pane fade" id="pills-cancel" role="tabpanel" aria-labelledby="pills-cancel-tab">
-                <TabContent Model="Model.OrderMasters.Where(o => o.OrderStatus.IsCancelStatus)"></TabContent>
+                <TabContent TableId="cancel" Model="Model.OrderMasters.Where(o => o.OrderStatus.IsCancelStatus)">
+                </TabContent>
             </div>
         </div>
     </div>

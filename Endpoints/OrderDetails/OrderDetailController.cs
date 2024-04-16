@@ -12,6 +12,7 @@ using DaMi.SO.Manager.Components;
 using DaMi.SO.Manager.Data.Models;
 using DaMi.SO.Manager.Endpoints.OrderDetails.DTO;
 using DaMi.SO.Manager.Endpoints.OrderDetails.Pages;
+using DaMi.SO.Manager.Endpoints.Share;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -28,53 +29,58 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
 
     [Authorize(policy: "ViewOrder")]
     [HttpGet("Detail/{guid}")]
-    public async Task<IResult> GetDetailsAsync(Guid guid, [FromQuery] string? FormID)
+    public async Task<IResult> GetDetailsAsync(Guid guid)
     {
-        OrderForm orderForm = await work.Get<OrderForm>().Find(f => f.OrderFormId == FormID).FirstOrDefaultAsync() ?? new OrderForm();
-        return await ReturnPage(work, work.Get<OrderDetail>().Get<OrderDetailSimpleView>(guid), orderForm, null, ViewMode.Detail);
+        OrderDetailSimpleView? orderDetailSimpleView = await work.Get<OrderDetail>().GetAsync<OrderDetailSimpleView>(guid);
+        if (orderDetailSimpleView == null)
+        {
+            return Results.NotFound();
+        }
+        var orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(o => o.OrderForm)
+            .Where(f => f.RowUniqueId == orderDetailSimpleView.OrderId).FirstOrDefaultAsync();
+        return await ReturnPage(work, orderDetailSimpleView, orderMaster, null, ViewMode.Detail);
     }
 
     [Authorize(policy: nameof(Permision.AddNewOrder))]
     [HttpGet("Create")]
-    public async Task<IResult> GetNewRow([FromQuery] Guid OrderId, [FromQuery] string? ItemIdSelect, [FromQuery] string? FormID)
+    public async Task<IResult> GetNewRow([FromQuery] Guid OrderId, [FromQuery] string? ItemIdSelect)
     {
-        OrderMaster? orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Where(f => f.RowUniqueId == OrderId).FirstOrDefaultAsync();
-        OrderForm orderForm = await work.Get<OrderForm>().Find(f => f.OrderFormId == FormID).FirstOrDefaultAsync() ?? new OrderForm();
-        var orderDetailSimpleView = new OrderDetailSimpleView() { OrderId = OrderId, ItemId = ItemIdSelect };
+        var orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Include(o => o.OrderForm)
+            .Where(f => f.RowUniqueId == OrderId!).FirstOrDefaultAsync();
+        var orderDetailSimpleView = new OrderDetailSimpleView()
+        {
+            OrderId = OrderId,
+            ItemId = ItemIdSelect,
+            CurrencyId = orderMaster!.CurrencyId,
+            ExchangeRate = orderMaster!.ExchangeRate
+        };
         if (ItemIdSelect is null)
         {
-            orderDetailSimpleView.ItemId = (await work.Get<ViwFullItem>().Find(f => f.OrderFormId == orderForm.OrderFormId).FirstOrDefaultAsync())?.ItemId;
+            orderDetailSimpleView.ItemId = (await work.Get<ViwFullItem>().Find(f => f.OrderFormId == orderMaster!.OrderFormId).FirstOrDefaultAsync())?.ItemId;
         }
-        return await ReturnPage(work, orderDetailSimpleView, orderForm, null, ViewMode.Create, orderMaster?.CustomerId);
+        return await ReturnPage(work, orderDetailSimpleView, orderMaster, null, ViewMode.Create);
     }
 
     [Authorize(policy: nameof(Permision.AddNewOrder))]
     [HttpPost("Create")]
     public async Task<IResult> PostNew([FromForm] OrderDetailSimpleView orderDetailNew)
     {
-        OrderMaster? orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Where(f => f.RowUniqueId == orderDetailNew.OrderId!).FirstOrDefaultAsync();
-        OrderForm orderForm = await work.Get<OrderForm>().Find(f => orderMaster != null && f.OrderFormId == orderMaster.OrderFormId).FirstOrDefaultAsync() ?? new OrderForm();
-        if (orderDetailNew.TaxRate > 0 && (orderDetailNew.ConvertTaxAmount == 0 || orderDetailNew.ConvertTaxAmount is null))
+        var orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Include(o => o.OrderForm).Where(f => f.RowUniqueId == orderDetailNew.OrderId!).FirstOrDefaultAsync();
+        if (orderDetailNew.DiscountPercent > 0 && (orderDetailNew.OriginalDiscAmount == 0 || orderDetailNew.OriginalDiscAmount is null))
         {
-            orderDetailNew.ConvertTaxAmount = orderDetailNew.TaxRate * orderDetailNew.ConvertAmount / 100;
+            orderDetailNew.OriginalDiscAmount = orderDetailNew.OriginalAmount * Convert.ToDecimal(orderDetailNew.DiscountPercent) / 100;
         }
         try
         {
             OrderDetail orderDetail = orderDetailNew.Adapt<OrderDetail>();
             orderDetail.Dump();
             await work.Get<OrderDetail>().AddAsync(orderDetail);
-            if (orderMaster != null)
-            {
-                orderMaster.ConvertDiscAmount = orderMaster.OrderDetails.Select(f => f.ConvertDiscAmount).Sum();
-                orderMaster.ConvertTaxAmount = orderMaster.OrderDetails.Select(f => f.ConvertTaxAmount).Sum();
-                orderMaster.ConvertTotalAmount = orderMaster.OrderDetails.Select(f => f.ConvertAmount + f.ConvertTaxAmount - f.ConvertDiscAmount).Sum();
-                await work.CompleteAsync();
-            }
-            return await ReturnPage(work, work.Get<OrderDetail>().Get<OrderDetailSimpleView>(orderDetail.RowUniqueId), orderForm, null, ViewMode.Detail, orderMaster?.CustomerId);
+            await ReCalculateMasterAmount(work, orderMaster!);
+            return await ReturnPage(work, work.Get<OrderDetail>().Get<OrderDetailSimpleView>(orderDetail.RowUniqueId), orderMaster, null, ViewMode.Detail);
         }
         catch (ModelValueInvalidException e)
         {
-            return await ReturnPage(work, null, orderForm, e.MemberErrors, ViewMode.Create, orderMaster?.CustomerId);
+            return await ReturnPage(work, null, orderMaster, e.MemberErrors, ViewMode.Create);
         }
     }
 
@@ -82,78 +88,95 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
     [HttpGet("Edit/{guid}")]
     public async Task<IResult> GetEdit(Guid guid, [FromQuery] string? ItemIdSelect, [FromQuery] string? FormID)
     {
-        OrderDetailSimpleView? orderDetail = await work.Get<OrderDetail>().GetAsync<OrderDetailSimpleView>(guid);
+        var orderDetail = await work.Get<OrderDetail>().GetAsync<OrderDetailSimpleView>(guid);
 
-        OrderMaster? orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Where(f => orderDetail != null && f.RowUniqueId == orderDetail.OrderId).FirstOrDefaultAsync();
-        ViwItem? item = await work.Get<ViwItem>().Find(x => x.ItemId == ItemIdSelect).FirstOrDefaultAsync();
+        var item = await work.Get<ViwItem>().Find(x => x.ItemId == ItemIdSelect).FirstOrDefaultAsync();
         if (item is not null && orderDetail is not null)
         {
             orderDetail.ItemId = item.ItemId;
-            orderDetail.ConvertPrice = item.ConvertPrice;
+            orderDetail.OriginalPrice = item.OriginalPrice;
             orderDetail.TaxRate = item.TaxRate;
         }
-
-        OrderForm orderForm = await work.Get<OrderForm>().Find(f => f.OrderFormId == FormID).FirstOrDefaultAsync() ?? new OrderForm();
-        return await ReturnPage(work, orderDetail, orderForm, null, ViewMode.Edit, orderMaster?.CustomerId);
+        var orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(o => o.OrderForm).Where(f => f.RowUniqueId == orderDetail!.OrderId).FirstOrDefaultAsync();
+        return await ReturnPage(work, orderDetail, orderMaster, null, ViewMode.Edit);
     }
 
     [Authorize(policy: nameof(Permision.UpdateOrder))]
     [HttpPost("Edit/{guid}")]
     public async Task<IResult> PostEdit([FromForm] OrderDetailSimpleView orderDetail, Guid guid)
     {
-
-        var orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Where(f => f.RowUniqueId == orderDetail.OrderId!).FirstOrDefaultAsync();
-        var orderForm = await work.Get<OrderForm>().Find(f => orderMaster != null && f.OrderFormId == orderMaster.OrderFormId).FirstOrDefaultAsync() ?? new OrderForm();
+        if (orderDetail.DiscountPercent > 0 && (orderDetail.OriginalDiscAmount == 0 || orderDetail.OriginalDiscAmount is null))
+        {
+            orderDetail.OriginalDiscAmount = orderDetail.OriginalAmount * Convert.ToDecimal(orderDetail.DiscountPercent) / 100;
+        }
+        var orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Include(o => o.OrderForm).Where(f => f.RowUniqueId == orderDetail.OrderId!).FirstOrDefaultAsync();
         try
         {
             var item = await work.Get<ViwItem>().Find(f => f.ItemId == orderDetail.ItemId).FirstOrDefaultAsync();
             if (item is not null)
             {
                 orderDetail.TaxRate = item.TaxRate;
-                if (orderDetail.TaxRate > 0 && (orderDetail.ConvertTaxAmount == 0 || orderDetail.ConvertTaxAmount is null))
-                {
-                    orderDetail.ConvertTaxAmount = orderDetail.TaxRate * orderDetail.ConvertAmount / 100;
-                }
             }
-            await service.UpdateAsync(orderDetail, guid);
-            if (orderMaster != null)
-            {
-                orderMaster.ConvertDiscAmount = orderMaster.OrderDetails.Select(f => f.ConvertDiscAmount).Sum();
-                orderMaster.ConvertTaxAmount = orderMaster.OrderDetails.Select(f => f.ConvertTaxAmount).Sum();
-                orderMaster.ConvertTotalAmount = orderMaster.OrderDetails.Select(f => f.ConvertAmount + f.ConvertTaxAmount - f.ConvertDiscAmount).Sum();
-                await work.CompleteAsync();
-            }
-            return await ReturnPage(work, work.Get<OrderDetail>().Get<OrderDetailSimpleView>(guid), orderForm, null, ViewMode.Detail, orderMaster?.CustomerId);
+            OrderDetail? update = await work.Get<OrderDetail>().GetAsync(guid);
+            orderDetail.Adapt(update);
+            await work.CompleteAsync();
+            await ReCalculateMasterAmount(work, orderMaster!);
+            return await ReturnPage(work, await work.Get<OrderDetail>().GetAsync<OrderDetailSimpleView>(guid), orderMaster, null, ViewMode.Detail);
         }
         catch (ModelValueInvalidException e)
         {
             OrderDetailSimpleView? orderDetailSimpleView = await work.Get<OrderDetail>().GetAsync<OrderDetailSimpleView>(guid);
-            return await ReturnPage(work, orderDetailSimpleView, orderForm, e.MemberErrors, ViewMode.Edit, orderMaster?.CustomerId);
+            return await ReturnPage(work, orderDetailSimpleView, orderMaster, e.MemberErrors, ViewMode.Edit);
         }
     }
-    // [Authorize(policy: nameof(Permision.DeleteOrder))]
-    // [HttpPost("Delete/{guid}")]
-    // public async Task<IResult> Delete(Guid guid)
-    // {
-    //     work.Get<OrderDetail>().RemoveAsync(guid);
-    // }
-    private static async Task<IResult> ReturnPage(IUnitOfWork work, OrderDetailSimpleView? orderDetail, OrderForm form, Dictionary<string, string>? e = null, ViewMode viewMode = ViewMode.Detail, string? customerId = null)
+
+    [Authorize(policy: nameof(Permision.DeleteOrder))]
+    [HttpDelete("{guid}")]
+    public async Task<IResult> Delete(Guid guid)
     {
-        Dictionary<string, ViwFullItem> fullItems = await work.Get<ViwFullItem>().Find(f => f.OrderFormId == form.OrderFormId).ToDictionaryAsync(f => f.ItemId);
+        var orderDetail = await work.Get<OrderDetail>().GetAsync(guid);
+
+        if (orderDetail is not null)
+        {
+            await work.Get<OrderDetail>().RemoveAsync(orderDetail);
+            var orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Where(f => f.RowUniqueId == orderDetail.OrderId!).FirstOrDefaultAsync();
+            await ReCalculateMasterAmount(work, orderMaster!);
+            return new RazorComponentResult(typeof(Empty));
+        }
+        return Results.NotFound();
+    }
+
+    private static async Task ReCalculateMasterAmount(IUnitOfWork work, OrderMaster orderMaster)
+    {
+        orderMaster.OriginalDiscAmount = orderMaster.OrderDetails.Select(f => f.OriginalDiscAmount).Sum();
+        orderMaster.OriginalTaxAmount = orderMaster.OrderDetails.Select(f => f.OriginalTaxAmount).Sum();
+        orderMaster.OriginalTotalAmount = orderMaster.OrderDetails.Select(f => f.OriginalTotalAmount).Sum();
+        orderMaster.ConvertDiscAmount = orderMaster.OriginalTotalAmount * orderMaster.ExchangeRate;
+        orderMaster.ConvertTaxAmount = orderMaster.OriginalTaxAmount * orderMaster.ExchangeRate;
+        orderMaster.ConvertTotalAmount = orderMaster.OriginalTotalAmount * orderMaster.ExchangeRate;
+        orderMaster.Dump();
+        await work.CompleteAsync();
+    }
+
+    private static async Task<IResult> ReturnPage(IUnitOfWork work, OrderDetailSimpleView? orderDetail,
+        OrderMaster? orderMaster, Dictionary<string, string>? e = null, ViewMode viewMode = ViewMode.Detail)
+    {
+        Dictionary<string, ViwFullItem> fullItems = await work.Get<ViwFullItem>().Find(f => orderMaster != null && f.OrderFormId == orderMaster.OrderFormId).ToDictionaryAsync(f => f.ItemId);
         return new RazorComponentResult(typeof(OrderDetailRow), new
         {
             Model = new OrderDetailModifyModel
             {
                 OrderDetails = [],
                 ItemTypes = await work.Get<ViwItemType>().GetAll().ToListAsync(),
-                TaxCodes = await work.Get<TaxCode>().Find(t => t.CustomerId == customerId).ToListAsync(),
+                TaxCodes = await work.Get<TaxCode>().Find(t => t.CustomerId == orderMaster!.CustomerId).ToListAsync(),
                 FullItemMap = fullItems
             },
             ViewMode = viewMode,
             detail = orderDetail,
             Errors = e,
             FullItem = fullItems.ContainsKey(orderDetail?.ItemId ?? "") ? fullItems[orderDetail?.ItemId ?? ""] : new ViwFullItem(),
-            Form = form
+            Form = orderMaster?.OrderForm,
+            Order = orderMaster
         });
     }
 

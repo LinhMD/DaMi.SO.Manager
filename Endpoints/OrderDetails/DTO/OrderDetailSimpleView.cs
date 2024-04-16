@@ -55,7 +55,7 @@ public class OrderDetailSimpleView : IView<OrderDetail>, IDto, IUpdateRequest<Or
 
     [DataType(DataType.Currency)]
     [DisplayName("Đơn giá quy đổi (VND)")]
-    public double? ConvertPrice { get; set; }
+    public double ConvertPrice => (OriginalPrice ?? 0) * Convert.ToDouble(ExchangeRate);
 
     [DataType(DataType.Currency)]
     [DisplayName("Đơn giá nguyên tệ")]
@@ -65,13 +65,13 @@ public class OrderDetailSimpleView : IView<OrderDetail>, IDto, IUpdateRequest<Or
     public decimal? TaxRate { get; set; }
 
     [DisplayName("Tiền thuế")]
-    public decimal? ConvertTaxAmount { get; set; }
+    public decimal ConvertTaxAmount => OriginalTaxAmount * (ExchangeRate ?? 0);
 
     [DisplayName("Số tiền VND")]
-    public decimal? ConvertAmount => Convert.ToDecimal(ConvertPrice * Quantity);
+    public decimal ConvertAmount => OriginalAmount * (ExchangeRate ?? 0);
 
     [DisplayName("Tổng số tiền")]
-    public decimal? ConvertTotalAmount => ConvertAmount + ConvertTaxAmount - ConvertDiscAmount;
+    public decimal ConvertTotalAmount => OriginalTotalAmount * (ExchangeRate ?? 0);
 
     [DisplayName("Loại tiền")]
     public string? CurrencyId { get; set; } = null!;
@@ -80,19 +80,20 @@ public class OrderDetailSimpleView : IView<OrderDetail>, IDto, IUpdateRequest<Or
     public decimal? ExchangeRate { get; set; }
 
     [DisplayName("Tiền thuế nguyên tệ")]
-    public decimal? OriginalTaxAmount { get; set; }
+    public decimal OriginalTaxAmount => (TaxRate ?? 0) * OriginalAmount / 100;
 
     [DisplayName("Thành tiền nguyên tệ")]
-    public decimal? OriginalAmount { get; set; }
+    public decimal OriginalAmount => Convert.ToDecimal(OriginalPrice * Quantity);
+
 
     [DisplayName("Tổng số tiền")]
-    public decimal? OriginalTotalAmount { get; set; }
+    public decimal OriginalTotalAmount => OriginalAmount + OriginalTaxAmount - (OriginalDiscAmount ?? 0);
 
     [DisplayName("Phần trăm chiết khấu")]
     public double? DiscountPercent { get; set; }
 
     [DisplayName("Chiết khấu VND")]
-    public decimal? ConvertDiscAmount { get; set; }
+    public decimal ConvertDiscAmount => (OriginalDiscAmount ?? 0) * (ExchangeRate ?? 0);
 
     [DisplayName("Chiết khấu nguyên tệ")]
     public decimal? OriginalDiscAmount { get; set; }

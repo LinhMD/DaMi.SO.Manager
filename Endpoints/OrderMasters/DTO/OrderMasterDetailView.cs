@@ -56,12 +56,20 @@ namespace DaMi.SO.Manager.Endpoints.OrderMasters.DTO
         public string? CurrencyId { get; set; } = null!;
         [DisplayName("Tỷ giá")]
         public decimal? ExchangeRate { get; set; }
+
+        [DisplayName("Tổng số tiền")]
+        public decimal OriginalTotalAmount { get; set; }
+        [DisplayName("Tiền thuế nguyên tệ")]
+        public decimal OriginalTaxAmount { get; set; }
+        [DisplayName("Chiết khấu nguyên tệ")]
+        public decimal OriginalDiscAmount { get; set; }
+
         [DisplayName("Cộng thành tiền")]
-        public decimal? ConvertTotalAmount { get; set; }
+        public decimal? ConvertTotalAmount => OriginalTotalAmount * ExchangeRate;
         [DisplayName("Cộng tiền thuế VAT")]
-        public decimal? ConvertTaxAmount { get; set; }
+        public decimal? ConvertTaxAmount => OriginalTaxAmount * ExchangeRate;
         [DisplayName("Cộng tiền CK")]
-        public decimal? ConvertDiscAmount { get; set; }
+        public decimal? ConvertDiscAmount => OriginalDiscAmount * ExchangeRate;
         //Tổng tiền thanh toán = ConvertTotalAmount + ConvertTaxAmount - ConvertDiscAmount
         [DisplayName("Tổng số tiền")]
         public decimal? TotalAmount { get; set; }

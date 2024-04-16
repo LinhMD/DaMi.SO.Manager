@@ -39,7 +39,7 @@ public class LoginController(IUnitOfWork work) : ControllerBase
     public async Task<IResult> Logout()
     {
         await HttpContext.SignOutAsync();
-        return Results.Redirect("Login");
+        return Results.Redirect("/Login");
     }
     [HttpPost]
     public async Task<IResult> LoginWithPassword([FromForm] LoginRequest request)

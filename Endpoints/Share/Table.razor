@@ -6,7 +6,7 @@
 @typeparam TItem
 @inject IStringLocalizer<ShareResource> L
 <div class="table-responsive">
-    <table class="table table-hover table-bordered text-black">
+    <table class="table nowrap compact order-column hover text-black" id='@TableId'>
         <thead>
             <tr class="text-black">
                 @if (NavLabel is not null)
@@ -44,55 +44,52 @@
                     }
                     @foreach (var fieldInfo in propertyInfos)
                     {
-                        if (Attribute.GetCustomAttribute(fieldInfo, typeof(HiddenInputAttribute)) is null)
+                        var value = fieldInfo.GetValue(model);
+                        if (value is null)
                         {
-                            var value = fieldInfo.GetValue(model);
-                            if (value is null)
+                            <td></td>
+                        }
+                        else
+                        {
+                            try
                             {
-                                <td></td>
+                                var boolValue = (bool)value;
+                                <td>
+                                    <input onclick="return false;" type="checkbox" class="form-control form-control-sm"
+                                        checked='@value'>
+                                </td>
                             }
-                            else
+                            catch (Exception)
                             {
-                                try
+                                var dataType = (Attribute.GetCustomAttribute(fieldInfo, typeof(DataTypeAttribute)) as
+                                DataTypeAttribute);
+                                if (dataType is not null)
                                 {
-                                    var boolValue = (bool)value;
-                                    <td>
-                                        <input onclick="return false;" type="checkbox" class="form-control form-control-sm"
-                                            checked='@value'>
-                                    </td>
+                                    switch (dataType.DataType)
+                                    {
+                                        case DataType.Currency:
+                                            if (value.GetType() == typeof(decimal))
+                                            {
+                                                <td class="text-right">@(((decimal)value).ToString("N0", CultureInfo.CurrentCulture))</td>
+                                            }
+                                            else if (value.GetType() == typeof(double))
+                                            {
+                                                <td class="text-right">@(((double)value).ToString("N0", CultureInfo.CurrentCulture))</td>
+                                            }
+                                            break;
+                                        case DataType.Date:
+                                            <td class="date">
+                                                @(((DateTime)value).ToString(CultureInfo.CurrentCulture))
+                                            </td>
+                                            break;
+                                        default:
+                                            <td>@value</td>
+                                            break;
+                                    }
                                 }
-                                catch (Exception)
+                                else
                                 {
-                                    var dataType = (Attribute.GetCustomAttribute(fieldInfo, typeof(DataTypeAttribute)) as
-                                    DataTypeAttribute);
-                                    if (dataType is not null)
-                                    {
-                                        switch (dataType.DataType)
-                                        {
-                                            case DataType.Currency:
-                                                if (value.GetType() == typeof(decimal))
-                                                {
-                                                    <td class="text-right">@(((decimal)value).ToString("N0", CultureInfo.CurrentCulture))</td>
-                                                }
-                                                else if (value.GetType() == typeof(double))
-                                                {
-                                                    <td class="text-right">@(((double)value).ToString("N0", CultureInfo.CurrentCulture))</td>
-                                                }
-                                                break;
-                                            case DataType.Date:
-                                                <td class="date">
-                                                    @(((DateTime)value).ToString(CultureInfo.CurrentCulture))
-                                                </td>
-                                                break;
-                                            default:
-                                                <td>@value</td>
-                                                break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        <td>@value</td>
-                                    }
+                                    <td>@value</td>
                                 }
                             }
                         }
@@ -106,16 +103,47 @@
         </tbody>
     </table>
 </div>
+<script>
+    var sortOptions = { orderable: false };
+    var sortAble = ['Số đơn hàng', 'Khách hàng', 'Trạng thái', 'NV triển khai', 'Kiểu đơn hàng']
+    new DataTable('#@TableId', {
+        order: false,
+        columns: [...Array(+Number('@(propertyInfos.Count() + (NavLabel == null ? 0 : 1) + (ActionLabel == null ? 0 : 1))')).keys()].map(f => { return sortOptions; }),
+        initComplete: function () {
+            this.api()
+                .columns()
+                .every(function () {
+                    let column = this;
+                    let title = column.header().textContent;
 
+                    if (sortAble.includes(title)) {
+                        // Create input element
+                        let input = document.createElement('input');
+                        input.classList.add('form-control', 'px-0')
+                        input.placeholder = title;
+                        column.header().replaceChildren(input);
+                        // Event listener for user input
+                        input.addEventListener('keyup', () => {
+                            if (column.search() !== this.value) {
+                                column.search(input.value).draw();
+                            }
+                        });
+                    }
+                });
+        }
+    });
+</script>
 @code {
-
     [Parameter]
     public IEnumerable<TItem> Models { get; set; } = [];
-    public PropertyInfo[] propertyInfos { get; init; } = typeof(TItem).GetProperties();
+
+    public IEnumerable<PropertyInfo> propertyInfos { get; init; } = typeof(TItem).GetProperties().Where(f =>
+    Attribute.GetCustomAttribute(f, typeof(HiddenInputAttribute)) is null);
+
     [Parameter] public Func<TItem, string>? RowStyleColor { get; set; }
     [Parameter] public RenderFragment<TItem>? NavKey { get; set; }
     [Parameter] public RenderFragment? NavLabel { get; set; }
     [Parameter] public RenderFragment<TItem>? Action { get; set; }
     [Parameter] public RenderFragment? ActionLabel { get; set; }
-
+    [Parameter] public string? TableId { get; set; }
 }

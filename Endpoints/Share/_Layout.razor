@@ -9,26 +9,27 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>DaMi - Sale Order Manager </title>
-    <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png">
-    <link rel="stylesheet" href="/vendor/owl-carousel/css/owl.carousel.min.css">
-    <link rel="stylesheet" href="/vendor/owl-carousel/css/owl.theme.default.min.css">
-    <link href="/vendor/jqvmap/css/jqvmap.min.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/2.8.2/slimselect.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/css/app.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
-    <link href="/icons/material-design-iconic-font/css/materialdesignicons.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="/css/toastr.css" />
+    <link rel="stylesheet" href="/css/app.css">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/2.8.2/slimselect.min.css" rel="stylesheet">
+    <link href="/icons/material-design-iconic-font/css/materialdesignicons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/datatable.css">
     <script src="/vendor/jquery/jquery.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
-    <script src="\vendor\bootstrap\js\bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/2.8.2/slimselect.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/imask/7.6.0/imask.min.js"></script>
+
+    <script src="/js/datatable.js"></script>
     <script src="/js/toastr.js"></script>
     <script src="/js/start.js"></script>
+
 </head>
 
 <body hx-history="false" hx-push-url="false">
@@ -62,61 +63,54 @@
                                 </span>
                                 <div class="dropdown-menu p-0 m-0">
                                     <form>
-                                        <input class="form-control" type="search" placeholder="Search"
+                                        <input class="form-control" type="search" placeholder="Tìm Kiếm"
                                             aria-label="Search">
                                     </form>
                                 </div>
                             </div>
                         </div>
-
                         <ul class="navbar-nav header-right">
-                            <li class="nav-item dropdown notification_dropdown">
-                                <a class="nav-link" href="#" role="button" data-toggle="dropdown">
-                                    <i class="mdi mdi-bell"></i>
-                                    <div class="pulse-css"></div>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <ul class="list-unstyled">
-                                        <li class="media dropdown-item">
-                                            <span class="success"><i class="ti-image"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong> James.</strong> has added a<strong>customer</strong>
-                                                        Successfully
-                                                    </p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                    </ul>
-                                    <a class="all-notification" href="#">See all notifications <i
-                                            class="ti-arrow-right"></i></a>
-                                </div>
+                            @* <li class="nav-item dropdown notification_dropdown">
+                            <a class="nav-link" href="#" role="button" data-toggle="dropdown">
+                            <i class="mdi mdi-bell"></i>
+                            <div class="pulse-css"></div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                            <ul class="list-unstyled">
+                            <li class="media dropdown-item">
+                            <span class="success"><i class="ti-image"></i></span>
+                            <div class="media-body">
+                            <a href="#">
+                            <p><strong> James.</strong> has added a<strong>customer</strong>
+                            Successfully
+                            </p>
+                            </a>
+                            </div>
+                            <span class="notify-time">3:20 am</span>
                             </li>
+                            </ul>
+                            <a class="all-notification" href="#">See all notifications <i
+                            class="ti-arrow-right"></i></a>
+                            </div>
+                            </li> *@
+                            <div class="d-flex justify-content-center">
+                                <div class="align-self-center">
+                                    @(httpContextAccessor.HttpContext?.User?.Claims.FirstOrDefault(c => c.Type ==
+                                        ClaimTypes.Name)?.Value ?? "")
+                                </div>
+                            </div>
                             <li class="nav-item dropdown header-profile">
-                                @if (httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated ?? false)
-                                {
-                                    <p class="mx-2 py-2">
-                                        Hello,
-                                        @(httpContextAccessor.HttpContext?.User?.Claims.FirstOrDefault(c => c.Type ==
-                                            ClaimTypes.Name)?.Value ?? "")
-                                    </p>
-                                }
-                                else
-                                {
-                                    <p class="mx-2">You're not <a class="btn btn-primary" href="/Login">Login</a></p>
-                                }
                                 <a class="nav-link" href="#" role="button" data-toggle="dropdown">
                                     <i class="mdi mdi-account"></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <a href="/Login/Logout" class="dropdown-item">
                                         <i class="icon-key"></i>
-                                        <span class="ml-2 text-danger">Logout</span>
+                                        <span class="ml-2 text-danger">Đăng xuất</span>
                                     </a>
                                     <a href="/Login/Reset" class="dropdown-item">
                                         <i class="icon-envelope-open"></i>
-                                        <span class="ml-2">Reset Password</span>
+                                        <span class="ml-2">Đổi mật khẩu</span>
                                     </a>
                                 </div>
                             </li>
@@ -125,6 +119,7 @@
                 </nav>
             </div>
         </div>
+
         <div class="quixnav">
             <div class="quixnav-scroll">
                 <ul class="metismenu" id="menu">
@@ -185,14 +180,6 @@
     <script src="/vendor/global/global.min.js"></script>
     <script src="/js/quixnav-init.js"></script>
     <script src="/js/custom.min.js"></script>
-    <script src="/vendor/raphael/raphael.min.js"></script>
-    <script src="/vendor/morris/morris.min.js"></script>
-    <script src="/vendor/circle-progress/circle-progress.min.js"></script>
-    <script src="/vendor/flot/jquery.flot.js"></script>
-    <script src="/vendor/flot/jquery.flot.resize.js"></script>
-    <script src="/vendor/owl-carousel/js/owl.carousel.min.js"></script>
-    <script src="/vendor/jquery.counterup/jquery.counterup.min.js"></script>
-    <script src="/js/dashboard/dashboard-1.js"></script>
     <script src="/js/htmx.js"></script>
     <script src="/js/app.js"></script>
 
