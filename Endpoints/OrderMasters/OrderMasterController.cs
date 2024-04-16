@@ -53,7 +53,6 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
     [HttpGet("Edit/Customer")]
     public async Task<IResult> GetCustomerInfo([FromQuery] string CustomerIdSelect)
     {
-
         var customer = await work.Get<ViwCustomer>().Find(c => c.CustomerId == CustomerIdSelect).FirstOrDefaultAsync() ?? new ViwCustomer();
         return new RazorComponentResult(typeof(OOBCustomerInfo), new { customer });
     }
@@ -135,10 +134,16 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
     [HttpGet("Edit/{guid}")]
     public async Task<IResult> GetEditAsync(Guid guid)
     {
+
         var orderMaster = await work.Get<OrderMaster>().Find<OrderMasterDetailView>(f => f.RowUniqueId == guid).FirstOrDefaultAsync();
         if (orderMaster is null)
         {
             return new RazorComponentResult(typeof(_404));
+        }
+
+        if (orderMaster.OrderStatusId != "OS10")
+        {
+            return Results.BadRequest("Đơn hàng không được phép sửa");
         }
         return await ReturnPage<EditPage>(work, orderMaster, ViewMode.Edit);
     }
@@ -147,6 +152,10 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
     [HttpPost("Edit/{guid}")]
     public async Task<IResult> EditAsync(Guid guid, [FromForm] OrderMasterDetailView orderMaster)
     {
+        if (orderMaster.OrderStatusId != "OS10")
+        {
+            return Results.BadRequest("Đơn hàng không được phép sửa");
+        }
         try
         {
             List<OrderDetail> orderDetails = await work.Get<OrderDetail>().Find(f => f.OrderId == guid).ToListAsync();
@@ -168,6 +177,24 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
             return await ReturnPage<EditPage>(work, work.Get<OrderMaster>().Find<OrderMasterDetailView>(f => f.RowUniqueId == guid).FirstOrDefault()!, ViewMode.Edit, null, $"Edit Error: {e.Message}");
         }
 
+    }
+    [Authorize(policy: nameof(Permision.UpdateOrder))]
+    [HttpDelete("{guid}")]
+    public async Task<IResult> Delete(Guid guid)
+    {
+        var orderMaster = await work.Get<OrderMaster>().Find(f => f.RowUniqueId == guid).FirstOrDefaultAsync();
+        if (orderMaster is null)
+        {
+            return new RazorComponentResult(typeof(_404));
+        }
+
+
+        if (orderMaster.OrderStatusId != "OS10")
+        {
+            return Results.BadRequest("Đơn hàng không được phép xóa");
+        }
+        await work.Get<OrderMaster>().RemoveAsync(orderMaster);
+        return Results.Redirect("/OrderMaster");
     }
 
     private async Task<IResult> ReturnPage<TPage>(IUnitOfWork work, OrderMasterDetailView orderMaster, ViewMode viewMode = ViewMode.Detail, Dictionary<string, string>? validateError = null, string? ErrorMessage = null) where TPage : XComponent<OrderMasterEditModel>
@@ -204,6 +231,104 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
             ViewMode = viewMode,
             Errors = validateError
         });
+    }
+
+    [Authorize(policy: nameof(Permision.AcceptOrder))]
+    [HttpGet("Accept/{guid}")]
+    public async Task<IResult> Accept(Guid guid, [FromClaim(ClaimTypes.Sid)] string userId)
+    {
+        var orderMaster = await work.Get<OrderMaster>().Find(f => f.RowUniqueId == guid).FirstOrDefaultAsync();
+        if (orderMaster is null)
+            return new RazorComponentResult(typeof(_404));
+        if (orderMaster.OrderStatusId != "OS10")
+        {
+            return Results.BadRequest("Đơn hàng không được phép duyệt");
+        }
+
+        orderMaster.AccepterId = userId;
+        orderMaster.Accepted = true;
+        orderMaster.AcceptedDate = DateTime.Now;
+
+        var acceptStatus = await work.Get<OrderStatus>().Find(f => f.IsAcceptStatus).FirstOrDefaultAsync();
+        if (acceptStatus is not null)
+            orderMaster.OrderStatusId = acceptStatus.OrderStatusId;
+        await work.CompleteAsync();
+        return Results.Redirect($"/OrderMaster/Details/{guid}");
+    }
+
+    [Authorize(policy: nameof(Permision.CancelOrder))]
+    [HttpGet("Cancel/{guid}")]
+    public async Task<IResult> Cancel(Guid guid)
+    {
+        var orderMaster = await work.Get<OrderMaster>().Find(f => f.RowUniqueId == guid).FirstOrDefaultAsync();
+        if (orderMaster is null)
+            return new RazorComponentResult(typeof(_404));
+        if (!Permision.AllowCancelStatus.Contains(orderMaster.OrderStatusId))
+        {
+            return Results.BadRequest("Đơn hàng không được phép hủy");
+        }
+
+        orderMaster.IsCancel = true;
+        orderMaster.CreatedDate = DateTime.Now;
+
+        var cancelStatus = await work.Get<OrderStatus>().Find(f => f.IsCancelStatus).FirstOrDefaultAsync();
+        if (cancelStatus is not null)
+            orderMaster.OrderStatusId = cancelStatus.OrderStatusId;
+        await work.CompleteAsync();
+
+        return Results.Redirect($"/OrderMaster/Details/{guid}");
+    }
+
+    [Authorize(policy: nameof(Permision.SuspendOrder))]
+    [HttpGet("Suspend/{guid}")]
+    public async Task<IResult> Suspend(Guid guid)
+    {
+        var orderMaster = await work.Get<OrderMaster>().Find(f => f.RowUniqueId == guid).FirstOrDefaultAsync();
+        if (orderMaster is null)
+            return new RazorComponentResult(typeof(_404));
+        if (!Permision.AllowCancelStatus.Contains(orderMaster.OrderStatusId))
+        {
+            return Results.BadRequest("Đơn hàng không được phép treo");
+        }
+
+        orderMaster.IsCancel = true;
+        orderMaster.CreatedDate = DateTime.Now;
+
+        var suspendStatus = await work.Get<OrderStatus>().Find(f => f.IsSuspendStatus).FirstOrDefaultAsync();
+        if (suspendStatus is not null)
+            orderMaster.OrderStatusId = suspendStatus.OrderStatusId;
+        await work.CompleteAsync();
+
+        return Results.Redirect($"/OrderMaster/Details/{guid}");
+    }
+
+    [Authorize(policy: nameof(Permision.ChangeStatusOrder))]
+    [HttpGet("Status/{guid}")]
+    public async Task<IResult> Status(Guid guid, [FromQuery] string StatusID)
+    {
+        var orderMaster = await work.Get<OrderMaster>().Find(f => f.RowUniqueId == guid).FirstOrDefaultAsync();
+        if (orderMaster is null)
+            return new RazorComponentResult(typeof(_404));
+
+        var status = await work.Get<OrderStatus>().Find(f => f.CanChangeStatus || f.IsAcceptStatus).ToListAsync();
+
+        if (!status.Select(f => f.OrderStatusId).Contains(orderMaster.OrderStatusId))
+        {
+            return Results.BadRequest("Đơn hàng không được phép đổi trạng thái");
+        }
+        if (!status.Where(f => !f.IsAcceptStatus).Select(f => f.OrderStatusId).Contains(StatusID))
+        {
+            return Results.BadRequest("Trạng thái không hợp lệ");
+        }
+        var orderStatus = status.FirstOrDefault(f => f.OrderStatusId == StatusID);
+        orderMaster.IsCancel = true;
+        orderMaster.CreatedDate = DateTime.Now;
+
+        if (orderStatus is not null)
+            orderMaster.OrderStatusId = orderStatus.OrderStatusId;
+        await work.CompleteAsync();
+
+        return Results.Content(orderStatus?.OrderStatusName);
     }
 }
 

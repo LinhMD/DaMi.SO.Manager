@@ -1,5 +1,7 @@
+@using DaMi.SO.Manager.Data.Models
 @using DaMi.SO.Manager.Endpoints.OrderMasters.DTO
 @inject IStringLocalizer<ShareResource> L
+@inject IHttpContextAccessor httpContextAccessor
 @inherits XComponent<IEnumerable<OrderMasterSimpleView>>
 <Table Models="@Model" TItem="OrderMasterSimpleView" RowStyleColor="Color" TableId="@TableId">
     <NavLabel>
@@ -11,7 +13,11 @@
     <ActionLabel></ActionLabel>
     <Action Context="o">
         <div>
-            <a href="/OrderMaster/Edit/@o.RowUniqueId"><span class="mdi mdi-pencil-box"></span></a>
+            @if (o.OrderStatusName == "Mới tạo"
+            && (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type == nameof(Permision.UpdateOrder)) ?? false))
+            {
+                <a href="/OrderMaster/Edit/@o.RowUniqueId"><span class="mdi mdi-pencil-box"></span></a>
+            }
             <a href="/OrderMaster/Details/@o.RowUniqueId"><span class="mdi mdi-magnify"></span></a>
         </div>
     </Action>

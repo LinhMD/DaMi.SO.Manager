@@ -84,4 +84,6 @@ public partial class Permision
 
     [InverseProperty("Permision")]
     public virtual IEnumerable<Department> Departments { get; set; } = new List<Department>();
+
+    public static readonly string[] AllowCancelStatus = ["OS20", "OS21", "OS30", "OS40", "OS41"];
 }

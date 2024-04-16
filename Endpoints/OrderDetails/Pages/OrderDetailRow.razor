@@ -316,23 +316,24 @@
             }
         </td>
     }
-    <td>
-        @if (ViewMode == ViewMode.Detail)
-        {
-            @(detail?.StartDate is not null ? detail.StartDate.Value.ToString(CultureInfo.CurrentCulture) : "")
-        }
-        else
-        {
-            <input data-provide="datepicker" type="date" name="@nameof(detail.StartDate)"
-                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
-                id="@nameof(detail.StartDate)_@(detail?.RowUniqueId)"
-                value="@(detail?.StartDate is not null ? detail.StartDate.Value.ToString("yyyy-MM-dd") : "")"
-                class="form-control">
-            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.StartDate)" />
-        }
-    </td>
+
     @if (Form.HasByTime)
     {
+        <td>
+            @if (ViewMode == ViewMode.Detail)
+            {
+                @(detail?.StartDate is not null ? detail.StartDate.Value.ToString(CultureInfo.CurrentCulture) : "")
+            }
+            else
+            {
+                <input data-provide="datepicker" type="date" name="@nameof(detail.StartDate)"
+                    form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                    id="@nameof(detail.StartDate)_@(detail?.RowUniqueId)"
+                    value="@(detail?.StartDate is not null ? detail.StartDate.Value.ToString("yyyy-MM-dd") : "")"
+                    class="form-control">
+                <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.StartDate)" />
+            }
+        </td>
         <td>
             @if (ViewMode == ViewMode.Detail)
             {

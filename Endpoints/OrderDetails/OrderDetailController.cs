@@ -24,21 +24,21 @@ namespace DaMi.SO.Manager.Endpoints.OrderDetails;
 [Authorize]
 [ApiController]
 [Route("[controller]")]
-public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> service) : ControllerBase
+public class OrderDetailController(IUnitOfWork work) : ControllerBase
 {
 
     [Authorize(policy: "ViewOrder")]
     [HttpGet("Detail/{guid}")]
     public async Task<IResult> GetDetailsAsync(Guid guid)
     {
-        OrderDetailSimpleView? orderDetailSimpleView = await work.Get<OrderDetail>().GetAsync<OrderDetailSimpleView>(guid);
-        if (orderDetailSimpleView == null)
+        var orderDetail = await work.Get<OrderDetail>().GetAsync<OrderDetailSimpleView>(guid);
+        if (orderDetail == null)
         {
             return Results.NotFound();
         }
         var orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(o => o.OrderForm)
-            .Where(f => f.RowUniqueId == orderDetailSimpleView.OrderId).FirstOrDefaultAsync();
-        return await ReturnPage(work, orderDetailSimpleView, orderMaster, null, ViewMode.Detail);
+            .Where(f => f.RowUniqueId == orderDetail.OrderId).FirstOrDefaultAsync();
+        return await ReturnPage(work, orderDetail, orderMaster, null, ViewMode.Detail);
     }
 
     [Authorize(policy: nameof(Permision.AddNewOrder))]
@@ -56,7 +56,7 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
         };
         if (ItemIdSelect is null)
         {
-            orderDetailSimpleView.ItemId = (await work.Get<ViwFullItem>().Find(f => f.OrderFormId == orderMaster!.OrderFormId).FirstOrDefaultAsync())?.ItemId;
+            orderDetailSimpleView.ItemId = await work.Get<ViwFullItem>().Find(f => f.OrderFormId == orderMaster!.OrderFormId).Select(f => f.ItemId).FirstOrDefaultAsync();
         }
         return await ReturnPage(work, orderDetailSimpleView, orderMaster, null, ViewMode.Create);
     }
@@ -89,7 +89,6 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
     public async Task<IResult> GetEdit(Guid guid, [FromQuery] string? ItemIdSelect, [FromQuery] string? FormID)
     {
         var orderDetail = await work.Get<OrderDetail>().GetAsync<OrderDetailSimpleView>(guid);
-
         var item = await work.Get<ViwItem>().Find(x => x.ItemId == ItemIdSelect).FirstOrDefaultAsync();
         if (item is not null && orderDetail is not null)
         {
@@ -135,7 +134,6 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
     public async Task<IResult> Delete(Guid guid)
     {
         var orderDetail = await work.Get<OrderDetail>().GetAsync(guid);
-
         if (orderDetail is not null)
         {
             await work.Get<OrderDetail>().RemoveAsync(orderDetail);
@@ -154,7 +152,6 @@ public class OrderDetailController(IUnitOfWork work, IServiceCrud<OrderDetail> s
         orderMaster.ConvertDiscAmount = orderMaster.OriginalTotalAmount * orderMaster.ExchangeRate;
         orderMaster.ConvertTaxAmount = orderMaster.OriginalTaxAmount * orderMaster.ExchangeRate;
         orderMaster.ConvertTotalAmount = orderMaster.OriginalTotalAmount * orderMaster.ExchangeRate;
-        orderMaster.Dump();
         await work.CompleteAsync();
     }
 

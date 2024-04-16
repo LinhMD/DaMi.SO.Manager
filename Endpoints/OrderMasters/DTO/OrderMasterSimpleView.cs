@@ -71,7 +71,7 @@ public class OrderMasterSimpleView : IView<OrderMaster>
 
     [DisplayName("Thành tiền thực")]
     [DataType(DataType.Currency)]
-    public decimal OriginalTotalAmount { get; set; }
+    public decimal ConvertTotalAmount { get; set; }
 
     [DataType(DataType.Currency)]
     [DisplayName("Số tiền đã thu")]
@@ -92,7 +92,7 @@ public class OrderMasterSimpleView : IView<OrderMaster>
         // .Map(view => view.NumOfPC, order => order.OrderDetails.Sum(d => d.NumOfPc))
         // .Map(view => view.NumOfData, order => order.OrderDetails.Sum(d => d.NumOfData))
         // .Map(view => view.NumOfInv, order => order.OrderDetails.Sum(d => d.NumOfInv))
-        // .Map(view => view.NumOfTaxCode, order => order.OrderDetails.Sum(d => d.NumOfTaxCode))
+        // .Map(view => view.NumOfTaxCode, order => order.OrderDetails.Sum(d => d.NumOfTaxCodes))
         // .Map(view => view.NumOfUser, order => order.OrderDetails.Sum(d => d.NumOfUser));
     }
 }
