@@ -29,29 +29,46 @@ function ModifyInput(elements) {
 }
 function calculatePrice(guid) {
     var quantity = Number($(`#Quantity_${guid}`).val());
+
     var price = toNumber($(`#OriginalPrice_${guid}`).text() || $(`#OriginalPrice_${guid}`).val());
-    var totalPrice = quantity * price;
-    $(`#OriginalAmount_${guid}`).text(toCurrency(totalPrice));
-    var taxRate = toNumber($(`#TaxRate_${guid}`).text());
-    $(`#OriginalTaxAmount_${guid}`).text(toCurrency(totalPrice * taxRate / 100));
+    var convertPrice = toNumber($(`#ConvertPrice_${guid}`).text() || $(`#ConvertPrice_${guid}`).val());
+
+    var taxRate = toNumber($(`#TaxRate_${guid}`).text() || $(`#TaxRate_${guid}`).val());
     var discountRate = Number($(`#DiscountPercent_${guid}`).val());
-    $(`#OriginalDiscAmount_${guid}`).val(toCurrency(totalPrice * discountRate / 100));
+    var totalConvertPrice = quantity * convertPrice;
+
+    $(`#ConvertAmount_${guid}`).text(toCurrency(totalConvertPrice, "VND"));
+    $(`#ConvertTaxAmount_${guid}`).text(toCurrency(totalConvertPrice * taxRate / 100, "VND"));
+    $(`#ConvertDiscAmount_${guid}`).val(toCurrency(totalConvertPrice * discountRate / 100, "VND"));
+
+    let currency = $('#CurrencyId').val();
+    if (currency == 'USD') {
+        var totalPrice = quantity * price;
+        $(`#OriginalAmount_${guid}`).text(toCurrency(totalPrice, currency));
+        $(`#OriginalTaxAmount_${guid}`).text(toCurrency(totalPrice * taxRate / 100, currency));
+        $(`#OriginalDiscAmount_${guid}`).val(toCurrency(totalPrice * discountRate / 100, currency));
+    }
     calculateTotal();
 }
 function toNumber(str) {
     return +Number((str || 0).toString().replace(/[^0-9-]+/g, ""));
 }
-function toCurrency(num) {
-    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(num);
+function toCurrency(num, currency = 'VND') {
+    return new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: currency,
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+    }).format(num);
 }
 function calculateTotal() {
-    var total = Array.from($(`table [name='OriginalAmount']`)).map(f => toNumber(f.value || f.innerText)).reduce((prev, curr) => prev + curr);
-    var totaltax = Array.from($(`table [name='OriginalTaxAmount']`)).map(f => toNumber(f.value || f.innerText)).reduce((prev, curr) => prev + curr);
-    var totaldisc = Array.from($(`table [name='OriginalDiscAmount']`)).map(f => toNumber(f.value || f.innerText)).reduce((prev, curr) => prev + curr);
-
-    $(`#OriginalTaxAmount`).val(toCurrency(totaltax));
-    $(`#OriginalDiscAmount`).val(toCurrency(totaldisc));
-    $(`#OriginalTotalAmount`).val(toCurrency(total + totaltax - totaldisc));
+    var total = Array.from($(`table [name='ConvertAmount']`)).map(f => toNumber(f.value || f.innerText)).reduce((prev, curr) => prev + curr);
+    var totaltax = Array.from($(`table [name='ConvertTaxAmount']`)).map(f => toNumber(f.value || f.innerText)).reduce((prev, curr) => prev + curr);
+    var totaldisc = Array.from($(`table [name='ConvertDiscAmount']`)).map(f => toNumber(f.value || f.innerText)).reduce((prev, curr) => prev + curr);
+    $('#TotalAmount').val(toCurrency(total, 'VND'));
+    $(`#ConvertTaxAmount`).val(toCurrency(totaltax, "VND"));
+    $(`#ConvertDiscAmount`).val(toCurrency(totaldisc, "VND"));
+    $(`#ConvertTotalAmount`).val(toCurrency(total + totaltax - totaldisc, "VND"));
 }
 function matchAny(params, data) {
     // If there are no search terms, return all of the data

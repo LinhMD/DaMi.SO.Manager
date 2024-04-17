@@ -40,6 +40,8 @@
                 form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
                 name="@nameof(detail.ItemId)Select" class="form-control selectpicker "
                 id="@nameof(detail.ItemId)_@(detail?.RowUniqueId)_select" value="@(detail?.ItemId ?? "")">
+                <option value="">
+                </option>
                 @foreach (var item in Model.FullItemMap.Keys)
                 {
                     <option value="@item" selected='@(item == detail?.ItemId)'>
@@ -74,6 +76,8 @@
                 hx-target='#row_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")' hx-swap='outerHTML'
                 name="@nameof(detail.ItemId)Select" class="form-control selectpicker "
                 id="@nameof(FullItem.ItemName)_@(detail?.RowUniqueId)_select" value="@(detail?.ItemId ?? "")">
+                <option value="">
+                </option>
                 @foreach (var item in Model.FullItemMap.Keys)
                 {
                     <option value="@item" selected='@(item == detail?.ItemId)'>
@@ -111,30 +115,75 @@
     <td>
         @if (ViewMode == ViewMode.Detail)
         {
-            @((detail?.OriginalPrice ?? 0).ToString("N0", CultureInfo.CurrentCulture))
+            <div class="currency">
+                @((detail?.ConvertPrice ?? 0).ToString("N0", CultureInfo.CurrentCulture))
+            </div>
         }
         else
         {
-            <input type="text" readonly="@(!FullItem?.AllowEditItemAmount ?? true)" value="@detail?.OriginalPrice"
-                class="form-control" oninput="calculatePrice('@detail?.RowUniqueId')" min="0"
+            <input type="text" readonly="@(!FullItem?.AllowEditItemAmount ?? true)" value="@detail?.ConvertPrice"
+                class="form-control currency" oninput="calculatePrice('@detail?.RowUniqueId')" min="0"
                 form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
-                name="@nameof(detail.OriginalPrice)" id="@nameof(detail.OriginalPrice)_@(detail?.RowUniqueId)" />
-            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.OriginalPrice)" />
+                name="@nameof(detail.ConvertPrice)" id="@nameof(detail.ConvertPrice)_@(detail?.RowUniqueId)" />
+            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.ConvertPrice)" />
         }
     </td>
     <td>
-        <div class="currency" name='OriginalAmount' id="@nameof(detail.OriginalAmount)_@(detail?.RowUniqueId)">
-            @((detail?.OriginalAmount ?? 0).ToString("N0", CultureInfo.CurrentCulture))
+        <div class="currency" name='ConvertAmount' id="@nameof(detail.ConvertAmount)_@(detail?.RowUniqueId)">
+            @((detail?.ConvertAmount ?? 0).ToString("N0", CultureInfo.CurrentCulture))
         </div>
     </td>
+    @if (Order?.CurrencyId == "USD")
+    {
+        <td>
+            @if (ViewMode == ViewMode.Detail)
+            {
+                <div class="currency">
+                    @((detail?.OriginalPrice ?? 0).ToString("N0", CultureInfo.CurrentCulture))
+                </div>
+            }
+            else
+            {
+                <input type="text" readonly="@(!FullItem?.AllowEditItemAmount ?? true)" value="@detail?.OriginalPrice"
+                    class="form-control currency" oninput="calculatePrice('@detail?.RowUniqueId')" min="0"
+                    form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                    name="@nameof(detail.OriginalPrice)" id="@nameof(detail.OriginalPrice)_@(detail?.RowUniqueId)" />
+                <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.OriginalPrice)" />
+            }
+        </td>
+        <td>
+            <div class="currency" name='OriginalAmount' id="@nameof(detail.OriginalAmount)_@(detail?.RowUniqueId)">
+                @((detail?.OriginalAmount ?? 0).ToString("N0", CultureInfo.CurrentCulture))
+            </div>
+        </td>
+    }
     <td>
-        <div class="currency" name='TaxRate' id="@nameof(detail.TaxRate)_@(detail?.RowUniqueId)">
-            @Convert.ToInt64(detail?.TaxRate)
-        </div>
+        @if (ViewMode == ViewMode.Detail)
+        {
+            <div class="currency" name='TaxRate' id="@nameof(detail.TaxRate)_@(detail?.RowUniqueId)">
+                @Convert.ToInt64(detail?.TaxRate)
+            </div>
+        }
+        else
+        {
+            <input type="text" readonly value="@detail?.TaxRate" class="form-control currency"
+                oninput="calculatePrice('@detail?.RowUniqueId')" min="0"
+                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")" name="@nameof(detail.TaxRate)"
+                id="@nameof(detail.TaxRate)_@(detail?.RowUniqueId)" />
+            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.TaxRate)" />
+        }
     </td>
+    @if (Order?.CurrencyId == "USD")
+    {
+        <td class="currency">
+            <div class="currency" name='OriginalTaxAmount' id="@nameof(detail.OriginalTaxAmount)_@(detail?.RowUniqueId)">
+                @((detail?.OriginalTaxAmount ?? 0).ToString("N0", CultureInfo.CurrentCulture))
+            </div>
+        </td>
+    }
     <td class="currency">
-        <div class="currency" name='OriginalTaxAmount' id="@nameof(detail.OriginalTaxAmount)_@(detail?.RowUniqueId)">
-            @((detail?.OriginalTaxAmount ?? 0).ToString("N0", CultureInfo.CurrentCulture))
+        <div class="currency" name='ConvertTaxAmount' id="@nameof(detail.ConvertTaxAmount)_@(detail?.RowUniqueId)">
+            @((detail?.ConvertTaxAmount ?? 0).ToString("N0", CultureInfo.CurrentCulture))
         </div>
     </td>
     <td class="currency">
@@ -151,20 +200,39 @@
             <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.DiscountPercent)" />
         }
     </td>
+    @if (Order?.CurrencyId == "USD")
+    {
+        <td class="currency">
+            @if (ViewMode == ViewMode.Detail)
+            {
+                <div class="currency" name='OriginalDiscAmount' id="@nameof(detail.OriginalDiscAmount)_@(detail?.RowUniqueId)">
+                    @((detail?.OriginalDiscAmount ?? 0).ToString("N0", CultureInfo.CurrentCulture))
+                </div>
+            }
+            else
+            {
+                <input type="text" class="form-control currency" onload="mask(this)" oninput="calculateTotal()"
+                    form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                    value="@(Convert.ToInt64(detail?.OriginalDiscAmount))" name="@nameof(detail.OriginalDiscAmount)"
+                    id="@nameof(detail.OriginalDiscAmount)_@(detail?.RowUniqueId)" />
+                <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.OriginalDiscAmount)" />
+            }
+        </td>
+    }
     <td class="currency">
         @if (ViewMode == ViewMode.Detail)
         {
-            <div class="currency" name='OriginalDiscAmount' id="@nameof(detail.OriginalDiscAmount)_@(detail?.RowUniqueId)">
-                @((detail?.OriginalDiscAmount ?? 0).ToString("N0", CultureInfo.CurrentCulture))
+            <div class="currency" name='ConvertDiscAmount' id="@nameof(detail.ConvertDiscAmount)_@(detail?.RowUniqueId)">
+                @((detail?.ConvertDiscAmount ?? 0).ToString("N0", CultureInfo.CurrentCulture))
             </div>
         }
         else
         {
-            <input type="text" class="form-control currency" onload="mask(this)"
+            <input type="text" class="form-control currency" onload="mask(this)" oninput="calculateTotal()"
                 form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
-                value="@(Convert.ToInt64(detail?.OriginalDiscAmount))" name="@nameof(detail.OriginalDiscAmount)"
-                id="@nameof(detail.OriginalDiscAmount)_@(detail?.RowUniqueId)" />
-            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.OriginalDiscAmount)" />
+                value="@(Convert.ToInt64(detail?.ConvertDiscAmount))" name="@nameof(detail.ConvertDiscAmount)"
+                id="@nameof(detail.ConvertDiscAmount)_@(detail?.RowUniqueId)" />
+            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.ConvertDiscAmount)" />
         }
     </td>
     @if (Form.HasByTaxCode)
@@ -212,10 +280,25 @@
                     events: {
                         search: (search, currentData) => {
                             return new Promise((resolve, reject) => {
-                                resolve([{
-                                    text: search,
-                                    value: search,
-                                }])
+
+                                if (search.length >= 10) {
+                                    fetch(`/TaxCode?taxcode=${search}&customer=@Order?.CustomerId`, {
+                                        method: 'GET',
+                                    }).then((response) => response.json()).then((data) => {
+                                        if (data.status == 400) {
+                                            reject('Mã số thuế không hợp lệ');
+                                        } else {
+                                            resolve(data.map(f => {
+                                                return {
+                                                    text: f.taxCodeId,
+                                                    value: f.taxCodeId
+                                                }
+                                            }))
+                                        }
+                                    });
+                                } else {
+                                    reject('Mã số thuế tối thiểu có 10 kí tự');
+                                }
                             })
                         },
                         afterChange: (newVal) => {
@@ -337,14 +420,14 @@
         <td>
             @if (ViewMode == ViewMode.Detail)
             {
-                @(FullItem?.AllowEditNumOfMonth ?? false ? FullItem.DefNumOfMonth : detail?.NumOfMonth)
+                @(FullItem?.AllowEditNumOfMonth ?? false ? detail?.NumOfMonth : FullItem?.DefNumOfMonth)
             }
             else
             {
                 <input readonly="@(!FullItem?.AllowEditNumOfMonth ?? true)" type="number" name="@nameof(detail.NumOfMonth)"
                     min='0' form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
                     id="@nameof(detail.NumOfMonth)_@(detail?.RowUniqueId)"
-                    value="@(FullItem?.AllowEditNumOfMonth ?? false? FullItem.DefNumOfMonth: detail?.NumOfMonth)"
+                    value="@(FullItem?.AllowEditNumOfMonth ?? false? detail?.NumOfMonth : FullItem?.DefNumOfMonth )"
                     class="form-control">
                 <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.NumOfMonth)" />
             }
@@ -393,7 +476,7 @@
     [Parameter] public OrderDetailSimpleView? detail { get; set; } = null!;
     [Parameter] public Dictionary<string, string>? Errors { get; set; }
     [Parameter] public ViwFullItem FullItem { get; set; } = new();
-    [Parameter] public OrderMaster? Order { get; set; } = null!;
+    [Parameter] public OrderMasterDetailView? Order { get; set; } = null!;
 
     [Parameter] public Guid? OrderID { get; set; } = null!;
     [Parameter] public OrderForm Form { get; set; } = null!;

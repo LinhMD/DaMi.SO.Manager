@@ -65,11 +65,11 @@ namespace DaMi.SO.Manager.Endpoints.OrderMasters.DTO
         public decimal OriginalDiscAmount { get; set; }
 
         [DisplayName("Cộng thành tiền")]
-        public decimal? ConvertTotalAmount => OriginalTotalAmount * ExchangeRate;
+        public decimal? ConvertTotalAmount { get; set; }
         [DisplayName("Cộng tiền thuế VAT")]
-        public decimal? ConvertTaxAmount => OriginalTaxAmount * ExchangeRate;
+        public decimal? ConvertTaxAmount { get; set; }
         [DisplayName("Cộng tiền CK")]
-        public decimal? ConvertDiscAmount => OriginalDiscAmount * ExchangeRate;
+        public decimal? ConvertDiscAmount { get; set; }
         //Tổng tiền thanh toán = ConvertTotalAmount + ConvertTaxAmount - ConvertDiscAmount
         [DisplayName("Tổng số tiền")]
         public decimal? TotalAmount { get; set; }

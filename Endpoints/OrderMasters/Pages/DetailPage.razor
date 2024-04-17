@@ -36,9 +36,10 @@
         (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type ==
         nameof(Permision.CancelOrder)) ?? false))
         {
-            <a href="/OrderMaster/Cancel/@Model.OrderMaster.RowUniqueId" class="btn btn-round btn-warning mx-2">
+            <button class="btn btn-round btn-warning mx-2" hx-post="/OrderMaster/Cancel/@Model.OrderMaster.RowUniqueId"
+                hx-prompt="Lý Do Hủy" hx->
                 <b>@L["Hủy"]</b>
-            </a>
+            </button>
         }
         @if (Permision.AllowCancelStatus.Contains(Model.OrderMaster.OrderStatusId ?? "") &&
         (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type ==

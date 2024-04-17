@@ -150,8 +150,14 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
 
     [Authorize(policy: nameof(Permision.UpdateOrder))]
     [HttpPost("Edit/{guid}")]
-    public async Task<IResult> EditAsync(Guid guid, [FromForm] OrderMasterDetailView orderMaster)
+    public async Task<IResult> EditAsync(Guid guid, [FromForm] OrderMasterDetailView editOrderMaster)
     {
+
+        var orderMaster = await work.Get<OrderMaster>().GetAsync(guid);
+        if (orderMaster is null)
+        {
+            return new RazorComponentResult(typeof(_404));
+        }
         if (orderMaster.OrderStatusId != "OS10")
         {
             return Results.BadRequest("Đơn hàng không được phép sửa");
@@ -159,12 +165,7 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
         try
         {
             List<OrderDetail> orderDetails = await work.Get<OrderDetail>().Find(f => f.OrderId == guid).ToListAsync();
-            orderMaster.TotalAmount = orderDetails.Select(x => Convert.ToDecimal(x.ConvertPrice * x.Quantity)).Sum();
-            orderMaster.OriginalTaxAmount = orderDetails.Select(x => x.OriginalTaxAmount).Sum();
-            orderMaster.OriginalDiscAmount = orderDetails.Select(x => x.OriginalDiscAmount).Sum();
-            orderMaster.OriginalTotalAmount = orderMaster.TotalAmount.Value + orderMaster.OriginalTaxAmount - orderMaster.OriginalDiscAmount;
-            Console.WriteLine(orderMaster);
-            OrderMaster save = await service.UpdateAsync(orderMaster, guid);
+            await service.UpdateAsync(editOrderMaster, guid);
             return await Task.FromResult(Results.Redirect($"/OrderMaster/Details/{guid}"));
         }
         catch (ModelValueInvalidException e)
@@ -176,10 +177,9 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
             e.Dump();
             return await ReturnPage<EditPage>(work, work.Get<OrderMaster>().Find<OrderMasterDetailView>(f => f.RowUniqueId == guid).FirstOrDefault()!, ViewMode.Edit, null, $"Edit Error: {e.Message}");
         }
-
     }
     [Authorize(policy: nameof(Permision.UpdateOrder))]
-    [HttpDelete("{guid}")]
+    [HttpGet("Delete/{guid}")]
     public async Task<IResult> Delete(Guid guid)
     {
         var orderMaster = await work.Get<OrderMaster>().Find(f => f.RowUniqueId == guid).FirstOrDefaultAsync();
@@ -187,7 +187,6 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
         {
             return new RazorComponentResult(typeof(_404));
         }
-
 
         if (orderMaster.OrderStatusId != "OS10")
         {
@@ -257,9 +256,10 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
     }
 
     [Authorize(policy: nameof(Permision.CancelOrder))]
-    [HttpGet("Cancel/{guid}")]
+    [HttpPost("Cancel/{guid}")]
     public async Task<IResult> Cancel(Guid guid)
     {
+
         var orderMaster = await work.Get<OrderMaster>().Find(f => f.RowUniqueId == guid).FirstOrDefaultAsync();
         if (orderMaster is null)
             return new RazorComponentResult(typeof(_404));
@@ -267,16 +267,15 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
         {
             return Results.BadRequest("Đơn hàng không được phép hủy");
         }
-
+        orderMaster.Notes += $"\nLý do hủy: {Request.Headers["hx-prompt"]}";
         orderMaster.IsCancel = true;
-        orderMaster.CreatedDate = DateTime.Now;
 
         var cancelStatus = await work.Get<OrderStatus>().Find(f => f.IsCancelStatus).FirstOrDefaultAsync();
         if (cancelStatus is not null)
             orderMaster.OrderStatusId = cancelStatus.OrderStatusId;
         await work.CompleteAsync();
-
-        return Results.Redirect($"/OrderMaster/Details/{guid}");
+        Response.Headers.Append("hx-redirect", $"/OrderMaster/Details/{guid}");
+        return Results.Ok();
     }
 
     [Authorize(policy: nameof(Permision.SuspendOrder))]
@@ -328,7 +327,8 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
             orderMaster.OrderStatusId = orderStatus.OrderStatusId;
         await work.CompleteAsync();
 
-        return Results.Content(orderStatus?.OrderStatusName);
+        Response.Headers.Append("hx-redirect", $"/OrderMaster/Details/{guid}");
+        return Results.Ok();
     }
 }
 

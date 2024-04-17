@@ -12,6 +12,7 @@ using DaMi.SO.Manager.Components;
 using DaMi.SO.Manager.Data.Models;
 using DaMi.SO.Manager.Endpoints.OrderDetails.DTO;
 using DaMi.SO.Manager.Endpoints.OrderDetails.Pages;
+using DaMi.SO.Manager.Endpoints.OrderMasters.DTO;
 using DaMi.SO.Manager.Endpoints.Share;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
@@ -52,11 +53,16 @@ public class OrderDetailController(IUnitOfWork work) : ControllerBase
             OrderId = OrderId,
             ItemId = ItemIdSelect,
             CurrencyId = orderMaster!.CurrencyId,
-            ExchangeRate = orderMaster!.ExchangeRate
+            ExchangeRate = orderMaster!.ExchangeRate,
+            Quantity = 1
         };
-        if (ItemIdSelect is null)
+        if (ItemIdSelect is not null)
         {
-            orderDetailSimpleView.ItemId = await work.Get<ViwFullItem>().Find(f => f.OrderFormId == orderMaster!.OrderFormId).Select(f => f.ItemId).FirstOrDefaultAsync();
+            var item = await work.Get<ViwFullItem>().Find(f => f.ItemId == ItemIdSelect).FirstOrDefaultAsync();
+            orderDetailSimpleView.ItemId = item?.ItemId;
+            orderDetailSimpleView.OriginalPrice = item?.OriginalPrice;
+            orderDetailSimpleView.ConvertPrice = item?.ConvertPrice ?? 0;
+            orderDetailSimpleView.TaxRate = item?.TaxRate;
         }
         return await ReturnPage(work, orderDetailSimpleView, orderMaster, null, ViewMode.Create);
     }
@@ -65,21 +71,24 @@ public class OrderDetailController(IUnitOfWork work) : ControllerBase
     [HttpPost("Create")]
     public async Task<IResult> PostNew([FromForm] OrderDetailSimpleView orderDetailNew)
     {
-        var orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Include(o => o.OrderForm).Where(f => f.RowUniqueId == orderDetailNew.OrderId!).FirstOrDefaultAsync();
-        if (orderDetailNew.DiscountPercent > 0 && (orderDetailNew.OriginalDiscAmount == 0 || orderDetailNew.OriginalDiscAmount is null))
-        {
-            orderDetailNew.OriginalDiscAmount = orderDetailNew.OriginalAmount * Convert.ToDecimal(orderDetailNew.DiscountPercent) / 100;
-        }
         try
         {
+            var item = await work.Get<ViwItem>().Find(x => x.ItemId == orderDetailNew.ItemId).FirstOrDefaultAsync();
+            if (item is not null)
+            {
+                orderDetailNew.TaxRate = item.TaxRate;
+            }
+
             OrderDetail orderDetail = orderDetailNew.Adapt<OrderDetail>();
-            orderDetail.Dump();
             await work.Get<OrderDetail>().AddAsync(orderDetail);
+            var orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Include(o => o.OrderForm).Where(f => f.RowUniqueId == orderDetail.OrderId!).FirstOrDefaultAsync();
             await ReCalculateMasterAmount(work, orderMaster!);
             return await ReturnPage(work, work.Get<OrderDetail>().Get<OrderDetailSimpleView>(orderDetail.RowUniqueId), orderMaster, null, ViewMode.Detail);
         }
         catch (ModelValueInvalidException e)
         {
+            var orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Include(o => o.OrderForm).Where(f => f.RowUniqueId == orderDetailNew.OrderId!).FirstOrDefaultAsync();
+
             return await ReturnPage(work, null, orderMaster, e.MemberErrors, ViewMode.Create);
         }
     }
@@ -94,6 +103,7 @@ public class OrderDetailController(IUnitOfWork work) : ControllerBase
         {
             orderDetail.ItemId = item.ItemId;
             orderDetail.OriginalPrice = item.OriginalPrice;
+            orderDetail.ConvertPrice = item.ConvertPrice;
             orderDetail.TaxRate = item.TaxRate;
         }
         var orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(o => o.OrderForm).Where(f => f.RowUniqueId == orderDetail!.OrderId).FirstOrDefaultAsync();
@@ -108,7 +118,6 @@ public class OrderDetailController(IUnitOfWork work) : ControllerBase
         {
             orderDetail.OriginalDiscAmount = orderDetail.OriginalAmount * Convert.ToDecimal(orderDetail.DiscountPercent) / 100;
         }
-        var orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Include(o => o.OrderForm).Where(f => f.RowUniqueId == orderDetail.OrderId!).FirstOrDefaultAsync();
         try
         {
             var item = await work.Get<ViwItem>().Find(f => f.ItemId == orderDetail.ItemId).FirstOrDefaultAsync();
@@ -119,11 +128,14 @@ public class OrderDetailController(IUnitOfWork work) : ControllerBase
             OrderDetail? update = await work.Get<OrderDetail>().GetAsync(guid);
             orderDetail.Adapt(update);
             await work.CompleteAsync();
+            var orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Include(o => o.OrderForm).Where(f => f.RowUniqueId == orderDetail.OrderId!).FirstOrDefaultAsync();
             await ReCalculateMasterAmount(work, orderMaster!);
             return await ReturnPage(work, await work.Get<OrderDetail>().GetAsync<OrderDetailSimpleView>(guid), orderMaster, null, ViewMode.Detail);
         }
         catch (ModelValueInvalidException e)
         {
+            var orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Include(o => o.OrderForm).Where(f => f.RowUniqueId == orderDetail.OrderId!).FirstOrDefaultAsync();
+
             OrderDetailSimpleView? orderDetailSimpleView = await work.Get<OrderDetail>().GetAsync<OrderDetailSimpleView>(guid);
             return await ReturnPage(work, orderDetailSimpleView, orderMaster, e.MemberErrors, ViewMode.Edit);
         }
@@ -149,9 +161,9 @@ public class OrderDetailController(IUnitOfWork work) : ControllerBase
         orderMaster.OriginalDiscAmount = orderMaster.OrderDetails.Select(f => f.OriginalDiscAmount).Sum();
         orderMaster.OriginalTaxAmount = orderMaster.OrderDetails.Select(f => f.OriginalTaxAmount).Sum();
         orderMaster.OriginalTotalAmount = orderMaster.OrderDetails.Select(f => f.OriginalTotalAmount).Sum();
-        orderMaster.ConvertDiscAmount = orderMaster.OriginalTotalAmount * orderMaster.ExchangeRate;
-        orderMaster.ConvertTaxAmount = orderMaster.OriginalTaxAmount * orderMaster.ExchangeRate;
-        orderMaster.ConvertTotalAmount = orderMaster.OriginalTotalAmount * orderMaster.ExchangeRate;
+        orderMaster.ConvertDiscAmount = orderMaster.OrderDetails.Select(f => f.ConvertDiscAmount).Sum();
+        orderMaster.ConvertTaxAmount = orderMaster.OrderDetails.Select(f => f.ConvertTaxAmount).Sum();
+        orderMaster.ConvertTotalAmount = orderMaster.OrderDetails.Select(f => f.ConvertTotalAmount).Sum();
         await work.CompleteAsync();
     }
 
@@ -173,7 +185,7 @@ public class OrderDetailController(IUnitOfWork work) : ControllerBase
             Errors = e,
             FullItem = fullItems.ContainsKey(orderDetail?.ItemId ?? "") ? fullItems[orderDetail?.ItemId ?? ""] : new ViwFullItem(),
             Form = orderMaster?.OrderForm,
-            Order = orderMaster
+            Order = orderMaster.Adapt<OrderMasterDetailView>()
         });
     }
 

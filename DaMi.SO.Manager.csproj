@@ -43,6 +43,10 @@
     <Reference Include="CrudApiTemplate">
       <HintPath>CrudApiTemplate.dll</HintPath>
     </Reference> 
+    
+    <Reference Include="DaMi.Shared">
+      <HintPath>DaMi.Shared.v8.1.dll</HintPath>
+    </Reference> 
   </ItemGroup>
 
 </Project>

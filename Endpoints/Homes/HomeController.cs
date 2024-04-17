@@ -5,15 +5,24 @@ using Microsoft.AspNetCore.Mvc;
 namespace DaMi.SO.Manager.Endpoints.Homes;
 
 [ApiController]
-[Route("index")]
+[Route("")]
 public class HomeController : ControllerBase
 {
-    [HttpGet("")]
+    [HttpGet("index")]
     public IResult Get()
     {
         if (HttpContext.User?.Identity?.IsAuthenticated ?? false)
         {
-            return this.Page<HomePage, HomeModel>(new() { Hello = 2 });
+            return Results.Redirect("/OrderMaster");
+        }
+        return Results.Redirect("/Login");
+    }
+    [HttpGet]
+    public IResult GetNor()
+    {
+        if (HttpContext.User?.Identity?.IsAuthenticated ?? false)
+        {
+            return Results.Redirect("/OrderMaster");
         }
         return Results.Redirect("/Login");
     }
