@@ -1,5 +1,7 @@
 ﻿using BlazorMinimalApis.Lib.Helpers;
 using BlazorMinimalApis.Lib.Validation;
+using DaMi.SO.Manager.Endpoints.Share;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DaMi.SO.Manager.Endpoints.Homes;
@@ -25,6 +27,12 @@ public class HomeController : ControllerBase
             return Results.Redirect("/OrderMaster");
         }
         return Results.Redirect("/Login");
+    }
+
+    [HttpGet("forbidden")]
+    public IResult Get403()
+    {
+        return new RazorComponentResult(typeof(_403));
     }
 }
 

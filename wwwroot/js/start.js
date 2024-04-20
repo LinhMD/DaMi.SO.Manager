@@ -103,3 +103,15 @@ function matchAny(params, data) {
     // Return `null` if the term should not be displayed
     return null;
 }
+
+function verifyPassword() {
+    var pw = document.getElementById("password").value;
+    if (!pw) {
+        document.getElementById("passwordError").innerHTML = "**Mật khẩu không được để trống";
+    }
+    var confirmpw = document.getElementById("confirmpass").value;
+    if (!confirmpw || confirmpw != pw) {
+        document.getElementById("confirmError").innerHTML = "**Xác nhận khác với mật khẩu";
+    }
+    return confirmpw == pw;
+}

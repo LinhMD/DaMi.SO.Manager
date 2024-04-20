@@ -126,6 +126,9 @@
                 form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
                 name="@nameof(detail.ConvertPrice)" id="@nameof(detail.ConvertPrice)_@(detail?.RowUniqueId)" />
             <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.ConvertPrice)" />
+            <script>
+                mask(document.getElementById('@nameof(detail.ConvertPrice)_@(detail?.RowUniqueId)'));
+            </script>
         }
     </td>
     <td>
@@ -149,6 +152,10 @@
                     form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
                     name="@nameof(detail.OriginalPrice)" id="@nameof(detail.OriginalPrice)_@(detail?.RowUniqueId)" />
                 <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.OriginalPrice)" />
+
+                <script>
+                    mask(document.getElementById('@nameof(detail.OriginalPrice)_@(detail?.RowUniqueId)'));
+                </script>
             }
         </td>
         <td>
@@ -166,7 +173,7 @@
         }
         else
         {
-            <input type="text" readonly value="@detail?.TaxRate" class="form-control currency"
+            <input type="text" readonly value="@Convert.ToInt64(detail?.TaxRate)" class="form-control currency"
                 oninput="calculatePrice('@detail?.RowUniqueId')" min="0"
                 form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")" name="@nameof(detail.TaxRate)"
                 id="@nameof(detail.TaxRate)_@(detail?.RowUniqueId)" />
@@ -216,6 +223,10 @@
                     value="@(Convert.ToInt64(detail?.OriginalDiscAmount))" name="@nameof(detail.OriginalDiscAmount)"
                     id="@nameof(detail.OriginalDiscAmount)_@(detail?.RowUniqueId)" />
                 <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.OriginalDiscAmount)" />
+
+                <script>
+                    mask(document.getElementById('@nameof(detail.OriginalDiscAmount)_@(detail?.RowUniqueId)'));
+                </script>
             }
         </td>
     }
@@ -233,6 +244,10 @@
                 value="@(Convert.ToInt64(detail?.ConvertDiscAmount))" name="@nameof(detail.ConvertDiscAmount)"
                 id="@nameof(detail.ConvertDiscAmount)_@(detail?.RowUniqueId)" />
             <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.ConvertDiscAmount)" />
+
+            <script>
+                mask(document.getElementById('@nameof(detail.ConvertDiscAmount)_@(detail?.RowUniqueId)'));
+            </script>
         }
     </td>
     @if (Form.HasByTaxCode)
@@ -412,6 +427,7 @@
                 <input data-provide="datepicker" type="date" name="@nameof(detail.StartDate)"
                     form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
                     id="@nameof(detail.StartDate)_@(detail?.RowUniqueId)"
+                    min='@(Order?.OrderDate is not null ? Order.OrderDate.Value.ToString("yyyy-MM-dd") : "")'
                     value="@(detail?.StartDate is not null ? detail.StartDate.Value.ToString("yyyy-MM-dd") : "")"
                     class="form-control">
                 <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.StartDate)" />

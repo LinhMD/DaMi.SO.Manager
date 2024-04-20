@@ -48,21 +48,28 @@ public class OrderDetailController(IUnitOfWork work) : ControllerBase
     {
         var orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Include(o => o.OrderForm)
             .Where(f => f.RowUniqueId == OrderId!).FirstOrDefaultAsync();
+        var taxCode = await work.Get<ViwCustomer>().Find(c => c.CustomerId == orderMaster!.CustomerId).Select(c => c.TaxCode).FirstOrDefaultAsync();
         var orderDetailSimpleView = new OrderDetailSimpleView()
         {
             OrderId = OrderId,
             ItemId = ItemIdSelect,
             CurrencyId = orderMaster!.CurrencyId,
             ExchangeRate = orderMaster!.ExchangeRate,
-            Quantity = 1
+            TaxCode = taxCode,
+            Quantity = 1,
         };
-        if (ItemIdSelect is not null)
+        var item = await work.Get<ViwFullItem>().Find(f => f.ItemId == ItemIdSelect).FirstOrDefaultAsync();
+        if (item is not null)
         {
-            var item = await work.Get<ViwFullItem>().Find(f => f.ItemId == ItemIdSelect).FirstOrDefaultAsync();
-            orderDetailSimpleView.ItemId = item?.ItemId;
-            orderDetailSimpleView.OriginalPrice = item?.OriginalPrice;
-            orderDetailSimpleView.ConvertPrice = item?.ConvertPrice ?? 0;
-            orderDetailSimpleView.TaxRate = item?.TaxRate;
+
+            orderDetailSimpleView.ItemId = item.ItemId;
+            orderDetailSimpleView.OriginalPrice = item.OriginalPrice;
+            orderDetailSimpleView.ConvertPrice = item.ConvertPrice;
+            orderDetailSimpleView.TaxRate = item.TaxRate;
+            if (item.DefNumOfMonth > 0)
+            {
+                orderDetailSimpleView.StartDate = DateTime.Now;
+            }
         }
         return await ReturnPage(work, orderDetailSimpleView, orderMaster, null, ViewMode.Create);
     }

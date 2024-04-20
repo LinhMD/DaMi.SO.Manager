@@ -46,3 +46,6 @@ document.body.addEventListener('htmx:responseError', function (evt) {
         toastr.warning(response.message || response.errorMessages || "Bad Request:");
     }
 });
+$('.Delete').on('click', function () {
+    return confirm('Bạn có muốn xóa?');
+});

@@ -4,6 +4,8 @@
 <input type="text" id="RefPerson" hx-swap-oob="true" name="RefPerson" class="form-control"
     value=@Customer.ContactPerson />
 <input id="RefPos" hx-swap-oob="true" name="RefPos" class="form-control" value="@Customer.ContactPersonPos">
+@* <input type="checkbox" id="HasInvoiceVat" value="true" name="HasInvoiceVat"
+class="form-control form-control-sm" checked='@(Customer.I)'> *@
 @code {
     [Parameter] public ViwCustomer Customer { get; set; } = null!;
 }

@@ -3210,6 +3210,9 @@
             var results = getInputValues(elt, verb);
             var errors = results.errors;
             var rawParameters = results.values;
+            if (promptResponse) {
+                rawParameters["hxPrompt"] = promptResponse;
+            }
             if (etc.values) {
                 rawParameters = mergeObjects(rawParameters, etc.values);
             }

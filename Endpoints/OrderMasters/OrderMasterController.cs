@@ -21,6 +21,8 @@ using Microsoft.Data.SqlClient;
 using System.Text.Json;
 using CrudApiTemplate.CustomBinding;
 using System.Security.Claims;
+using System.Web;
+using System.Text;
 
 namespace DaMi.SO.Manager.Endpoints.OrderMasters;
 
@@ -257,7 +259,7 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
 
     [Authorize(policy: nameof(Permision.CancelOrder))]
     [HttpPost("Cancel/{guid}")]
-    public async Task<IResult> Cancel(Guid guid)
+    public async Task<IResult> Cancel(Guid guid, [FromForm] string? hxPrompt)
     {
 
         var orderMaster = await work.Get<OrderMaster>().Find(f => f.RowUniqueId == guid).FirstOrDefaultAsync();
@@ -267,7 +269,9 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
         {
             return Results.BadRequest("Đơn hàng không được phép hủy");
         }
-        orderMaster.Notes += $"\nLý do hủy: {Request.Headers["hx-prompt"]}";
+
+        $"Lý do hủy: {hxPrompt}".Dump();
+        orderMaster.Notes += $"Lý do hủy: {hxPrompt}";
         orderMaster.IsCancel = true;
 
         var cancelStatus = await work.Get<OrderStatus>().Find(f => f.IsCancelStatus).FirstOrDefaultAsync();
@@ -279,8 +283,8 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
     }
 
     [Authorize(policy: nameof(Permision.SuspendOrder))]
-    [HttpGet("Suspend/{guid}")]
-    public async Task<IResult> Suspend(Guid guid)
+    [HttpPost("Suspend/{guid}")]
+    public async Task<IResult> Suspend(Guid guid, [FromForm] string? hxPrompt)
     {
         var orderMaster = await work.Get<OrderMaster>().Find(f => f.RowUniqueId == guid).FirstOrDefaultAsync();
         if (orderMaster is null)
@@ -289,10 +293,8 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
         {
             return Results.BadRequest("Đơn hàng không được phép treo");
         }
-
-        orderMaster.IsCancel = true;
-        orderMaster.CreatedDate = DateTime.Now;
-
+        $"Lý do treo: {hxPrompt}".Dump();
+        orderMaster.Notes += $"Lý do treo: {hxPrompt}";
         var suspendStatus = await work.Get<OrderStatus>().Find(f => f.IsSuspendStatus).FirstOrDefaultAsync();
         if (suspendStatus is not null)
             orderMaster.OrderStatusId = suspendStatus.OrderStatusId;

@@ -34,7 +34,7 @@ builder.Services.AddAuthentication(o =>
 }).AddCookie(o =>
 {
     o.LoginPath = "/Login";
-    o.AccessDeniedPath = "/Login";
+    o.AccessDeniedPath = "/forbidden";
 });
 builder.Services.AddAuthorization(o =>
 {
@@ -67,19 +67,15 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
 });
 builder.Services.AddRazorComponents();
 builder.Services.AddHttpContextAccessor();
-
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
-
 builder.Services.AddAntiforgery();
-
 builder.Services.AddTransient<SessionManager>();
 builder.Services.AddHttpContextAccessor();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 builder.Services.AddControllersWithViews(options => options.ValueProviderFactories.Add(new ClaimValueProviderFactory()));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -89,22 +85,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
 app.UseDeveloperExceptionPage();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-
 app.UseSession();
-
 app.UseAntiforgery();
 app.MapControllers();
 app.UseRequestLocalization();
-var cookiePolicyOptions = new CookiePolicyOptions
+app.UseCookiePolicy(new CookiePolicyOptions
 {
     MinimumSameSitePolicy = SameSiteMode.Strict,
-};
-app.UseCookiePolicy(cookiePolicyOptions);
+});
 app.UseAuthentication();
 
 app.UseAuthorization();
