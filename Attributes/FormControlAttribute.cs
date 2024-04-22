@@ -1,14 +1,9 @@
 ﻿namespace DaMi.SO.Manager.Attributes
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class FormControlAttribute : Attribute
+    public class FormControlAttribute(FormControlType type) : Attribute
     {
-        public FormControlAttribute(FormControlType type)
-        {
-            Type = type;
-        }
-
-        public FormControlType Type { get; private set; }
+        public FormControlType Type { get; private set; } = type;
     }
     public enum FormControlType
     {

@@ -28,6 +28,7 @@ namespace DaMi.SO.Manager.Endpoints.Logins;
 [Route("[controller]")]
 public class LoginController(IUnitOfWork work) : ControllerBase
 {
+
     [HttpGet]
     public IResult GetLogin()
     {
@@ -134,8 +135,7 @@ public class LoginController(IUnitOfWork work) : ControllerBase
 
         string salt = LoginHelper.GenerateSalt();
         user.PwSalt = salt;
-        user.PwHash = LoginHelper.ComputeHash(Encoding.UTF8.GetBytes(newPassword),
-            Encoding.UTF8.GetBytes(salt));
+        user.PwHash = LoginHelper.ComputeHash(Encoding.UTF8.GetBytes(newPassword), Encoding.UTF8.GetBytes(salt));
         try
         {
             await work.CompleteAsync();

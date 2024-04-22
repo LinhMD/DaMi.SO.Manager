@@ -25,16 +25,14 @@
         </ol>
     </div>
     <div class="col-sm-4 p-md-0 justify-content-sm-center mt-2 mt-sm-0 d-flex">
-        @if (Model.OrderMaster.OrderStatusId == "OS10" && (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type ==
-        nameof(Permision.AcceptOrder)) ?? false))
+        @if (Model.OrderMaster.OrderStatusId == "OS10" && (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type == nameof(Permision.AcceptOrder)) ?? false))
         {
             <a href="/OrderMaster/Accept/@Model.OrderMaster.RowUniqueId" class="btn btn-round btn-primary mx-2">
                 <b>@L["Duyệt"]</b>
             </a>
         }
         @if (Permision.AllowCancelStatus.Contains(Model.OrderMaster.OrderStatusId ?? "") &&
-        (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type ==
-        nameof(Permision.CancelOrder)) ?? false))
+        (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type == nameof(Permision.CancelOrder)) ?? false))
         {
             <button class="btn btn-round btn-warning mx-2" hx-post="/OrderMaster/Cancel/@Model.OrderMaster.RowUniqueId"
                 hx-prompt="Lý Do Hủy">

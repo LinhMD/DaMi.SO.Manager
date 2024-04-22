@@ -299,8 +299,8 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
         if (suspendStatus is not null)
             orderMaster.OrderStatusId = suspendStatus.OrderStatusId;
         await work.CompleteAsync();
-
-        return Results.Redirect($"/OrderMaster/Details/{guid}");
+        Response.Headers.Append("hx-redirect", $"/OrderMaster/Details/{guid}");
+        return Results.Ok();
     }
 
     [Authorize(policy: nameof(Permision.ChangeStatusOrder))]

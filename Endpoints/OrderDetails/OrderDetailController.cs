@@ -8,6 +8,7 @@ using CrudApiTemplate.CustomException;
 using CrudApiTemplate.Repository;
 using CrudApiTemplate.Services;
 using CrudApiTemplate.Utilities;
+using DaMi.Shared;
 using DaMi.SO.Manager.Components;
 using DaMi.SO.Manager.Data.Models;
 using DaMi.SO.Manager.Endpoints.OrderDetails.DTO;
@@ -55,7 +56,7 @@ public class OrderDetailController(IUnitOfWork work) : ControllerBase
             ItemId = ItemIdSelect,
             CurrencyId = orderMaster!.CurrencyId,
             ExchangeRate = orderMaster!.ExchangeRate,
-            TaxCode = taxCode,
+            TaxCode = Utils.TaxCodeIsValid(taxCode) ? taxCode : null,
             Quantity = 1,
         };
         var item = await work.Get<ViwFullItem>().Find(f => f.ItemId == ItemIdSelect).FirstOrDefaultAsync();
@@ -102,7 +103,7 @@ public class OrderDetailController(IUnitOfWork work) : ControllerBase
 
     [Authorize(policy: nameof(Permision.UpdateOrder))]
     [HttpGet("Edit/{guid}")]
-    public async Task<IResult> GetEdit(Guid guid, [FromQuery] string? ItemIdSelect, [FromQuery] string? FormID)
+    public async Task<IResult> GetEdit(Guid guid, [FromQuery] string? ItemIdSelect)
     {
         var orderDetail = await work.Get<OrderDetail>().GetAsync<OrderDetailSimpleView>(guid);
         var item = await work.Get<ViwItem>().Find(x => x.ItemId == ItemIdSelect).FirstOrDefaultAsync();

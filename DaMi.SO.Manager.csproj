@@ -1,12 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
+<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>12</LangVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Blazor.Bootstrap" Version="2.1.0" />
     <PackageReference Include="FluentValidation" Version="11.9.0" />
@@ -34,19 +32,15 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
   </ItemGroup>
-
   <ItemGroup>
     <Reference Include="BlazorMinimalApis">
       <HintPath>BlazorMinimalApis.dll</HintPath>
-    </Reference> 
-    
+    </Reference>
     <Reference Include="CrudApiTemplate">
       <HintPath>CrudApiTemplate.dll</HintPath>
-    </Reference> 
-    
+    </Reference>
     <Reference Include="DaMi.Shared">
       <HintPath>DaMi.Shared.v8.1.dll</HintPath>
-    </Reference> 
+    </Reference>
   </ItemGroup>
-
 </Project>
