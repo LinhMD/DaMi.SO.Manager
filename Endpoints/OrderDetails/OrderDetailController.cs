@@ -40,7 +40,7 @@ public class OrderDetailController(IUnitOfWork work) : ControllerBase
         }
         var orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(o => o.OrderForm)
             .Where(f => f.RowUniqueId == orderDetail.OrderId).FirstOrDefaultAsync();
-        return await ReturnPage(work, orderDetail, orderMaster, null, ViewMode.Detail);
+        return await ReturnRow(work, orderDetail, orderMaster, null, ViewMode.Detail);
     }
 
     [Authorize(policy: nameof(Permision.AddNewOrder))]
@@ -72,7 +72,7 @@ public class OrderDetailController(IUnitOfWork work) : ControllerBase
                 orderDetailSimpleView.StartDate = DateTime.Now;
             }
         }
-        return await ReturnPage(work, orderDetailSimpleView, orderMaster, null, ViewMode.Create);
+        return await ReturnRow(work, orderDetailSimpleView, orderMaster, null, ViewMode.Create);
     }
 
     [Authorize(policy: nameof(Permision.AddNewOrder))]
@@ -91,13 +91,13 @@ public class OrderDetailController(IUnitOfWork work) : ControllerBase
             await work.Get<OrderDetail>().AddAsync(orderDetail);
             var orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Include(o => o.OrderForm).Where(f => f.RowUniqueId == orderDetail.OrderId!).FirstOrDefaultAsync();
             await ReCalculateMasterAmount(work, orderMaster!);
-            return await ReturnPage(work, work.Get<OrderDetail>().Get<OrderDetailSimpleView>(orderDetail.RowUniqueId), orderMaster, null, ViewMode.Detail);
+            return await ReturnRow(work, work.Get<OrderDetail>().Get<OrderDetailSimpleView>(orderDetail.RowUniqueId), orderMaster, null, ViewMode.Detail);
         }
         catch (ModelValueInvalidException e)
         {
             var orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Include(o => o.OrderForm).Where(f => f.RowUniqueId == orderDetailNew.OrderId!).FirstOrDefaultAsync();
 
-            return await ReturnPage(work, null, orderMaster, e.MemberErrors, ViewMode.Create);
+            return await ReturnRow(work, null, orderMaster, e.MemberErrors, ViewMode.Create);
         }
     }
 
@@ -115,7 +115,7 @@ public class OrderDetailController(IUnitOfWork work) : ControllerBase
             orderDetail.TaxRate = item.TaxRate;
         }
         var orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(o => o.OrderForm).Where(f => f.RowUniqueId == orderDetail!.OrderId).FirstOrDefaultAsync();
-        return await ReturnPage(work, orderDetail, orderMaster, null, ViewMode.Edit);
+        return await ReturnRow(work, orderDetail, orderMaster, null, ViewMode.Edit);
     }
 
     [Authorize(policy: nameof(Permision.UpdateOrder))]
@@ -138,14 +138,14 @@ public class OrderDetailController(IUnitOfWork work) : ControllerBase
             await work.CompleteAsync();
             var orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Include(o => o.OrderForm).Where(f => f.RowUniqueId == orderDetail.OrderId!).FirstOrDefaultAsync();
             await ReCalculateMasterAmount(work, orderMaster!);
-            return await ReturnPage(work, await work.Get<OrderDetail>().GetAsync<OrderDetailSimpleView>(guid), orderMaster, null, ViewMode.Detail);
+            return await ReturnRow(work, await work.Get<OrderDetail>().GetAsync<OrderDetailSimpleView>(guid), orderMaster, null, ViewMode.Detail);
         }
         catch (ModelValueInvalidException e)
         {
             var orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderDetails).Include(o => o.OrderForm).Where(f => f.RowUniqueId == orderDetail.OrderId!).FirstOrDefaultAsync();
 
             OrderDetailSimpleView? orderDetailSimpleView = await work.Get<OrderDetail>().GetAsync<OrderDetailSimpleView>(guid);
-            return await ReturnPage(work, orderDetailSimpleView, orderMaster, e.MemberErrors, ViewMode.Edit);
+            return await ReturnRow(work, orderDetailSimpleView, orderMaster, e.MemberErrors, ViewMode.Edit);
         }
     }
 
@@ -175,7 +175,7 @@ public class OrderDetailController(IUnitOfWork work) : ControllerBase
         await work.CompleteAsync();
     }
 
-    private static async Task<IResult> ReturnPage(IUnitOfWork work, OrderDetailSimpleView? orderDetail,
+    private static async Task<IResult> ReturnRow(IUnitOfWork work, OrderDetailSimpleView? orderDetail,
         OrderMaster? orderMaster, Dictionary<string, string>? e = null, ViewMode viewMode = ViewMode.Detail)
     {
         Dictionary<string, ViwFullItem> fullItems = await work.Get<ViwFullItem>().Find(f => orderMaster != null && f.OrderFormId == orderMaster.OrderFormId).ToDictionaryAsync(f => f.ItemId);
@@ -193,7 +193,8 @@ public class OrderDetailController(IUnitOfWork work) : ControllerBase
             Errors = e,
             FullItem = fullItems.ContainsKey(orderDetail?.ItemId ?? "") ? fullItems[orderDetail?.ItemId ?? ""] : new ViwFullItem(),
             Form = orderMaster?.OrderForm,
-            Order = orderMaster.Adapt<OrderMasterDetailView>()
+            Order = orderMaster.Adapt<OrderMasterDetailView>(),
+            Action = viewMode == ViewMode.Detail
         });
     }
 

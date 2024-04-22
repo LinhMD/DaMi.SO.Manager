@@ -6,7 +6,7 @@
 @typeparam TItem
 @inject IStringLocalizer<ShareResource> L
 <div class="table-responsive">
-    <table class="table nowrap compact order-column hover text-black" id='@TableId'>
+    <table class="table nowrap compact order-column table-hover text-black table-bordered" id='@TableId'>
         <thead>
             <tr class="text-black">
                 @if (NavLabel is not null)
@@ -51,15 +51,14 @@
                         }
                         else
                         {
-                            try
+                            if (value.GetType() == typeof(bool) || value.GetType() == typeof(bool?))
                             {
-                                var boolValue = (bool)value;
                                 <td>
                                     <input onclick="return false;" type="checkbox" class="form-control form-control-sm"
                                         checked='@value'>
                                 </td>
                             }
-                            catch (Exception)
+                            else
                             {
                                 var dataType = (Attribute.GetCustomAttribute(fieldInfo, typeof(DataTypeAttribute)) as
                                 DataTypeAttribute);
@@ -77,9 +76,14 @@
                                                 <td class="text-right">@(((double)value).ToString("N0", CultureInfo.CurrentCulture))</td>
                                             }
                                             break;
-                                        case DataType.Date:
+                                        case DataType.DateTime:
                                             <td class="date">
                                                 @(((DateTime)value).ToString(CultureInfo.CurrentCulture))
+                                            </td>
+                                            break;
+                                        case DataType.Date:
+                                            <td class="date">
+                                                @(((DateOnly)value).ToString(CultureInfo.CurrentCulture))
                                             </td>
                                             break;
                                         default:
@@ -96,7 +100,7 @@
                     }
                     @if (Action is not null)
                     {
-                        <td class="px-0">@Action(model)</td>
+                        <td class="px-0 text-center">@Action(model)</td>
                     }
                 </tr>
             }

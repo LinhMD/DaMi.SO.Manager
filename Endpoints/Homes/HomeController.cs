@@ -28,7 +28,11 @@ public class HomeController : ControllerBase
         }
         return Results.Redirect("/Login");
     }
-
+    [HttpGet("Home")]
+    public IResult GetHome()
+    {
+        return this.Page<HomePage, HomeModel>(new HomeModel { Hello = 1 });
+    }
     [HttpGet("forbidden")]
     public IResult Get403()
     {

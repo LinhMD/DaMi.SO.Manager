@@ -15,63 +15,70 @@
             <th>@L["Số lượng"]</th>
             <th style='min-width: 120px;'>@L["Đơn giá"]</th>
             <th style='min-width: 120px;'>@L["Thành tiền"]</th>
-            @if(Order?.CurrencyId == "USD"){
-            <th style='min-width: 120px;'>@L["Đơn giá USD"]</th>
-            <th style='min-width: 120px;'>@L["Thành tiền USD"]</th>
+            @if (Order?.CurrencyId == "USD")
+            {
+                <th style='min-width: 120px;'>@L["Đơn giá USD"]</th>
+                <th style='min-width: 120px;'>@L["Thành tiền USD"]</th>
             }
             <th>@L["% VAT"]</th>
-            @if(Order?.CurrencyId == "USD"){
-            <th style='min-width: 120px;'>@L["Thuế VAT NT"]</th>
+            @if (Order?.CurrencyId == "USD")
+            {
+                <th style='min-width: 120px;'>@L["Thuế VAT NT"]</th>
             }
             <th style='min-width: 120px;'>@L["Tiền thuế VAT"]</th>
             <th>@L["% Chiết khấu"]</th>
-            @if(Order?.CurrencyId == "USD"){
-            <th style='min-width: 120px;'>@L["Tiền CK NT"]</th>
+            @if (Order?.CurrencyId == "USD")
+            {
+                <th style='min-width: 120px;'>@L["Tiền CK NT"]</th>
             }
             <th style='min-width: 120px;'>@L["Số tiền CK"]</th>
-            @if(Form.HasByTaxCode){
-            <th>@L["Số MST"]</th>
-            }
-            <th  style='min-width: 120px;'>@L["MST sử dụng"]</th>
-            @if(Form.HasByPc){
-            <th>@L["Số máy"]</th>
-            }
-            @if(Form.HasByNumData){
-            <th>@L["Số hệ thống"]</th>
-            }
-            @if(Form.HasByQtyInvc){
-            <th style='min-width: 100px;'>@L["Số lượng HĐ"]</th>
-            }
-            @if(Form.HasByUser){
-            <th>@L["Số User"]</th>
-            }
-            @if(Form.HasByDiskSize){
-            <th>@L["Số Data (GB)"]</th>
-            }
-            @if(Form.HasByTime){
-            <th>@L["Ngày sử dụng"]</th>
-            <th>@L["Số tháng SD"]</th>
-            }
-            @if ( Action == true)
+            @if (Form.HasByTaxCode)
             {
-                <th style='min-width: 50px;'></th>
+                <th>@L["Số MST"]</th>
             }
+            <th style='min-width: 120px;'>@L["MST sử dụng"]</th>
+            @if (Form.HasByPc)
+            {
+                <th>@L["Số máy"]</th>
+            }
+            @if (Form.HasByNumData)
+            {
+                <th>@L["Số hệ thống"]</th>
+            }
+            @if (Form.HasByQtyInvc)
+            {
+                <th style='min-width: 100px;'>@L["Số lượng HĐ"]</th>
+            }
+            @if (Form.HasByUser)
+            {
+                <th>@L["Số User"]</th>
+            }
+            @if (Form.HasByDiskSize)
+            {
+                <th>@L["Số Data (GB)"]</th>
+            }
+            @if (Form.HasByTime)
+            {
+                <th>@L["Ngày sử dụng"]</th>
+                <th>@L["Số tháng SD"]</th>
+            }
+            <th style='min-width: 50px;'></th>
         </tr>
     </thead>
     <tbody id='table-body'>
         @foreach (var detail in Model.OrderDetails)
         {
-            <OrderDetailRow detail="@detail" Model="@Model" ViewMode="@ViewMode" OrderID="@OrderID" Action="@Action" Form="@Form"
-                FullItem="@Model.FullItemMap?[detail?.ItemId ?? ""]" Order="@Order">
+            <OrderDetailRow detail="@detail" Model="@Model" ViewMode="@ViewMode" OrderID="@OrderID"
+                Action="@(Action ?? false)" Form="@Form" FullItem="@Model.FullItemMap?[detail?.ItemId ?? ""]"
+                Order="@Order">
             </OrderDetailRow>
         }
     </tbody>
 </table>
 @code {
     [Parameter] public ViewMode ViewMode { get; set; } = ViewMode.Detail;
-    [Parameter] public Guid? OrderID { get; set; } 
+    [Parameter] public Guid? OrderID { get; set; }
     [Parameter] public bool? Action { get; set; } = true;
     [Parameter] public OrderForm Form { get; set; } = null!;
-    
     [Parameter] public OrderMasterDetailView? Order { get; set; } = null!;
 }

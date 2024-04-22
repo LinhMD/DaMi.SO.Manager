@@ -5,7 +5,9 @@
 @using DaMi.SO.Manager.Endpoints.OrderMasters
 @using DaMi.SO.Manager.Endpoints.OrderMasters.DTO
 <tr class="basic-form @(ViewMode == ViewMode.Detail? "" : "no-padding")"
-    id="row_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")">
+    hx-get="@(Action? $"/OrderDetail/Edit/{detail?.RowUniqueId}?FormID={Form.OrderFormId}" : false)" hx-push-url="false"
+    hx-target="#row_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")" hx-swap="outerHTML"
+    hx-trigger="dblclick" id="row_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")">
     @if (ViewMode == ViewMode.Detail)
     {
     }
@@ -71,6 +73,9 @@
         }
         else
         {
+            <input type="hidden" value="@(detail?.ItemId ?? "")" name="@nameof(detail.ItemId)"
+                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                id="@nameof(detail.ItemId)_@(detail?.RowUniqueId)">
             <select style="min-height: auto;"
                 hx-get="/OrderDetail/@(ViewMode == ViewMode.Edit? $"{ViewMode}/{detail?.RowUniqueId}": ViewMode)?FormID=@(Form.OrderFormId)&OrderId=@(Order?.RowUniqueId ?? detail?.OrderId)"
                 hx-target='#row_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")' hx-swap='outerHTML'
@@ -449,7 +454,7 @@
             }
         </td>
     }
-    @if (ViewMode == ViewMode.Detail && Action == true)
+    @if (ViewMode == ViewMode.Detail)
     {
         <td class="px-0  justify-content-center">
             <a href="/OrderDetail/Edit/@detail?.RowUniqueId?FormID=@(Form.OrderFormId)" hx-push-url="false"
@@ -464,7 +469,7 @@
             </button>
         </td>
     }
-    @if (ViewMode == ViewMode.Edit && Action == true)
+    @if (ViewMode == ViewMode.Edit)
     {
         <td class="px-0  justify-content-center">
             <input type="submit" class="btn btn-success" value="Lưu" hx-push-url="false"
@@ -474,7 +479,7 @@
                 hx-target='#row_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")'>Hủy</button>
         </td>
     }
-    @if (ViewMode == ViewMode.Create && Action == true)
+    @if (ViewMode == ViewMode.Create)
     {
         <td class="px-0  justify-content-center">
             <input type="submit" class="btn btn-success" value="Lưu" hx-on:click="$('#add-new-btn').removeAttr('disabled');"
@@ -487,7 +492,7 @@
 
 
 @code {
-    [Parameter] public ViewMode ViewMode { get; init; } = ViewMode.Detail;
+    [Parameter] public ViewMode ViewMode { get; set; } = ViewMode.Detail;
     [Parameter] public OrderDetailModifyModel Model { get; set; } = null!;
     [Parameter] public OrderDetailSimpleView? detail { get; set; } = null!;
     [Parameter] public Dictionary<string, string>? Errors { get; set; }
@@ -496,7 +501,7 @@
 
     [Parameter] public Guid? OrderID { get; set; } = null!;
     [Parameter] public OrderForm Form { get; set; } = null!;
-    [Parameter] public bool? Action { get; set; } = true;
+    [Parameter] public bool Action { get; set; }
     private IEnumerable<string>? Taxcodes;
     public IEnumerable<string> GetTaxCode()
     {

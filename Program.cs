@@ -6,6 +6,7 @@ using CrudApiTemplate.Repository;
 using CrudApiTemplate.Services;
 using DaMi.SO.Manager.Data;
 using DaMi.SO.Manager.Data.Models;
+using DaMi.SO.Manager.Hubs;
 using DaMi.SO.Manager.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Localization;
@@ -20,6 +21,8 @@ builder.Services.AddDbContext<DaMiSoManagerContext>(o => o.UseSqlServer(builder.
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork<DaMiSoManagerContext>>();
 builder.Services.AddScoped(typeof(IServiceCrud<>), typeof(ServiceCrud<>));
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddSignalR();
+
 
 builder.Services.AddControllers(option =>
 {
@@ -92,6 +95,7 @@ app.UseRouting();
 app.UseSession();
 app.UseAntiforgery();
 app.MapControllers();
+app.MapHub<NotificationHub>("/notification");
 app.UseRequestLocalization();
 app.UseCookiePolicy(new CookiePolicyOptions
 {

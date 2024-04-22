@@ -19,7 +19,7 @@ public class OrderMasterSimpleView : IView<OrderMaster>
     [DisplayName("Số đơn hàng")]
     public string? OrderNo { get; set; }
 
-    [DataType(DataType.Date)]
+    [DataType(DataType.DateTime)]
     [DisplayName("Ngày ĐH")]
     public DateTime OrderDate { get; set; }
 
@@ -35,7 +35,7 @@ public class OrderMasterSimpleView : IView<OrderMaster>
     [DisplayName("NV triển khai")]
     public string ExecutorName { get; set; } = null!;
 
-    [DataType(DataType.Date)]
+    [DataType(DataType.DateTime)]
     [DisplayName("Ngày triển khai")]
     public DateTime? BeginExecDate { get; set; }
 
