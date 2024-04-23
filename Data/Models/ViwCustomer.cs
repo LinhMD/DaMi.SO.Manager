@@ -25,6 +25,8 @@ public partial class ViwCustomer
     [Unicode(false)]
     public string? TaxCode { get; set; }
 
+    public bool JustMeTaxCode { get; set; }
+
     [StringLength(40)]
     [Unicode(false)]
     public string? Phone { get; set; }

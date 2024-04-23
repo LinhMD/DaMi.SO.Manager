@@ -25,12 +25,11 @@
 @code {
     public static Func<OrderMasterSimpleView, string> Color = (o) => o.OrderStatusName switch
     {
-        "Hủy" => "bg-danger",
-        "Mới tạo" => "bg-secondary",
-        "Tạm ngưng" => "bg-warning",
-        "Đã duyệt" => "bg-primary",
-        "Đã hoàn thành" => "bg-info",
-        _ => "bg-light"
+        "Đơn bị hủy" => "text-danger",
+        "Tạm ngưng" => "text-warning",
+        "Đã duyệt" => "text-primary",
+        "Đã hoàn thành" => "text-success",
+        _ => "text-black"
     };
 
     [Parameter] public string? TableId { get; set; }

@@ -24,7 +24,10 @@ public class OrderDetailSimpleView : IView<OrderDetail>, IDto, IUpdateRequest<Or
     public int? LineNumber { get; set; }
 
     [DisplayName("Mã Vật tư sản phẩm hàng hóa")]
-    public string? ItemId { get; set; } = null!;
+    public string? ItemId { get; set; }
+
+    [DisplayName("Tên sản phẩm")]
+    public string? ItemName { get; set; }
 
     [DisplayName("Số lượng mã số thuế")]
     public int? NumOfTaxCode { get; set; }

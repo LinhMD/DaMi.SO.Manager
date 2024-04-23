@@ -28,6 +28,7 @@ namespace DaMi.SO.Manager.Endpoints.OrderMasters.DTO
         [DisplayName("Mã khách hàng")]
         public string? CustomerId { get; set; } = null!;
         [DisplayName("MST/CCCD")]
+
         [AdaptIgnore]
         public string? TaxCode { get; set; } = null!;
         [DisplayName("Điện thoại")]

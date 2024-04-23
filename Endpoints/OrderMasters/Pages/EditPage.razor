@@ -54,7 +54,7 @@
             </div>
             <div class="card-body">
                 <div class="overflow-auto">
-                    <OrderDetailTable Model="@Model.OrderDetailModify" ViewMode='@Components.ViewMode.Detail'
+                    <OrderDetailTable Model="@Model.OrderDetailModify" ViewMode='@Components.ViewMode.Edit'
                         OrderID="@Model.OrderMaster.RowUniqueId" Order="@Model.OrderMaster" Action="true"
                         Form="@Model.OrderForms.FirstOrDefault(f => f.OrderFormId == Model.OrderMaster.OrderFormId)" />
                 </div>

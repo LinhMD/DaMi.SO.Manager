@@ -215,6 +215,7 @@ public partial class DaMiSoManagerContext : DbContext
                 .HasComment("Tỷ giá");
             entity.Property(e => e.ICloudDataSize).HasComment("Dung lượng lưu trữ iCloud (GB)");
             entity.Property(e => e.ItemId).HasComment("Mã Vật tư sản phẩm hàng hóa");
+            entity.Property(e => e.ItemName).HasComment("Tên sản phẩm");
             entity.Property(e => e.LastModifiedDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasComment("Ngày chỉnh sửa cuối cùng");
@@ -245,6 +246,7 @@ public partial class DaMiSoManagerContext : DbContext
 
             entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails).HasConstraintName("FK_tblOrderDetail_tblOrderMaster");
         });
+
 
         modelBuilder.Entity<OrderForm>(entity =>
         {

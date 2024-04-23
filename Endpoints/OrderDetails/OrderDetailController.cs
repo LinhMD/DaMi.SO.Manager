@@ -62,8 +62,8 @@ public class OrderDetailController(IUnitOfWork work) : ControllerBase
         var item = await work.Get<ViwFullItem>().Find(f => f.ItemId == ItemIdSelect).FirstOrDefaultAsync();
         if (item is not null)
         {
-
             orderDetailSimpleView.ItemId = item.ItemId;
+            orderDetailSimpleView.ItemName = item.ItemName;
             orderDetailSimpleView.OriginalPrice = item.OriginalPrice;
             orderDetailSimpleView.ConvertPrice = item.ConvertPrice;
             orderDetailSimpleView.TaxRate = item.TaxRate;
@@ -110,6 +110,7 @@ public class OrderDetailController(IUnitOfWork work) : ControllerBase
         if (item is not null && orderDetail is not null)
         {
             orderDetail.ItemId = item.ItemId;
+            orderDetail.ItemName = item.ItemName;
             orderDetail.OriginalPrice = item.OriginalPrice;
             orderDetail.ConvertPrice = item.ConvertPrice;
             orderDetail.TaxRate = item.TaxRate;
@@ -194,7 +195,9 @@ public class OrderDetailController(IUnitOfWork work) : ControllerBase
             FullItem = fullItems.ContainsKey(orderDetail?.ItemId ?? "") ? fullItems[orderDetail?.ItemId ?? ""] : new ViwFullItem(),
             Form = orderMaster?.OrderForm,
             Order = orderMaster.Adapt<OrderMasterDetailView>(),
-            Action = viewMode == ViewMode.Detail
+            Action = true,
+            DBClickAction = viewMode == ViewMode.Detail,
+            Customer = await work.Get<ViwCustomer>().Find(t => t.CustomerId == orderMaster!.CustomerId).FirstOrDefaultAsync()
         });
     }
 

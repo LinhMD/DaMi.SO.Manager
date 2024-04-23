@@ -68,8 +68,8 @@
     <tbody id='table-body'>
         @foreach (var detail in Model.OrderDetails)
         {
-            <OrderDetailRow detail="@detail" Model="@Model" ViewMode="@ViewMode" OrderID="@OrderID"
-                Action="@(Action ?? false)" Form="@Form" FullItem="@Model.FullItemMap?[detail?.ItemId ?? ""]"
+            <OrderDetailRow detail="@detail" Model="@Model" ViewMode="ViewMode.Detail" OrderID="@OrderID" Action="@(Action ?? false)" DBClickAction="@(ViewMode== ViewMode.Edit)"
+                Form="@Form" FullItem="@Model.FullItemMap?[detail?.ItemId ?? ""]" 
                 Order="@Order">
             </OrderDetailRow>
         }

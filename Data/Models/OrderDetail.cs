@@ -28,6 +28,10 @@ public partial class OrderDetail
     [Unicode(false)]
     public string ItemId { get; set; } = null!;
 
+    [DisplayName("Tên sản phẩm")]
+    [StringLength(400)]
+    public string? ItemName { get; set; }
+
     [DisplayName("Số lượng mã số thuế")]
     public int NumOfTaxCode { get; set; }
 
