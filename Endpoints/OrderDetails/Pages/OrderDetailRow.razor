@@ -47,7 +47,7 @@
                 @foreach (var item in Model.FullItemMap.Keys)
                 {
                     <option value="@item" selected='@(item == detail?.ItemId)'>
-                        @Model.FullItemMap[item].ItemName
+                        @item
                     </option>
                 }
             </select>
@@ -68,12 +68,46 @@
         @if (ViewMode == ViewMode.Detail)
         {
             <div name='ItemName' id="ItemName_@(detail?.RowUniqueId)">
+                @(FullItem?.ItemName)
+            </div>
+        }
+        else
+        {
+            <input type="hidden" value="@(detail?.ItemId ?? "")" name="@nameof(detail.ItemId)"
+                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                id="@nameof(detail.ItemId)_@(detail?.RowUniqueId)">
+            <select style="min-height: auto;"
+                hx-get="/OrderDetail/@(ViewMode == ViewMode.Edit? $"{ViewMode}/{detail?.RowUniqueId}": ViewMode)?FormID=@(Form.OrderFormId)&OrderId=@(Order?.RowUniqueId ?? detail?.OrderId)"
+                hx-target='#row_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")' hx-swap='outerHTML'
+                name="@nameof(detail.ItemId)Select" class="form-control selectpicker "
+                id="@nameof(FullItem.ItemName)_@(detail?.RowUniqueId)_select" value="@(detail?.ItemId ?? "")">
+                <option value="">
+                </option>
+                @foreach (var item in Model.FullItemMap.Keys)
+                {
+                    <option value="@item" selected='@(item == detail?.ItemId)'>
+                        @Model.FullItemMap[item].ItemName
+                    </option>
+                }
+            </select>
+            <script>
+                var select = new SlimSelect({
+                    select: '#@nameof(FullItem.ItemName)_@(detail?.RowUniqueId)_select',
+                });
+            </script>
+        }
+    </td>
+    <td>
+        @if (ViewMode == ViewMode.Detail)
+        {
+            <div name='ItemName' id="ItemName_@(detail?.RowUniqueId)">
                 @(detail?.ItemName)
             </div>
         }
         else
         {
-            <input type="text" value="@detail?.ItemName" class="form-control" readonly='@(FullItem.AllowEditItemName)'
+            <input type="text" value="@detail?.ItemName" class="form-control"
+                readonly='@(FullItem?.AllowEditItemName ?? false)'
                 form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")" name="@nameof(detail.ItemName)"
                 id="@nameof(detail.ItemName)_@(detail?.RowUniqueId)" />
             <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.ItemName)" />

@@ -59,6 +59,7 @@ public partial class DaMiSoManagerContext : DbContext
 
     public virtual DbSet<ViwUnitOfMeasr> ViwUnitOfMeasrs { get; set; }
 
+    public virtual DbSet<Notification> Notifications { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Procedure>().HasNoKey();

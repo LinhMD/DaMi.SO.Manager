@@ -23,13 +23,16 @@ using CrudApiTemplate.CustomBinding;
 using System.Security.Claims;
 using System.Web;
 using System.Text;
+using Microsoft.AspNetCore.SignalR;
+using DaMi.SO.Manager.Hubs;
+using DaMi.SO.Manager.Endpoints.Notifications;
 
 namespace DaMi.SO.Manager.Endpoints.OrderMasters;
 
 [ApiController]
 [Authorize]
 [Route("[controller]")]
-public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> service, DaMiSoManagerContext context) : ControllerBase
+public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> service, DaMiSoManagerContext context, NotificationService notificationService) : ControllerBase
 {
     [Authorize(policy: "ViewOrder")]
     [HttpGet]
@@ -43,11 +46,13 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
 
     [Authorize(policy: "ViewOrder")]
     [HttpGet("Details/{guid}")]
-    public async Task<IResult> GetDetailsAsync(Guid guid)
+    public async Task<IResult> GetDetailsAsync(Guid guid, [FromClaim(ClaimTypes.NameIdentifier)] string employeeID)
     {
         var orderMaster = await work.Get<OrderMaster>().Find<OrderMasterDetailView>(f => f.RowUniqueId == guid).FirstOrDefaultAsync();
         if (orderMaster is null)
+        {
             return new RazorComponentResult(typeof(_404));
+        }
         return await ReturnPage<DetailPage>(work, orderMaster, ViewMode.Detail);
     }
 
@@ -61,7 +66,7 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
 
     [Authorize(policy: nameof(Permision.AddNewOrder))]
     [HttpGet("New")]
-    public async Task<IResult> GetNew([FromClaim(ClaimTypes.Sid)] string? employeeID)
+    public async Task<IResult> GetNew([FromClaim(ClaimTypes.NameIdentifier)] string? employeeID)
     {
         var orderMaster = new OrderMasterDetailView
         {
@@ -136,7 +141,6 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
     [HttpGet("Edit/{guid}")]
     public async Task<IResult> GetEditAsync(Guid guid)
     {
-
         var orderMaster = await work.Get<OrderMaster>().Find<OrderMasterDetailView>(f => f.RowUniqueId == guid).FirstOrDefaultAsync();
         if (orderMaster is null)
         {
@@ -236,7 +240,7 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
 
     [Authorize(policy: nameof(Permision.AcceptOrder))]
     [HttpGet("Accept/{guid}")]
-    public async Task<IResult> Accept(Guid guid, [FromClaim(ClaimTypes.Sid)] string userId)
+    public async Task<IResult> Accept(Guid guid, [FromClaim(ClaimTypes.NameIdentifier)] string userId)
     {
         var orderMaster = await work.Get<OrderMaster>().Find(f => f.RowUniqueId == guid).FirstOrDefaultAsync();
         if (orderMaster is null)
@@ -254,6 +258,7 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
         if (acceptStatus is not null)
             orderMaster.OrderStatusId = acceptStatus.OrderStatusId;
         await work.CompleteAsync();
+        await notificationService.Notify(orderMaster, $"Đơn Hàng {orderMaster.OrderNo} đã duyệt", "info");
         return Results.Redirect($"/OrderMaster/Details/{guid}");
     }
 
@@ -278,6 +283,8 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
         if (cancelStatus is not null)
             orderMaster.OrderStatusId = cancelStatus.OrderStatusId;
         await work.CompleteAsync();
+
+        await notificationService.Notify(orderMaster, $"Đơn Hàng {orderMaster.OrderNo} vừa hủy", "danger");
         Response.Headers.Append("hx-redirect", $"/OrderMaster/Details/{guid}");
         return Results.Ok();
     }
@@ -299,6 +306,8 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
         if (suspendStatus is not null)
             orderMaster.OrderStatusId = suspendStatus.OrderStatusId;
         await work.CompleteAsync();
+
+        await notificationService.Notify(orderMaster, $"Đơn Hàng {orderMaster.OrderNo} vừa Treo/Tạm ngưng", "danger");
         Response.Headers.Append("hx-redirect", $"/OrderMaster/Details/{guid}");
         return Results.Ok();
     }
@@ -307,10 +316,11 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
     [HttpGet("Status/{guid}")]
     public async Task<IResult> Status(Guid guid, [FromQuery] string StatusID)
     {
-        var orderMaster = await work.Get<OrderMaster>().Find(f => f.RowUniqueId == guid).FirstOrDefaultAsync();
+
+        var orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderStatus).Where(f => f.RowUniqueId == guid).FirstOrDefaultAsync();
         if (orderMaster is null)
             return new RazorComponentResult(typeof(_404));
-
+        var oldStatus = orderMaster.OrderStatus.OrderStatusName;
         var status = await work.Get<OrderStatus>().Find(f => f.CanChangeStatus || f.IsAcceptStatus).ToListAsync();
 
         if (!status.Select(f => f.OrderStatusId).Contains(orderMaster.OrderStatusId))
@@ -329,6 +339,7 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
             orderMaster.OrderStatusId = orderStatus.OrderStatusId;
         await work.CompleteAsync();
 
+        await notificationService.Notify(orderMaster, $"Đơn Hàng {orderMaster.OrderNo} vừa đổi trạng thái từ {oldStatus} sang {orderStatus?.OrderStatusName}", "warning");
         Response.Headers.Append("hx-redirect", $"/OrderMaster/Details/{guid}");
         return Results.Ok();
     }

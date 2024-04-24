@@ -6,6 +6,7 @@ using CrudApiTemplate.Repository;
 using CrudApiTemplate.Services;
 using DaMi.SO.Manager.Data;
 using DaMi.SO.Manager.Data.Models;
+using DaMi.SO.Manager.Endpoints.Notifications;
 using DaMi.SO.Manager.Hubs;
 using DaMi.SO.Manager.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -19,6 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<DaMiSoManagerContext>(o => o.UseSqlServer(builder.Configuration["ConnectionStrings:main"]));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork<DaMiSoManagerContext>>();
+builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped(typeof(IServiceCrud<>), typeof(ServiceCrud<>));
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddSignalR();

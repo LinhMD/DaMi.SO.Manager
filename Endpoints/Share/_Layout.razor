@@ -1,5 +1,9 @@
 @using System.Security.Claims
-@inject IHttpContextAccessor httpContextAccessor
+@using CrudApiTemplate.Repository
+@using DaMi.SO.Manager.Data.Models
+@using Microsoft.EntityFrameworkCore
+@inject IUnitOfWork work
+@inject IHttpContextAccessor context
 @inherits LayoutComponentBase
 <!DOCTYPE html>
 <html lang="en">
@@ -70,32 +74,59 @@
                             </div>
                         </div>
                         <ul class="navbar-nav header-right">
-                            @* <li class="nav-item dropdown notification_dropdown">
-                            <a class="nav-link" href="#" role="button" data-toggle="dropdown">
-                            <i class="mdi mdi-bell"></i>
-                            <div class="pulse-css"></div>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right">
-                            <ul class="list-unstyled">
-                            <li class="media dropdown-item">
-                            <span class="success"><i class="ti-image"></i></span>
-                            <div class="media-body">
-                            <a href="#">
-                            <p><strong> James.</strong> has added a<strong>customer</strong>
-                            Successfully
-                            </p>
-                            </a>
-                            </div>
-                            <span class="notify-time">3:20 am</span>
+                            <li class="nav-item dropdown notification_dropdown">
+                                <a class="nav-link" href="#" id='notification-a' role="button" data-toggle="dropdown">
+                                    <i class="mdi mdi-bell"></i>
+                                    @if (UnReadNotifications.Any())
+                                    {
+                                        <div class="pulse-css"></div>
+                                        <script>
+                                            var titleChange = setInterval(function () {
+                                                var title = document.title;
+                                                document.title = (title == "DaMi" ? "Có thông báo" : "DaMi");
+                                            }, 3000);
+                                            $('#notification-a').click(() => {
+                                                clearInterval(titleChange);
+                                                document.title = "DaMi";
+                                                $('.pulse-css').remove()
+                                            })
+                                        </script>
+                                    }
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <ul class="list-unstyled" id='notifications'>
+                                        @foreach (var notification in UnReadNotifications)
+                                        {
+                                            <li class="media dropdown-item active">
+                                                <div class="media-body">
+                                                    <a href="@($"/notification/{notification.RowUniqueId}")">
+                                                        <p class="text-@notification.MessageType">
+                                                            @notification.Message
+                                                        </p>
+                                                    </a>
+                                                </div>
+                                                <span class="notify-time">@notification.CreatedDate.ToString()</span>
+                                            </li>
+                                        }
+                                        @foreach (var notification in ReadNotifications)
+                                        {
+                                            <li class="media dropdown-item">
+                                                <div class="media-body">
+                                                    <a href="@notification.RedirectLink">
+                                                        <p class="text-@notification.MessageType">
+                                                            @notification.Message
+                                                        </p>
+                                                    </a>
+                                                </div>
+                                                <span class="notify-time">@notification.CreatedDate.ToString()</span>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
                             </li>
-                            </ul>
-                            <a class="all-notification" href="#">See all notifications <i
-                            class="ti-arrow-right"></i></a>
-                            </div>
-                            </li> *@
                             <div class="d-flex justify-content-center">
                                 <div class="align-self-center text-primary">
-                                    @(httpContextAccessor.HttpContext?.User?.Claims.FirstOrDefault(c => c.Type ==
+                                    @(context.HttpContext?.User?.Claims.FirstOrDefault(c => c.Type ==
                                         ClaimTypes.Name)?.Value ?? "")
                                 </div>
                             </div>
@@ -187,3 +218,20 @@
 </body>
 
 </html>
+
+@code {
+    private IList<Notification> UnReadNotifications { get; set; } = [];
+    private IList<Notification> ReadNotifications { get; set; } = [];
+    override protected async Task OnInitializedAsync()
+    {
+        var employeeId = context.HttpContext?.User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ??
+        "";
+        UnReadNotifications = await work.Get<Notification>()
+        .Find(f => f.TargetEmployeeId == employeeId && f.HasSeen == false).ToListAsync();
+
+        ReadNotifications = await work.Get<Notification>()
+        .Find(f => f.TargetEmployeeId == employeeId && f.HasSeen == true)
+        .OrderByDescending(f => f.CreatedDate).Take(5).ToListAsync();
+
+    }
+}
