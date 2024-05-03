@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DaMi.SO.Manager", "DaMi.SO.Manager.csproj", "{191DC039-2357-45D5-99F2-60ACC98B6F5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DaMi.SO.Manager", "DaMi.SO.Manager.csproj", "{191DC039-2357-45D5-99F2-60ACC98B6F5B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -17,7 +17,9 @@ connection.on("ReceiveMessage", function (user, message) {
 connection.on("notify", function (notification) {
     console.log(notification);
     var wrapper = document.createElement('div');
-    wrapper.innerHTML = `<li class="media dropdown-item active">
+    wrapper.innerHTML =
+    /*html*/`
+    <li class="media dropdown-item active">
         <div class="media-body">
             <a href="/notification/${notification.rowUniqueId}">
                 <p class="text-messageType">

@@ -31,6 +31,12 @@ builder.Services.AddControllers(option =>
     option.Filters.Add<CrudExceptionFilterAttribute>();
 }).AddSessionStateTempDataProvider();
 builder.Services.AddBlazorBootstrap();
+
+builder.Services.AddRazorComponents();
+builder.Services.AddRazorPages();
+builder.Services.AddServerSideBlazor();
+builder.Services.AddDevExpressBlazor();
+builder.Services.AddDevExpressServerSideBlazorReportViewer();
 builder.Services.ConfigMapping();
 builder.Services.AddLocalization(o => o.ResourcesPath = "Resources");
 builder.Services.AddAuthentication(o =>
@@ -70,7 +76,6 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     options.SupportedCultures = supportedCultures;
     options.SupportedUICultures = supportedCultures;
 });
-builder.Services.AddRazorComponents();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();

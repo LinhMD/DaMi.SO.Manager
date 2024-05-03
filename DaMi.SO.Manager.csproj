@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
@@ -7,6 +7,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Blazor.Bootstrap" Version="2.1.0" />
+    <PackageReference Include="DevExpress.Blazor.Reporting.Viewer" Version="22.2.3" />
+    <PackageReference Include="DevExpress.Reporting.Core" Version="22.2.3" />
     <PackageReference Include="FluentValidation" Version="11.9.0" />
     <PackageReference Include="Htmx" Version="1.7.0" />
     <PackageReference Include="Htmx.TagHelpers" Version="1.7.0" />
@@ -42,5 +44,9 @@
     <Reference Include="DaMi.Shared">
       <HintPath>DaMi.Shared.v8.1.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Endpoints\Reports\" />
+    <Folder Include="Reports\" />
   </ItemGroup>
 </Project>
