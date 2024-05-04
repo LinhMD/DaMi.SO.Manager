@@ -107,7 +107,7 @@
         else
         {
             <input type="text" value="@detail?.ItemName" class="form-control"
-                readonly='@(FullItem?.AllowEditItemName ?? false)'
+                readonly='@(!FullItem?.AllowEditItemName ?? true)'
                 form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")" name="@nameof(detail.ItemName)"
                 id="@nameof(detail.ItemName)_@(detail?.RowUniqueId)" />
             <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.ItemName)" />

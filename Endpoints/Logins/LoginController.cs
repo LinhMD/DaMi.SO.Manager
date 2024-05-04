@@ -48,7 +48,8 @@ public class LoginController(IUnitOfWork work) : ControllerBase
         var user = await work.Get<Employee>().IncludeAll()
                         .Include(e => e.Department)
                         .ThenInclude(d => d.Permision)
-                        .Where(user => user.EmployeeId == request.EmployeeID).FirstOrDefaultAsync();
+                        .Where(user => user.EmployeeId == request.EmployeeID)
+                        .FirstOrDefaultAsync();
 
         if (user == null)
         {
@@ -110,7 +111,7 @@ public class LoginController(IUnitOfWork work) : ControllerBase
     [HttpGet("Reset")]
     public async Task<IResult> GetResetPassword()
     {
-        string? EmployeeUID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "";
+        string? EmployeeUID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value ?? "";
         Employee? employee = await work.Get<Employee>().GetAsync(new Guid(EmployeeUID));
         if (employee is null)
         {
@@ -126,7 +127,8 @@ public class LoginController(IUnitOfWork work) : ControllerBase
         var user = await work.Get<Employee>().IncludeAll()
                         .Include(e => e.Department)
                         .ThenInclude(d => d.Permision)
-                        .Where(user => user.EmployeeId == UserName).FirstOrDefaultAsync();
+                        .Where(user => user.EmployeeId == UserName)
+                        .FirstOrDefaultAsync();
 
         if (user is null)
         {

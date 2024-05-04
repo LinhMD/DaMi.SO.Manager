@@ -53,7 +53,7 @@ public partial class OrderMaster
     public string OrderFormId { get; set; } = null!;
 
     [DisplayName("Diễn giải")]
-    [StringLength(400)]
+    [StringLength(800)]
     public string? Description { get; set; }
 
     [DisplayName("Mã khách hàng")]

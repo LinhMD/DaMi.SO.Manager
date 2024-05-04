@@ -32,23 +32,41 @@ namespace DaMi.SO.Manager.Endpoints.OrderMasters;
 [ApiController]
 [Authorize]
 [Route("[controller]")]
-public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> service, DaMiSoManagerContext context, NotificationService notificationService) : ControllerBase
+public class OrderMasterController
+(
+    IUnitOfWork work,
+    IServiceCrud<OrderMaster> service,
+    DaMiSoManagerContext context,
+    NotificationService notificationService
+) : ControllerBase
 {
     [Authorize(policy: "ViewOrder")]
     [HttpGet]
     public async Task<IResult> GetAsync()
     {
-        var orderMasters = await work.Get<OrderMaster>().GetAll<OrderMasterSimpleView>().OrderByDescending(f => f.OrderNo).ToListAsync();
-        Dictionary<string, ViwCustomer> customer = await work.Get<ViwCustomer>().GetAll().ToDictionaryAsync(f => f.CustomerId);
+        var orderMasters = await work.Get<OrderMaster>()
+                                .GetAll<OrderMasterSimpleView>()
+                                .OrderByDescending(f => f.OrderNo)
+                                .ToListAsync();
+        var customer = await work.Get<ViwCustomer>()
+                                .GetAll()
+                                .ToDictionaryAsync(f => f.CustomerId);
+
         orderMasters.ForEach(m => m.CustomerId = customer[m.CustomerId].TradeName);
-        return this.Page<IndexPage, OrderMasterTableModel>(new() { OrderMasters = orderMasters });
+
+        return this.Page<IndexPage, OrderMasterTableModel>
+        (
+            new() { OrderMasters = orderMasters }
+        );
     }
 
     [Authorize(policy: "ViewOrder")]
     [HttpGet("Details/{guid}")]
-    public async Task<IResult> GetDetailsAsync(Guid guid, [FromClaim(ClaimTypes.NameIdentifier)] string employeeID)
+    public async Task<IResult> GetDetailsAsync(Guid guid)
     {
-        var orderMaster = await work.Get<OrderMaster>().Find<OrderMasterDetailView>(f => f.RowUniqueId == guid).FirstOrDefaultAsync();
+        var orderMaster = await work.Get<OrderMaster>()
+                                .Find<OrderMasterDetailView>(f => f.RowUniqueId == guid)
+                                .FirstOrDefaultAsync();
         if (orderMaster is null)
         {
             return new RazorComponentResult(typeof(_404));
@@ -60,7 +78,9 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
     [HttpGet("Edit/Customer")]
     public async Task<IResult> GetCustomerInfo([FromQuery] string CustomerIdSelect)
     {
-        var customer = await work.Get<ViwCustomer>().Find(c => c.CustomerId == CustomerIdSelect).FirstOrDefaultAsync() ?? new ViwCustomer();
+        var customer = await work.Get<ViwCustomer>()
+                            .Find(c => c.CustomerId == CustomerIdSelect)
+                            .FirstOrDefaultAsync() ?? new ViwCustomer();
         return new RazorComponentResult(typeof(OOBCustomerInfo), new { customer });
     }
 
@@ -83,7 +103,7 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
     [HttpPost("New")]
     public async Task<IResult> PostNew([FromForm] OrderMasterDetailView orderMasterCreate)
     {
-        OrderMaster orderMaster = orderMasterCreate.Adapt<OrderMaster>();
+        var orderMaster = orderMasterCreate.Adapt<OrderMaster>();
         try
         {
             var SubCompanyID = new SqlParameter
@@ -112,7 +132,9 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
                 SqlDbType = System.Data.SqlDbType.BigInt,
                 Direction = System.Data.ParameterDirection.Output
             };
-            context.Database.ExecuteSqlRaw("EXECUTE [dbo].[spGetNewOrderNo] @SubCompanyID, @OrderDate, @OrderNo OUTPUT, @SeqInMonth OUTPUT",
+            context.Database.ExecuteSqlRaw
+            (
+                "EXECUTE [dbo].[spGetNewOrderNo] @SubCompanyID, @OrderDate, @OrderNo OUTPUT, @SeqInMonth OUTPUT",
                 SubCompanyID,
                 OrderDate,
                 OrderNo,
@@ -141,7 +163,9 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
     [HttpGet("Edit/{guid}")]
     public async Task<IResult> GetEditAsync(Guid guid)
     {
-        var orderMaster = await work.Get<OrderMaster>().Find<OrderMasterDetailView>(f => f.RowUniqueId == guid).FirstOrDefaultAsync();
+        var orderMaster = await work.Get<OrderMaster>()
+                                .Find<OrderMasterDetailView>(f => f.RowUniqueId == guid)
+                                .FirstOrDefaultAsync();
         if (orderMaster is null)
         {
             return new RazorComponentResult(typeof(_404));
@@ -170,18 +194,37 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
         }
         try
         {
-            List<OrderDetail> orderDetails = await work.Get<OrderDetail>().Find(f => f.OrderId == guid).ToListAsync();
+            var orderDetails = await work.Get<OrderDetail>()
+                                        .Find(f => f.OrderId == guid)
+                                        .ToListAsync();
             await service.UpdateAsync(editOrderMaster, guid);
             return await Task.FromResult(Results.Redirect($"/OrderMaster/Details/{guid}"));
         }
         catch (ModelValueInvalidException e)
         {
-            return await ReturnPage<EditPage>(work, work.Get<OrderMaster>().Find<OrderMasterDetailView>(f => f.RowUniqueId == guid).FirstOrDefault()!, ViewMode.Edit, e.MemberErrors);
+            return await ReturnPage<EditPage>
+            (
+                work,
+                work.Get<OrderMaster>()
+                    .Find<OrderMasterDetailView>(f => f.RowUniqueId == guid)
+                    .FirstOrDefault()!,
+                ViewMode.Edit,
+                e.MemberErrors
+            );
         }
         catch (Exception e)
         {
             e.Dump();
-            return await ReturnPage<EditPage>(work, work.Get<OrderMaster>().Find<OrderMasterDetailView>(f => f.RowUniqueId == guid).FirstOrDefault()!, ViewMode.Edit, null, $"Edit Error: {e.Message}");
+            return await ReturnPage<EditPage>
+            (
+                work,
+                work.Get<OrderMaster>()
+                    .Find<OrderMasterDetailView>(f => f.RowUniqueId == guid)
+                    .FirstOrDefault()!,
+                ViewMode.Edit,
+                null,
+                $"Edit Error: {e.Message}"
+            );
         }
     }
     [Authorize(policy: nameof(Permision.UpdateOrder))]
@@ -202,7 +245,14 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
         return Results.Redirect("/OrderMaster");
     }
 
-    private async Task<IResult> ReturnPage<TPage>(IUnitOfWork work, OrderMasterDetailView orderMaster, ViewMode viewMode = ViewMode.Detail, Dictionary<string, string>? validateError = null, string? ErrorMessage = null) where TPage : XComponent<OrderMasterEditModel>
+    private async Task<IResult> ReturnPage<TPage>
+    (
+        IUnitOfWork work,
+        OrderMasterDetailView orderMaster,
+        ViewMode viewMode = ViewMode.Detail,
+        Dictionary<string, string>? validateError = null,
+        string? ErrorMessage = null
+    ) where TPage : XComponent<OrderMasterEditModel>
     {
         var orderTypes = await work.Get<OrderType>().GetAll().ToListAsync();
         var orderForms = await work.Get<OrderForm>().GetAll().ToListAsync();
@@ -229,8 +279,12 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
             {
                 OrderDetails = orderMaster.OrderDetails,
                 ItemTypes = await work.Get<ViwItemType>().GetAll().ToListAsync(),
-                TaxCodes = await work.Get<TaxCode>().Find(t => orderMaster.CustomerId == null || t.CustomerId == orderMaster.CustomerId).ToListAsync(),
-                FullItemMap = await work.Get<ViwFullItem>().Find(f => orderMaster.OrderFormId == null || f.OrderFormId == orderMaster.OrderFormId).ToDictionaryAsync(i => i.ItemId),
+                TaxCodes = await work.Get<TaxCode>()
+                                .Find(t => orderMaster.CustomerId == null || t.CustomerId == orderMaster.CustomerId)
+                                .ToListAsync(),
+                FullItemMap = await work.Get<ViwFullItem>()
+                                    .Find(f => orderMaster.OrderFormId == null || f.OrderFormId == orderMaster.OrderFormId)
+                                    .ToDictionaryAsync(i => i.ItemId),
             },
             ErrorMessage = ErrorMessage,
             ViewMode = viewMode,
@@ -254,7 +308,9 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
         orderMaster.Accepted = true;
         orderMaster.AcceptedDate = DateTime.Now;
 
-        var acceptStatus = await work.Get<OrderStatus>().Find(f => f.IsAcceptStatus).FirstOrDefaultAsync();
+        var acceptStatus = await work.Get<OrderStatus>()
+                                .Find(f => f.IsAcceptStatus)
+                                .FirstOrDefaultAsync();
         if (acceptStatus is not null)
             orderMaster.OrderStatusId = acceptStatus.OrderStatusId;
         await work.CompleteAsync();
@@ -267,7 +323,9 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
     public async Task<IResult> Cancel(Guid guid, [FromForm] string? hxPrompt)
     {
 
-        var orderMaster = await work.Get<OrderMaster>().Find(f => f.RowUniqueId == guid).FirstOrDefaultAsync();
+        var orderMaster = await work.Get<OrderMaster>()
+                                    .Find(f => f.RowUniqueId == guid)
+                                    .FirstOrDefaultAsync();
         if (orderMaster is null)
             return new RazorComponentResult(typeof(_404));
         if (!Permision.AllowCancelStatus.Contains(orderMaster.OrderStatusId))
@@ -317,11 +375,17 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
     public async Task<IResult> Status(Guid guid, [FromQuery] string StatusID)
     {
 
-        var orderMaster = await work.Get<OrderMaster>().IncludeAll().Include(f => f.OrderStatus).Where(f => f.RowUniqueId == guid).FirstOrDefaultAsync();
+        var orderMaster = await work.Get<OrderMaster>()
+                                .IncludeAll()
+                                .Include(f => f.OrderStatus)
+                                .Where(f => f.RowUniqueId == guid)
+                                .FirstOrDefaultAsync();
         if (orderMaster is null)
             return new RazorComponentResult(typeof(_404));
         var oldStatus = orderMaster.OrderStatus.OrderStatusName;
-        var status = await work.Get<OrderStatus>().Find(f => f.CanChangeStatus || f.IsAcceptStatus).ToListAsync();
+        var status = await work.Get<OrderStatus>()
+                            .Find(f => f.CanChangeStatus || f.IsAcceptStatus)
+                            .ToListAsync();
 
         if (!status.Select(f => f.OrderStatusId).Contains(orderMaster.OrderStatusId))
         {
@@ -339,7 +403,13 @@ public class OrderMasterController(IUnitOfWork work, IServiceCrud<OrderMaster> s
             orderMaster.OrderStatusId = orderStatus.OrderStatusId;
         await work.CompleteAsync();
 
-        await notificationService.Notify(orderMaster, $"Đơn Hàng {orderMaster.OrderNo} vừa đổi trạng thái từ {oldStatus} sang {orderStatus?.OrderStatusName}", "warning");
+        await notificationService.Notify
+        (
+            orderMaster,
+            $"Đơn Hàng {orderMaster.OrderNo} vừa đổi trạng thái từ {oldStatus} sang {orderStatus?.OrderStatusName}",
+            "warning"
+        );
+
         Response.Headers.Append("hx-redirect", $"/OrderMaster/Details/{guid}");
         return Results.Ok();
     }

@@ -14,7 +14,12 @@ public class ItemController(IUnitOfWork work) : ControllerBase
     [HttpGet]
     public async Task<ActionResult> GetItem([FromQuery] string? ItemIdSelect)
     {
-        var items = await work.Get<ViwItem>().Find(t => ItemIdSelect == null || t.ItemId == ItemIdSelect || t.ItemName.ToLower().Contains(ItemIdSelect.ToLower())).ToListAsync();
+        var items = await work.Get<ViwItem>()
+            .Find(t =>
+                ItemIdSelect == null
+                || t.ItemId == ItemIdSelect
+                || t.ItemName.ToLower().Contains(ItemIdSelect.ToLower()))
+            .ToListAsync();
         return Ok(items);
     }
 }
