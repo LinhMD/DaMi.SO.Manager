@@ -21,8 +21,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<DaMiSoManagerContext>(o => o.UseSqlServer(builder.Configuration["ConnectionStrings:main"]));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork<DaMiSoManagerContext>>();
 builder.Services.AddScoped<NotificationService>();
-builder.Services.AddScoped(typeof(IServiceCrud<>), typeof(ServiceCrud<>));
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped(typeof(IServiceCrud<>), typeof(ServiceCrud<>));
 builder.Services.AddSignalR();
 
 

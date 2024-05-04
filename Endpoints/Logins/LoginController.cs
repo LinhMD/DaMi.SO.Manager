@@ -64,7 +64,12 @@ public class LoginController(IUnitOfWork work) : ControllerBase
             });
         }
 
-        var hash = LoginHelper.ComputeHash(Encoding.UTF8.GetBytes(request.Password), Encoding.UTF8.GetBytes(user!.PwSalt ?? ""));
+        var hash = LoginHelper.ComputeHash
+        (
+            Encoding.UTF8.GetBytes(request.Password),
+            Encoding.UTF8.GetBytes(user!.PwSalt ?? "")
+        );
+
         if (hash != user.PwHash)
         {
             return this.Page<Login, LoginRequest>(request, new ValidationResponse()

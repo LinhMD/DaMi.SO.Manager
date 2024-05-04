@@ -18,7 +18,7 @@ public class TaxCodeController(IUnitOfWork work) : ControllerBase
     [HttpGet]
     public async Task<ActionResult> GetTaxCode([FromQuery] string taxcode, [FromQuery] string customer)
     {
-        if (Utils.TaxCodeIsValid(taxcode ?? ""))
+        if (Utils.TaxCodeIsValid(taxcode))
         {
             var taxCodes = await work.Get<TaxCode>().Find(t => t.TaxCodeId == taxcode).ToListAsync();
             if (taxCodes.Count == 0)

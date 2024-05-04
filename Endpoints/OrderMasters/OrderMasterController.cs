@@ -13,18 +13,12 @@ using Microsoft.AspNetCore.Authorization;
 using DaMi.SO.Manager.Endpoints.OrderDetails;
 using CrudApiTemplate.Services;
 using CrudApiTemplate.CustomException;
-using BlazorMinimalApis.Lib.Validation;
 using BlazorMinimalApis.Lib.Views;
 using DaMi.SO.Manager.Components;
 using DaMi.SO.Manager.Data;
 using Microsoft.Data.SqlClient;
-using System.Text.Json;
 using CrudApiTemplate.CustomBinding;
 using System.Security.Claims;
-using System.Web;
-using System.Text;
-using Microsoft.AspNetCore.SignalR;
-using DaMi.SO.Manager.Hubs;
 using DaMi.SO.Manager.Endpoints.Notifications;
 
 namespace DaMi.SO.Manager.Endpoints.OrderMasters;
