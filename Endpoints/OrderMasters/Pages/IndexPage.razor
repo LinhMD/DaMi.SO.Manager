@@ -12,8 +12,9 @@
                         <a href="#pills-all" class="btn btn-outline-primary" data-toggle="tab">Tất cả đơn hàng</a>
                     </li>
                     <li class="nav-item mx-2" role="presentation">
-                        <a href="#pills-wait-for-approve" class="btn btn btn-outline-info" data-toggle="tab">Chưa
-                            duyệt</a>
+                        <a href="#pills-wait-for-approve" class="btn btn btn-outline-info" data-toggle="tab">
+                            Chưa duyệt
+                        </a>
                     </li>
                     <li class="nav-item mx-2" role="presentation">
                         <a href="#pills-unfinish" class="btn btn-outline-warning" data-toggle="tab">Chưa hoàn thành</a>
@@ -47,9 +48,9 @@
             </div>
             <div class="tab-pane fade" id="pills-unfinish" role="tabpanel" aria-labelledby="pills-unfinish-tab">
                 <TabContent TableId="unfinish" Model='Model.OrderMasters
-                                        .Where(o => o.OrderStatus.OrderStatusId != "OS99"
-                                                && !o.OrderStatus.IsCancelStatus
-                                                && !o.OrderStatus.IsSuspendStatus)'>
+                                                            .Where(o => o.OrderStatus.OrderStatusId != "OS99"
+                                                                    && !o.OrderStatus.IsCancelStatus
+                                                                    && !o.OrderStatus.IsSuspendStatus)'>
                 </TabContent>
             </div>
             <div class="tab-pane fade" id="pills-finish" role="tabpanel" aria-labelledby="pills-finish-tab">
