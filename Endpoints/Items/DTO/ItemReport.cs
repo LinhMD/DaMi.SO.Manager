@@ -27,35 +27,34 @@ public class ItemReport : IView<ViwItem>, IDto
     [DisplayName("Ngôn ngữ")]
     public string? Language { get; set; }
 
-    [DisplayName("Là trả tiền 1 lần")]
+    [DisplayName("Trả 1 lần")]
     public bool IsPayFull { get; set; }
 
-    [DisplayName("Là trả tiền theo năm")]
+    [DisplayName("Trả theo năm")]
     public bool IsPayYear { get; set; }
 
-    [DisplayName("Số lượng mã số thuế (mặc định)")]
+    [DisplayName("Số MST")]
     public int DefNumOfTaxCode { get; set; }
 
-    [DisplayName("Số lượng hệ thống (mặc định)")]
+    [DisplayName("Số Data")]
     public int DefNumOfData { get; set; }
 
-    [DisplayName("Số lượng hóa đơn (mặc định)")]
+    [DisplayName("Số HĐ")]
     public int DefNumOfInv { get; set; }
 
-    [DisplayName("Số lượng User (mặc định)")]
+    [DisplayName("Số User")]
     public int DefNumOfUser { get; set; }
 
-    [DisplayName("Số lượng máy tính (mặc định)")]
+    [DisplayName("Số Máy")]
     public int DefNumOfPc { get; set; }
 
-    [DisplayName("Dung lượng lưu trữ iCloud (GB) (mặc định)")]
+    [DisplayName("iCloud (GB)")]
     public int DefiCloudDataSize { get; set; }
 
-    [DisplayName("Số lượng tháng (mặc định)")]
+    [DisplayName("Số tháng SD")]
     public int DefNumOfMonth { get; set; }
 
-
-    [DisplayName("Thuế suất (%)")]
+    [DisplayName("VAT (%)")]
     [DataType(DataType.Currency)]
     public decimal TaxRate { get; set; }
 
@@ -75,6 +74,7 @@ public class ItemReport : IView<ViwItem>, IDto
 
     [HiddenInput]
     public int SortOrder { get; set; }
+
     public static void InitMapper()
     {
         TypeAdapterConfig<ViwItem, ItemReport>.NewConfig();

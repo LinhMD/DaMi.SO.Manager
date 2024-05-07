@@ -20,6 +20,10 @@ public class OrderDetailSimpleView : IView<OrderDetail>, IDto, IUpdateRequest<Or
     [DisplayName("Mã đơn đặt hàng")]
     public Guid? OrderId { get; set; }
 
+    [HiddenInput]
+    public string? OrderNo { get; set; }
+
+
     [DisplayName("Thứ tự dòng")]
     public int? LineNumber { get; set; }
 
@@ -117,7 +121,7 @@ public class OrderDetailSimpleView : IView<OrderDetail>, IDto, IUpdateRequest<Or
 
     public static void InitMapper()
     {
-        TypeAdapterConfig<OrderDetail, OrderDetailSimpleView>.NewConfig();
+        TypeAdapterConfig<OrderDetail, OrderDetailSimpleView>.NewConfig().Map(v => v.OrderNo, o => o.Order.OrderNo);
 
         TypeAdapterConfig<OrderDetailSimpleView, OrderDetail>.NewConfig();
     }
