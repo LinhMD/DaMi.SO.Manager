@@ -53,9 +53,9 @@
                         {
                             if (value.GetType() == typeof(bool) || value.GetType() == typeof(bool?))
                             {
+
                                 <td>
-                                    <input onclick="return false;" type="checkbox" class="form-control form-control-sm"
-                                        checked='@value'>
+                                    <input type="checkbox" value="true" onclick="return false;" checked='@value'>
                                 </td>
                             }
                             else
@@ -107,6 +107,7 @@
         </tbody>
     </table>
 </div>
+
 <script>
     var sortOptions = { orderable: false };
     var sortAble = ['Số đơn hàng', 'Khách hàng', 'Trạng thái', 'NV triển khai', 'Kiểu đơn hàng']
