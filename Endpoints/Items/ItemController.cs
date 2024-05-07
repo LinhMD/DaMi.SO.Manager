@@ -1,6 +1,9 @@
 using CrudApiTemplate.Repository;
 using DaMi.SO.Manager.Data.Models;
+using DaMi.SO.Manager.Endpoints.Items.DTO;
+using DaMi.SO.Manager.Endpoints.Items.Pages;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,4 +25,13 @@ public class ItemController(IUnitOfWork work) : ControllerBase
             .ToListAsync();
         return Ok(items);
     }
+    [HttpGet("index")]
+    public async Task<IResult> GetItemIndex()
+    {
+        var items = await work.Get<ViwItem>()
+            .Find<ItemReport>(t => true).OrderBy(i => i.SortOrder)
+            .ToListAsync();
+        return new RazorComponentResult(typeof(IndexPage), new { Items = items });
+    }
+
 }

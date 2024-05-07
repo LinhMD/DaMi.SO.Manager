@@ -1,0 +1,31 @@
+﻿@using DaMi.SO.Manager.Endpoints.Items.DTO
+@layout _Layout
+@inject IStringLocalizer<ShareResource> L
+<div class="row page-titles mx-0">
+    <div class="col-sm-6 p-md-0 justify-content-sm-start mt-2 mt-sm-0 d-flex">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/Item/index">@L["Sản phẩm"] </a></li>
+        </ol>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header text-bold">
+        @L["Danh Sách Sản phẩm"]
+    </div>
+    <div class="card-body">
+        <Table Models="@Items" TItem="ItemReport" TableId="item-report"
+            SortAbleFields='["Mã sản phẩm", "Tên sản phẩm", "Mã đơn vị tính", "Mã nhóm sản phẩm"]'>
+        </Table>
+    </div>
+</div>
+<div class="row page-titles mx-0">
+    <div class="col-sm-6 p-md-0 justify-content-sm-start mt-2 mt-sm-0 d-flex">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/Item/index">@L["Sản phẩm"] </a></li>
+        </ol>
+    </div>
+</div>
+@code
+{
+    [Parameter] public required IEnumerable<ItemReport> Items { get; set; }
+}

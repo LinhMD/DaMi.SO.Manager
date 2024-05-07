@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using CrudApiTemplate.Attributes.Update;
+using CrudApiTemplate.Model;
 using CrudApiTemplate.Request;
 using CrudApiTemplate.View;
 using DaMi.SO.Manager.Data.Models;
@@ -9,7 +10,7 @@ using Mapster;
 
 namespace DaMi.SO.Manager.Endpoints.OrderMasters.DTO
 {
-    public class OrderMasterDetailView : IView<OrderMaster>, IUpdateRequest<OrderMaster>, ICreateRequest<OrderMaster>
+    public class OrderMasterDetailView : IView<OrderMaster>, IUpdateRequest<OrderMaster>, ICreateRequest<OrderMaster>, IDto
     {
         public Guid? RowUniqueId { get; set; }
 

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DaMi.SO.Manager.Endpoints.OrderMasters.DTO;
 
-public class OrderMasterSimpleView : IView<OrderMaster>
+public class OrderMasterSimpleView : IView<OrderMaster>, IDto
 {
 
     [HiddenInput]

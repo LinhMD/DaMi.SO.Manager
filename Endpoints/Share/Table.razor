@@ -110,7 +110,7 @@
 
 <script>
     var sortOptions = { orderable: false };
-    var sortAble = ['Số đơn hàng', 'Khách hàng', 'Trạng thái', 'NV triển khai', 'Kiểu đơn hàng']
+    var sortAble = [...'@(String.Join(",", SortAbleFields))'.split(',')]
     new DataTable('#@TableId', {
         order: false,
         columns: [...Array(+Number('@(propertyInfos.Count() + (NavLabel == null ? 0 : 1) + (ActionLabel == null ? 0 : 1))')).keys()].map(f => { return sortOptions; }),
@@ -142,6 +142,8 @@
     [Parameter]
     public IEnumerable<TItem> Models { get; set; } = [];
 
+    [Parameter]
+    public IEnumerable<string> SortAbleFields { get; set; } = [];
     public IEnumerable<PropertyInfo> propertyInfos { get; init; } = typeof(TItem).GetProperties().Where(f =>
     Attribute.GetCustomAttribute(f, typeof(HiddenInputAttribute)) is null);
 

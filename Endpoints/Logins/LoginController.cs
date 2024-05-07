@@ -92,19 +92,19 @@ public class LoginController(IUnitOfWork work) : ControllerBase
 
         ];
         List<Claim> Permissions = [
-            new (nameof(user.Department.Permision.View), user?.Department.Permision.View.ToString() ?? ""),
-            new (nameof(user.Department.Permision.AddNew), user?.Department.Permision.AddNew.ToString()?? ""),
-            new (nameof(user.Department.Permision.Delete), user?.Department.Permision.Delete.ToString()?? ""),
-            new (nameof(user.Department.Permision.Update), user?.Department.Permision.Update.ToString()?? ""),
-            new (nameof(user.Department.Permision.ViewLimitOrder), user?.Department.Permision.ViewLimitOrder.ToString()?? ""),
-            new (nameof(user.Department.Permision.ViewFullOrder), user?.Department.Permision.ViewFullOrder.ToString()?? ""),
-            new (nameof(user.Department.Permision.AddNewOrder), user?.Department.Permision.AddNewOrder.ToString()?? ""),
-            new (nameof(user.Department.Permision.DeleteOrder), user?.Department.Permision.DeleteOrder.ToString()?? ""),
-            new (nameof(user.Department.Permision.UpdateOrder), user?.Department.Permision.UpdateOrder.ToString()?? ""),
-            new (nameof(user.Department.Permision.AcceptOrder), user?.Department.Permision.AcceptOrder.ToString()?? ""),
-            new (nameof(user.Department.Permision.CancelOrder), user?.Department.Permision.CancelOrder.ToString()?? ""),
-            new (nameof(user.Department.Permision.SuspendOrder), user?.Department.Permision.SuspendOrder.ToString()?? ""),
-            new (nameof(user.Department.Permision.ChangeStatusOrder), user?.Department.Permision.ChangeStatusOrder.ToString()?? "")
+            new (nameof(Permision.View), user?.Department.Permision.View.ToString() ?? ""),
+            new (nameof(Permision.AddNew), user?.Department.Permision.AddNew.ToString()?? ""),
+            new (nameof(Permision.Delete), user?.Department.Permision.Delete.ToString()?? ""),
+            new (nameof(Permision.Update), user?.Department.Permision.Update.ToString()?? ""),
+            new (nameof(Permision.ViewLimitOrder), user?.Department.Permision.ViewLimitOrder.ToString()?? ""),
+            new (nameof(Permision.ViewFullOrder), user?.Department.Permision.ViewFullOrder.ToString()?? ""),
+            new (nameof(Permision.AddNewOrder), user?.Department.Permision.AddNewOrder.ToString()?? ""),
+            new (nameof(Permision.DeleteOrder), user?.Department.Permision.DeleteOrder.ToString()?? ""),
+            new (nameof(Permision.UpdateOrder), user?.Department.Permision.UpdateOrder.ToString()?? ""),
+            new (nameof(Permision.AcceptOrder), user?.Department.Permision.AcceptOrder.ToString()?? ""),
+            new (nameof(Permision.CancelOrder), user?.Department.Permision.CancelOrder.ToString()?? ""),
+            new (nameof(Permision.SuspendOrder), user?.Department.Permision.SuspendOrder.ToString()?? ""),
+            new (nameof(Permision.ChangeStatusOrder), user?.Department.Permision.ChangeStatusOrder.ToString()?? "")
         ];
         claims.AddRange(Permissions.Where(x => x.Value == "True").ToList());
         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

@@ -3,7 +3,9 @@
 @inject IStringLocalizer<ShareResource> L
 @inject IHttpContextAccessor httpContextAccessor
 @inherits XComponent<IEnumerable<OrderMasterSimpleView>>
-<Table Models="@Model" TItem="OrderMasterSimpleView" RowStyleColor="Color" TableId="@TableId">
+<Table Models="@Model" TItem="OrderMasterSimpleView"
+    SortAbleFields='["Số đơn hàng", "Khách hàng", "Trạng thái", "NV triển khai", "Kiểu đơn hàng"]'
+    RowStyleColor="Color" TableId="@TableId">
     <NavLabel>
         @L["Số đơn hàng"]
     </NavLabel>
