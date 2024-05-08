@@ -90,6 +90,10 @@ namespace DaMi.SO.Manager.Endpoints.OrderMasters.DTO
         [DisplayName("Ghi chú")]
         public string? Notes { get; set; }
 
+        [DisplayName("Điều kiện kỹ thuật")]
+        public string? TechnicalInfo { get; set; }
+
+
         [UpdateIgnore]
         public IEnumerable<OrderDetailSimpleView> OrderDetails { get; set; } = [];
 

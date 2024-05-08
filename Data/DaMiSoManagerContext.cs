@@ -337,6 +337,7 @@ public partial class DaMiSoManagerContext : DbContext
             entity.Property(e => e.TranMonth).HasComputedColumnSql("(datepart(month,[OrderDate]))", false);
             entity.Property(e => e.TranYear).HasComputedColumnSql("(datepart(year,[OrderDate]))", false);
 
+            entity.Property(e => e.TechnicalInfo);
             entity.HasOne(d => d.Executor).WithMany(p => p.OrderMasterExecutors)
                 .HasPrincipalKey(p => p.EmployeeId)
                 .HasForeignKey(d => d.ExecutorId)

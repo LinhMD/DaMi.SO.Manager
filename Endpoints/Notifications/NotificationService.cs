@@ -16,7 +16,7 @@ public class NotificationService(IUnitOfWork work, IHubContext<NotificationHub> 
             CreatedDate = DateTime.Now,
             HasSeen = false,
             Message = message,
-            RedirectLink = $"/OrderMaster/{orderMaster.RowUniqueId}",
+            RedirectLink = $"/OrderMaster/Details/{orderMaster.RowUniqueId}",
             MessageType = type,
             TargetEmployeeId = n,
             CreatedUserId = context.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? ""

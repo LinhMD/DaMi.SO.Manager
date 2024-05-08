@@ -46,7 +46,8 @@ public class OrderMasterController
     {
         var orderMasters = await work.Get<OrderMaster>()
                                 .GetAll<OrderMasterSimpleView>()
-                                .OrderByDescending(f => f.OrderNo)
+                                .OrderByDescending(f => f.OrderDate)
+                                .ThenByDescending(f => f.OrderNo)
                                 .ToListAsync();
         var customer = await work.Get<ViwCustomer>()
                                 .GetAll()
@@ -257,7 +258,7 @@ public class OrderMasterController
         var orderTypes = await work.Get<OrderType>().GetAll().ToListAsync();
         var orderForms = await work.Get<OrderForm>().GetAll().ToListAsync();
         var customers = await work.Get<ViwCustomer>().GetAll().ToListAsync();
-        var employees = await work.Get<Employee>().IncludeAll().Include(e => e.Department).ToListAsync();
+        var employees = await work.Get<Employee>().IncludeAll().Include(e => e.Department).OrderBy(e => e.SortOrder).ToListAsync();
         var currencies = await work.Get<Currency>().GetAll().ToListAsync();
         var paymentMethods = await work.Get<PaymentMethod>().GetAll().ToListAsync();
 

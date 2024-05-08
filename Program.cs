@@ -4,6 +4,7 @@ using CrudApiTemplate.CustomBinding;
 using CrudApiTemplate.ExceptionFilter;
 using CrudApiTemplate.Repository;
 using CrudApiTemplate.Services;
+using DaMi.SO.Manager.Components;
 using DaMi.SO.Manager.Data;
 using DaMi.SO.Manager.Data.Models;
 using DaMi.SO.Manager.Endpoints.Notifications;
@@ -31,12 +32,15 @@ builder.Services.AddControllers(option =>
     option.Filters.Add<CrudExceptionFilterAttribute>();
 }).AddSessionStateTempDataProvider();
 builder.Services.AddBlazorBootstrap();
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
 
-builder.Services.AddRazorComponents();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+
 builder.Services.AddDevExpressBlazor();
 builder.Services.AddDevExpressServerSideBlazorReportViewer();
+
 builder.Services.ConfigMapping();
 builder.Services.AddLocalization(o => o.ResourcesPath = "Resources");
 builder.Services.AddAuthentication(o =>
@@ -102,6 +106,9 @@ app.UseRouting();
 app.UseSession();
 app.UseAntiforgery();
 app.MapControllers();
+
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 app.MapHub<NotificationHub>("/notification");
 app.UseRequestLocalization();
 app.UseCookiePolicy(new CookiePolicyOptions

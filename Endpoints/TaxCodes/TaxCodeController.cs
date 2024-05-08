@@ -27,6 +27,8 @@ public class TaxCodeController(IUnitOfWork work) : ControllerBase
             }
             return Ok(taxCodes);
         }
+
         return BadRequest();
+
     }
 }

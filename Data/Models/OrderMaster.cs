@@ -221,6 +221,8 @@ public partial class OrderMaster
     [Column("RowVersionID")]
     public byte[]? RowVersionId { get; set; }
 
+    public virtual string? TechnicalInfo { get; set; }
+
     [ForeignKey("ExecutorId")]
     [InverseProperty("OrderMasterExecutors")]
     public virtual Employee? Executor { get; set; }
@@ -244,6 +246,8 @@ public partial class OrderMaster
     [ForeignKey("SalesManId")]
     [InverseProperty("OrderMasterSalesMen")]
     public virtual Employee? SalesMan { get; set; }
+
+
 
     [InverseProperty("Order")]
     [UpdateIgnore]

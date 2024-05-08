@@ -606,7 +606,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-12">
+    <div class="col-6">
         <div class="card">
             <h4 class="card-header">@L["Diễn giải"]</h4>
             <div class="card-body">
@@ -615,6 +615,20 @@
                         readonly='@(Model.ViewMode == ViewMode.Detail)'
                         rows="6">@Model.OrderMaster.Description</textarea>
                     <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.Description)" />
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-6">
+        <div class="card">
+            <h4 class="card-header">@L["Điều kiện kỹ thuật"]</h4>
+            <div class="card-body">
+                <div class="form-group">
+                    <textarea type="text" class="form-control" id="TechnicalInfo" name="TechnicalInfo"
+                        readonly='@(Model.ViewMode == ViewMode.Detail)'
+                        rows="6">@Model.OrderMaster.TechnicalInfo</textarea>
+                    <ErrorMember Errors="@Model.Errors" MemberName="@nameof(Model.OrderMaster.TechnicalInfo)" />
                 </div>
             </div>
         </div>

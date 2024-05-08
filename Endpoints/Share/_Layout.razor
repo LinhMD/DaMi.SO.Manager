@@ -23,7 +23,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/2.8.2/slimselect.min.css" rel="stylesheet">
     <link href="/icons/material-design-iconic-font/css/materialdesignicons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
+    <link href="_content/DevExpress.Blazor.Themes/blazing-berry.bs5.css" rel="stylesheet" />
+    <link rel="stylesheet"
+        href="_content/DevExpress.Blazor.Reporting.Viewer/css/dx-blazor-reporting-components.bs5.css">
     <link rel="stylesheet" href="/css/datatables.css">
     <script src="/vendor/jquery/jquery.min.js"></script>
 
@@ -102,9 +104,9 @@
                                             <li class="media dropdown-item active">
                                                 <div class="media-body">
                                                     <a href="@($"/notification/{notification.RowUniqueId}")">
-                                                        <p class="text-@notification.MessageType">
+                                                        <div class="text-@notification.MessageType">
                                                             @notification.Message
-                                                        </p>
+                                                        </div>
                                                     </a>
                                                 </div>
                                                 <span class="notify-time">@notification.CreatedDate.ToString()</span>
@@ -115,9 +117,9 @@
                                             <li class="media dropdown-item">
                                                 <div class="media-body">
                                                     <a href="@notification.RedirectLink">
-                                                        <p class="text-@notification.MessageType">
+                                                        <div class="text-@notification.MessageType">
                                                             @notification.Message
-                                                        </p>
+                                                        </div>
                                                     </a>
                                                 </div>
                                                 <span class="notify-time">@notification.CreatedDate.ToString()</span>
@@ -187,7 +189,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/viewer">
+                        <a href="/Report/AccountRecievable">
                             <i class="mdi mdi-cash-100"></i><span class="nav-text">Công nợ</span>
                         </a>
                     </li>

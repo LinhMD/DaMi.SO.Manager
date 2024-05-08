@@ -75,6 +75,10 @@
                                             {
                                                 <td class="text-right">@(((double)value).ToString("N0", CultureInfo.CurrentCulture))</td>
                                             }
+                                            else
+                                            {
+                                                <td class="text-right">@value</td>
+                                            }
                                             break;
                                         case DataType.DateTime:
                                             <td class="date">

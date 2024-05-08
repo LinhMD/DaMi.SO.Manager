@@ -1,0 +1,13 @@
+﻿@page "/Report/AccountRecievable"
+@using DaMi.SO.Manager.Reports
+@using DevExpress.Blazor.Reporting
+@rendermode InteractiveServer
+
+<DxReportViewer @ref="reportViewer" Report="report">
+</DxReportViewer>
+
+@code {
+    DxReportViewer? reportViewer;
+    ARReport report = new ARReport();
+
+}
