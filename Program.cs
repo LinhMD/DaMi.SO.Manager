@@ -19,7 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddDbContext<DaMiSoManagerContext>(o => o.UseSqlServer(builder.Configuration["ConnectionStrings:main"]));
+builder.Services.AddDbContext<DaMiSoManagerContext>(o => o.UseSqlServer(builder.Configuration["ConnectionStrings:main"], o => o.UseCompatibilityLevel(120)));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork<DaMiSoManagerContext>>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

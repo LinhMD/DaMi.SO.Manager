@@ -28,9 +28,10 @@
     public static Func<OrderMasterSimpleView, string> Color = (o) => o.OrderStatusName switch
     {
         "Đơn bị hủy" => "text-danger",
-        "Tạm ngưng" => "text-warning",
+        "Tạm ngưng/treo" => "text-warning",
         "Đã duyệt" => "text-primary",
         "Đã hoàn thành" => "text-success",
+        "Đang theo dõi, đàm phán" => "text-info",
         _ => "text-black"
     };
 

@@ -104,7 +104,13 @@ public class LoginController(IUnitOfWork work) : ControllerBase
             new (nameof(Permision.AcceptOrder), user?.Department.Permision.AcceptOrder.ToString()?? ""),
             new (nameof(Permision.CancelOrder), user?.Department.Permision.CancelOrder.ToString()?? ""),
             new (nameof(Permision.SuspendOrder), user?.Department.Permision.SuspendOrder.ToString()?? ""),
-            new (nameof(Permision.ChangeStatusOrder), user?.Department.Permision.ChangeStatusOrder.ToString()?? "")
+            new (nameof(Permision.ChangeStatusOrder), user?.Department.Permision.ChangeStatusOrder.ToString()?? ""),
+            new (nameof(Department.IsAdmin), user?.Department.IsAdmin.ToString()?? ""),
+            new (nameof(Department.IsAccounting), user?.Department.IsAccounting.ToString()?? ""),
+            new (nameof(Department.IsDeveloper), user?.Department.IsDeveloper.ToString()?? ""),
+            new (nameof(Department.IsInstall), user?.Department.IsInstall.ToString()?? ""),
+            new (nameof(Department.IsSales), user?.Department.IsSales.ToString()?? ""),
+            new (nameof(Department.IsSystem), user?.Department.IsSystem.ToString()?? ""),
         ];
         claims.AddRange(Permissions.Where(x => x.Value == "True").ToList());
         var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

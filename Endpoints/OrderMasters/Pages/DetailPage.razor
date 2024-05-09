@@ -1,9 +1,11 @@
-﻿@using DaMi.SO.Manager.Components
+﻿@using CrudApiTemplate.Repository
+@using DaMi.SO.Manager.Components
 @using DaMi.SO.Manager.Data.Models
 @using DaMi.SO.Manager.Endpoints.OrderDetails
 @using DaMi.SO.Manager.Endpoints.OrderDetails.DTO
 @using DaMi.SO.Manager.Endpoints.OrderDetails.Pages
 @using System.Globalization
+@using Microsoft.EntityFrameworkCore
 @inherits XComponent<OrderMasterEditModel>
 @layout _Layout
 @inject IHttpContextAccessor httpContextAccessor
@@ -25,23 +27,31 @@
         </ol>
     </div>
     <div class="col-sm-4 p-md-0 justify-content-sm-center mt-2 mt-sm-0 d-flex">
-        @if (Model.OrderMaster.OrderStatusId == "OS10" && (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type == nameof(Permision.AcceptOrder)) ?? false))
+        @if (Model.OrderMaster.OrderStatusId == "OS10"
+        && (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type == nameof(Permision.AcceptOrder)) ?? false))
+        {
+            <a href="/OrderMaster/Track/@Model.OrderMaster.RowUniqueId" class="btn btn-round btn-info mx-2">
+                <b>@L["Theo dõi"]</b>
+            </a>
+        }
+        @if ((Model.OrderMaster.OrderStatusId == "OS10" || Model.OrderMaster.OrderStatusId == "OS11") &&
+        (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type ==
+        nameof(Permision.AcceptOrder)) ?? false) && Model.AllowAccept)
         {
             <a href="/OrderMaster/Accept/@Model.OrderMaster.RowUniqueId" class="btn btn-round btn-primary mx-2">
                 <b>@L["Duyệt"]</b>
             </a>
         }
-        @if (Permision.AllowCancelStatus.Contains(Model.OrderMaster.OrderStatusId ?? "") &&
-        (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type == nameof(Permision.CancelOrder)) ?? false))
+        @if (Permision.AllowCancelStatus.Contains(Model.OrderMaster.OrderStatusId ?? "")
+        && (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type == nameof(Permision.CancelOrder)) ?? false))
         {
             <button class="btn btn-round btn-warning mx-2" hx-post="/OrderMaster/Cancel/@Model.OrderMaster.RowUniqueId"
                 hx-prompt="Lý Do Hủy">
                 <b>@L["Hủy"]</b>
             </button>
         }
-        @if (Permision.AllowCancelStatus.Contains(Model.OrderMaster.OrderStatusId ?? "") &&
-        (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type ==
-        nameof(Permision.SuspendOrder)) ?? false))
+        @if (Permision.AllowCancelStatus.Contains(Model.OrderMaster.OrderStatusId ?? "")
+        && (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type == nameof(Permision.SuspendOrder)) ?? false))
         {
             <button class="btn btn-round btn-warning mx-2" hx-post="/OrderMaster/Suspend/@Model.OrderMaster.RowUniqueId"
                 hx-prompt="Lý Do Treo">
@@ -50,15 +60,15 @@
         }
     </div>
     <div class="col-sm-4 p-md-0 justify-content-sm-end mt-2 mt-sm-0 my-0 d-flex">
-        @if (Model.OrderMaster.OrderStatusId == "OS10" &&
-        (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type == nameof(Permision.DeleteOrder)) ?? false))
+        @if (Model.OrderMaster.OrderStatusId == "OS10"
+        && (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type == nameof(Permision.DeleteOrder)) ?? false))
         {
             <a href="/OrderMaster/Delete/@Model.OrderMaster.RowUniqueId" class="btn btn-round btn-danger mx-2 Delete">
                 <b>@L["Xóa"]</b>
             </a>
         }
-        @if (Model.OrderMaster.OrderStatusId == "OS10" &&
-        (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type == nameof(Permision.UpdateOrder)) ?? false))
+        @if ((Model.OrderMaster.OrderStatusId == "OS10" || Model.OrderMaster.OrderStatusId == "OS11")
+        && (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type == nameof(Permision.UpdateOrder)) ?? false))
         {
             <a href="/OrderMaster/Edit/@Model.OrderMaster.RowUniqueId" class="btn btn-round btn-warning mx-2">
                 <b>@L["Chỉnh sửa"]</b>
@@ -67,19 +77,17 @@
         @if (Model.OrderMaster.OrderStatusId == "OS10")
         {
             <a href="/OrderMaster" class="btn btn-round btn-primary mx-2">
-                <b>@L["Danh sách đơn hàng"]</b>
+                <b>@L["Danh sách"]</b>
             </a>
         }
         @if (Model.OrderStatuses
         .Where(f => f.CanChangeStatus || f.IsAcceptStatus)
         .Select(f => f.OrderStatusId)
-        .Contains(Model.OrderMaster.OrderStatusId) &&
+        .Contains(Model.OrderMaster.OrderStatusId)
+        &&
         (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type == nameof(Permision.ChangeStatusOrder)) ?? false))
         {
-            <div class="row col-md-12">
-                <label for="StatusID" class="col-4">
-                    @L["Thay đổi trạng thái"]
-                </label>
+            <div class="row col-md-12 justify-content-end">
                 <select class="form-control selectpicker col-8" aria-placeholder="Thay đổi trạng thái"
                     hx-get="/OrderMaster/Status/@Model.OrderMaster.RowUniqueId" id="StatusID" name="StatusID"
                     hx-target='#OrderStatusId' value="@Model.OrderMaster.OrderStatusId">
@@ -133,25 +141,31 @@
         </ol>
     </div>
     <div class="col-sm-4 p-md-0 justify-content-sm-center mt-2 mt-sm-0 d-flex">
-        @if (Model.OrderMaster.OrderStatusId == "OS10" && (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type ==
-        nameof(Permision.AcceptOrder)) ?? false))
+        @if (Model.OrderMaster.OrderStatusId == "OS10"
+        && (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type == nameof(Permision.AcceptOrder)) ?? false))
+        {
+            <a href="/OrderMaster/Track/@Model.OrderMaster.RowUniqueId" class="btn btn-round btn-info mx-2">
+                <b>@L["Theo dõi"]</b>
+            </a>
+        }
+        @if ((Model.OrderMaster.OrderStatusId == "OS10" || Model.OrderMaster.OrderStatusId == "OS11") &&
+        (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type ==
+        nameof(Permision.AcceptOrder)) ?? false) && Model.AllowAccept)
         {
             <a href="/OrderMaster/Accept/@Model.OrderMaster.RowUniqueId" class="btn btn-round btn-primary mx-2">
                 <b>@L["Duyệt"]</b>
             </a>
         }
-        @if (Permision.AllowCancelStatus.Contains(Model.OrderMaster.OrderStatusId ?? "") &&
-        (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type ==
-        nameof(Permision.CancelOrder)) ?? false))
+        @if (Permision.AllowCancelStatus.Contains(Model.OrderMaster.OrderStatusId ?? "")
+        && (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type == nameof(Permision.CancelOrder)) ?? false))
         {
             <button class="btn btn-round btn-warning mx-2" hx-post="/OrderMaster/Cancel/@Model.OrderMaster.RowUniqueId"
                 hx-prompt="Lý Do Hủy">
                 <b>@L["Hủy"]</b>
             </button>
         }
-        @if (Permision.AllowCancelStatus.Contains(Model.OrderMaster.OrderStatusId ?? "") &&
-        (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type ==
-        nameof(Permision.SuspendOrder)) ?? false))
+        @if (Permision.AllowCancelStatus.Contains(Model.OrderMaster.OrderStatusId ?? "")
+        && (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type == nameof(Permision.SuspendOrder)) ?? false))
         {
             <button class="btn btn-round btn-warning mx-2" hx-post="/OrderMaster/Suspend/@Model.OrderMaster.RowUniqueId"
                 hx-prompt="Lý Do Treo">
@@ -160,15 +174,15 @@
         }
     </div>
     <div class="col-sm-4 p-md-0 justify-content-sm-end mt-2 mt-sm-0 my-0 d-flex">
-        @if (Model.OrderMaster.OrderStatusId == "OS10" &&
-        (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type == nameof(Permision.DeleteOrder)) ?? false))
+        @if (Model.OrderMaster.OrderStatusId == "OS10"
+        && (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type == nameof(Permision.DeleteOrder)) ?? false))
         {
             <a href="/OrderMaster/Delete/@Model.OrderMaster.RowUniqueId" class="btn btn-round btn-danger mx-2 Delete">
                 <b>@L["Xóa"]</b>
             </a>
         }
-        @if (Model.OrderMaster.OrderStatusId == "OS10" &&
-        (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type == nameof(Permision.UpdateOrder)) ?? false))
+        @if ((Model.OrderMaster.OrderStatusId == "OS10" || Model.OrderMaster.OrderStatusId == "OS11")
+        && (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type == nameof(Permision.UpdateOrder)) ?? false))
         {
             <a href="/OrderMaster/Edit/@Model.OrderMaster.RowUniqueId" class="btn btn-round btn-warning mx-2">
                 <b>@L["Chỉnh sửa"]</b>
@@ -177,19 +191,17 @@
         @if (Model.OrderMaster.OrderStatusId == "OS10")
         {
             <a href="/OrderMaster" class="btn btn-round btn-primary mx-2">
-                <b>@L["Danh sách đơn hàng"]</b>
+                <b>@L["Danh sách"]</b>
             </a>
         }
         @if (Model.OrderStatuses
         .Where(f => f.CanChangeStatus || f.IsAcceptStatus)
         .Select(f => f.OrderStatusId)
-        .Contains(Model.OrderMaster.OrderStatusId) &&
+        .Contains(Model.OrderMaster.OrderStatusId)
+        &&
         (httpContextAccessor.HttpContext?.User.HasClaim(f => f.Type == nameof(Permision.ChangeStatusOrder)) ?? false))
         {
-            <div class="row col-md-12">
-                <label for="StatusID" class="col-4">
-                    @L["Thay đổi trạng thái"]
-                </label>
+            <div class="row col-md-12 justify-content-end">
                 <select class="form-control selectpicker col-8" aria-placeholder="Thay đổi trạng thái"
                     hx-get="/OrderMaster/Status/@Model.OrderMaster.RowUniqueId" id="StatusID" name="StatusID"
                     hx-target='#OrderStatusId' value="@Model.OrderMaster.OrderStatusId">

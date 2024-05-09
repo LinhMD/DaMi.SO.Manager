@@ -143,7 +143,7 @@
                             {
                                 <select class="form-control selectpicker" id="ExecutorId" name="ExecutorId"
                                     @bind="Model.OrderMaster.ExecutorId">
-                                    @foreach (var employee in Model.Employees.Where(e => e.Department.IsInstall))
+                                    @foreach (var employee in Model.Employees.Where(e => e.Department.IsInstall && e.InActive == false))
                                     {
                                         <option value="@employee.EmployeeId"
                                             selected="@(Model.OrderMaster.ExecutorId == employee.EmployeeId)">

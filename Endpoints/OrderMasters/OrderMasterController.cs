@@ -63,7 +63,7 @@ public class OrderMasterController
 
     [Authorize(policy: "ViewOrder")]
     [HttpGet("Details/{guid}")]
-    public async Task<IResult> GetDetailsAsync(Guid guid)
+    public async Task<IResult> GetDetailsAsync(Guid guid, [FromClaim(nameof(Department.IsAdmin))] bool? IsAdmin)
     {
         var orderMaster = await work.Get<OrderMaster>()
                                 .Find<OrderMasterDetailView>(f => f.RowUniqueId == guid)
@@ -72,7 +72,30 @@ public class OrderMasterController
         {
             return new RazorComponentResult(typeof(_404));
         }
-        return await ReturnPage<DetailPage>(work, orderMaster, ViewMode.Detail);
+        var itemIds = await work.Get<OrderDetail>().Find(d => d.OrderId == guid).Select(f => f.ItemId).ToListAsync();
+        bool allowAccept = true;
+        if (!IsAdmin ?? true)
+        {
+            allowAccept = !await work.Get<ViwFullItem>().Find
+                    (
+                        f => itemIds.Contains(f.ItemId)
+                        &&
+                        (
+                            f.AllowEditItemName == true
+                            || f.AllowEditItemAmount == true
+                            || f.AllowEditNumOfTaxCode == true
+                            || f.AllowEditNumOfData == true
+                            || f.AllowEditNumOfInv == true
+                            || f.AllowEditNumOfUser == true
+                            || f.AllowEditNumOfPc == true
+                            || f.AllowEditiCloudDataSize == true
+                            || f.AllowEditNumOfMonth == true
+                        )
+                    ).AnyAsync();
+        }
+
+
+        return await ReturnPage<DetailPage>(work, orderMaster, ViewMode.Detail, allowAccept: (IsAdmin ?? false) || allowAccept);
     }
 
     [Authorize(policy: nameof(Permision.UpdateOrder))]
@@ -172,7 +195,7 @@ public class OrderMasterController
             return new RazorComponentResult(typeof(_404));
         }
 
-        if (orderMaster.OrderStatusId != "OS10")
+        if (!(orderMaster.OrderStatusId == "OS10" || orderMaster.OrderStatusId == "OS11"))
         {
             return Results.BadRequest("Đơn hàng không được phép sửa");
         }
@@ -189,7 +212,8 @@ public class OrderMasterController
         {
             return new RazorComponentResult(typeof(_404));
         }
-        if (orderMaster.OrderStatusId != "OS10")
+
+        if (!(orderMaster.OrderStatusId == "OS10" || orderMaster.OrderStatusId == "OS11"))
         {
             return Results.BadRequest("Đơn hàng không được phép sửa");
         }
@@ -252,7 +276,8 @@ public class OrderMasterController
         OrderMasterDetailView orderMaster,
         ViewMode viewMode = ViewMode.Detail,
         Dictionary<string, string>? validateError = null,
-        string? ErrorMessage = null
+        string? ErrorMessage = null,
+        bool allowAccept = false
     ) where TPage : XComponent<OrderMasterEditModel>
     {
         var orderTypes = await work.Get<OrderType>().GetAll().ToListAsync();
@@ -269,6 +294,7 @@ public class OrderMasterController
         return this.Page<TPage, OrderMasterEditModel>(new OrderMasterEditModel()
         {
             OrderMaster = orderMaster,
+            AllowAccept = allowAccept,
             OrderForms = orderForms,
             OrderTypes = orderTypes,
             Customers = customers,
@@ -295,12 +321,40 @@ public class OrderMasterController
 
     [Authorize(policy: nameof(Permision.AcceptOrder))]
     [HttpGet("Accept/{guid}")]
-    public async Task<IResult> Accept(Guid guid, [FromClaim(ClaimTypes.NameIdentifier)] string userId)
+    public async Task<IResult> Accept(Guid guid, [FromClaim(ClaimTypes.NameIdentifier)] string userId, [FromClaim(nameof(Department.IsAdmin))] bool? IsAdmin)
     {
         var orderMaster = await work.Get<OrderMaster>().Find(f => f.RowUniqueId == guid).FirstOrDefaultAsync();
         if (orderMaster is null)
             return new RazorComponentResult(typeof(_404));
-        if (orderMaster.OrderStatusId != "OS10")
+        var itemIds = await work.Get<OrderDetail>().Find(d => d.OrderId == guid).Select(f => f.ItemId).ToListAsync();
+        bool allowAccept = false;
+        if (!IsAdmin ?? true)
+        {
+            allowAccept = !await work.Get<ViwFullItem>().Find
+                    (
+                        f => itemIds.Contains(f.ItemId)
+                        &&
+                        (
+                            f.AllowEditItemName == true
+                            || f.AllowEditItemAmount == true
+                            || f.AllowEditNumOfTaxCode == true
+                            || f.AllowEditNumOfData == true
+                            || f.AllowEditNumOfInv == true
+                            || f.AllowEditNumOfUser == true
+                            || f.AllowEditNumOfPc == true
+                            || f.AllowEditiCloudDataSize == true
+                            || f.AllowEditNumOfMonth == true
+                        )
+                    ).AnyAsync();
+        }
+
+
+        if (!((IsAdmin ?? false) || allowAccept))
+        {
+            return Results.Redirect("/forbidden");
+        }
+
+        if (!(orderMaster.OrderStatusId == "OS10" || orderMaster.OrderStatusId == "OS11"))
         {
             return Results.BadRequest("Đơn hàng không được phép duyệt");
         }
@@ -316,6 +370,29 @@ public class OrderMasterController
             orderMaster.OrderStatusId = acceptStatus.OrderStatusId;
         await work.CompleteAsync();
         await notificationService.Notify(orderMaster, $"Đơn Hàng {orderMaster.OrderNo} đã duyệt", "info");
+        return Results.Redirect($"/OrderMaster/Details/{guid}");
+    }
+
+    [Authorize(policy: nameof(Permision.AcceptOrder))]
+    [HttpGet("Track/{guid}")]
+    public async Task<IResult> TrackingOrder(Guid guid, [FromClaim(ClaimTypes.NameIdentifier)] string userId)
+    {
+        var orderMaster = await work.Get<OrderMaster>().Find(f => f.RowUniqueId == guid).FirstOrDefaultAsync();
+        if (orderMaster is null)
+            return new RazorComponentResult(typeof(_404));
+        if (orderMaster.OrderStatusId != "OS10")
+        {
+            return Results.BadRequest("Đơn hàng không được Theo dõi");
+        }
+
+        orderMaster.AccepterId = userId;
+        orderMaster.Accepted = true;
+        orderMaster.AcceptedDate = DateTime.Now;
+
+        orderMaster.OrderStatusId = "OS11";
+
+        await work.CompleteAsync();
+        await notificationService.Notify(orderMaster, $"Đơn Hàng {orderMaster.OrderNo} đã chuyển trạng thái thành Đang theo dõi, đàm phán", "info");
         return Results.Redirect($"/OrderMaster/Details/{guid}");
     }
 
@@ -425,7 +502,7 @@ public class OrderMasterEditModel
 {
     public OrderDetailModifyModel OrderDetailModify { get; set; } = null!;
     public OrderMasterDetailView OrderMaster { get; set; } = null!;
-
+    public bool AllowAccept { get; set; } = false;
     public IEnumerable<OrderType> OrderTypes { get; set; } = [];
     public IEnumerable<OrderForm> OrderForms { get; set; } = [];
     public IEnumerable<ViwCustomer> Customers { get; set; } = [];

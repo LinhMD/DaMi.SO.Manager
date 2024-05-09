@@ -9,15 +9,17 @@
             <div class="row">
                 <ul class="nav justify-content-sm-start col-10 d-flex" id="pills-tab" role="tablist">
                     <li class="nav-item mx-2" role="presentation">
-                        <a href="#pills-all" class="btn btn-outline-primary" data-toggle="tab">Tất cả đơn hàng</a>
+                        <a href="#pills-all" class="btn btn-outline-dark" data-toggle="tab">Tất cả đơn hàng</a>
                     </li>
                     <li class="nav-item mx-2" role="presentation">
-                        <a href="#pills-wait-for-approve" class="btn btn btn-outline-info" data-toggle="tab">
-                            Chưa duyệt
+                        <a href="#pills-tracking" class="btn btn btn-outline-info" data-toggle="tab">
+                            Theo dõi
                         </a>
                     </li>
                     <li class="nav-item mx-2" role="presentation">
-                        <a href="#pills-unfinish" class="btn btn-outline-warning" data-toggle="tab">Chưa hoàn thành</a>
+                        <a href="#pills-unfinish" class="btn btn-outline-primary" data-toggle="tab">
+                            Đang triển khai
+                        </a>
                     </li>
                     <li class="nav-item mx-2" role="presentation">
                         <a href="#pills-finish" class="btn btn-outline-success" data-toggle="tab">Đã hoàn thành</a>
@@ -28,7 +30,7 @@
                 </ul>
                 <div class="col-2 justify-content-end d-flex">
                     <a href="/OrderMaster/New" class="btn btn-outline-success">
-                        Lập đơn hàng mới
+                        Tạo mới
                     </a>
                 </div>
             </div>
@@ -40,17 +42,15 @@
             <div class="tab-pane fade show active" id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab">
                 <TabContent TableId="all" Model="Model.OrderMasters"></TabContent>
             </div>
-            <div class="tab-pane fade" id="pills-wait-for-approve" role="tabpanel"
-                aria-labelledby="pills-wait-for-approve-tab">
-                <TabContent TableId="wait-for-approve"
-                    Model="Model.OrderMasters.Where(o => !o.OrderStatus.IsAcceptStatus)">
+            <div class="tab-pane fade" id="pills-tracking" role="tabpanel" aria-labelledby="pills-tracking">
+                <TabContent TableId="tracking"
+                    Model='Model.OrderMasters.Where(o => o.OrderStatus.OrderStatusId == "OS11")'>
                 </TabContent>
             </div>
             <div class="tab-pane fade" id="pills-unfinish" role="tabpanel" aria-labelledby="pills-unfinish-tab">
-                <TabContent TableId="unfinish" Model='Model.OrderMasters
-                                                            .Where(o => o.OrderStatus.OrderStatusId != "OS99"
-                                                                    && !o.OrderStatus.IsCancelStatus
-                                                                    && !o.OrderStatus.IsSuspendStatus)'>
+                <TabContent TableId="unfinish"
+                    Model='Model.OrderMasters .Where(o => o.OrderStatus.IsAcceptStatus
+                                                    || (o.OrderStatus.CanChangeStatus && o.OrderStatus.OrderStatusId != "OS99"))'>
                 </TabContent>
             </div>
             <div class="tab-pane fade" id="pills-finish" role="tabpanel" aria-labelledby="pills-finish-tab">
