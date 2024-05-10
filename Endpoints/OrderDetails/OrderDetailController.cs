@@ -115,6 +115,7 @@ public class OrderDetailController(IUnitOfWork work) : ControllerBase
                                     .Where(f => f.RowUniqueId == orderDetail.OrderId!)
                                     .FirstOrDefaultAsync();
             await ReCalculateMasterAmount(work, orderMaster!);
+
             return await ReturnRow(
                 work,
                 work.Get<OrderDetail>().Get<OrderDetailSimpleView>(orderDetail.RowUniqueId),

@@ -106,9 +106,9 @@
                                                     </a>
                                                 </div>
                                                 <div class="w-100"></div>
-                                                <div class="col justify-content-end">
-                                                    <span
-                                                        class="notify-time row">@notification.CreatedDate.ToString()</span>
+                                                <div class="col px-4 justify-content-end">
+                                                    <span class="notify-time row px-2">
+                                                        @notification.CreatedDate.ToString()</span>
                                                 </div>
 
                                             </li>
@@ -124,9 +124,9 @@
                                                     </a>
                                                 </div>
                                                 <div class="w-100"></div>
-                                                <div class="col justify-content-end">
-                                                    <span
-                                                        class="notify-time row">@notification.CreatedDate.ToString()</span>
+                                                <div class="col px-4 justify-content-end">
+                                                    <span class="notify-time row px-2">
+                                                        @notification.CreatedDate.ToString()</span>
                                                 </div>
                                             </li>
                                         }
@@ -236,11 +236,11 @@
         var employeeId = context.HttpContext?.User?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ??
         "";
         UnReadNotifications = await work.Get<Notification>()
-        .Find(f => f.TargetEmployeeId == employeeId && f.HasSeen == false).ToListAsync();
+        .Find(f => f.TargetEmployeeId == employeeId && f.HasSeen == false).OrderByDescending(f => f.CreatedDate).ToListAsync();
 
         ReadNotifications = await work.Get<Notification>()
         .Find(f => f.TargetEmployeeId == employeeId && f.HasSeen == true)
         .OrderByDescending(f => f.CreatedDate).Take(5).ToListAsync();
-
+        await work.CompleteAsync();
     }
 }

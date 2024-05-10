@@ -1,0 +1,56 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+
+namespace DaMi.SO.Manager.Data.Models;
+
+[Keyless]
+public class CustomerBalance
+{
+
+    [DisplayName("Mã TK")]
+    public string AccountID { get; set; }
+    public string Address1 { get; set; }
+    public decimal CnvAccumCredit { get; set; }
+    public decimal CnvAccumDebit { get; set; }
+
+    public decimal CnvBegCredit { get; set; }
+    public decimal CnvBegDebit { get; set; }
+
+
+    public decimal CnvCredit { get; set; }
+    public decimal CnvDebit { get; set; }
+
+
+    public decimal CnvEndCredit { get; set; }
+    public decimal CnvEndDebit { get; set; }
+
+    public string CustomerID { get; set; }
+    public string CustomerName { get; set; }
+    public string GrpDebitID { get; set; }
+    public string GrpDebitName { get; set; }
+
+    public decimal OrgAccumCredit { get; set; }
+    public decimal OrgAccumDebit { get; set; }
+
+    public decimal OrgBegCredit { get; set; }
+    public decimal OrgBegDebit { get; set; }
+
+
+    public decimal OrgCredit { get; set; }
+    public decimal OrgDebit { get; set; }
+
+    public decimal OrgEndCredit { get; set; }
+    public decimal OrgEndDebit { get; set; }
+
+    [DisplayName("STT")]
+    public long RowNumber { get; set; }
+    public string SubCompanyID { get; set; }
+    public string TaxCode { get; set; }
+    public int TranMonth { get; set; }
+    public short TranYear { get; set; }
+
+}

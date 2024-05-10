@@ -1,4 +1,4 @@
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Security.Claims;
 using CrudApiTemplate.Repository;
 using CrudApiTemplate.Utilities;
@@ -49,8 +49,8 @@ public class NotificationService(IUnitOfWork work, IHubContext<NotificationHub> 
                 var NotifiMsg = new SqlParameter
                 {
                     ParameterName = "@NotifiMsg",
-                    SqlDbType = System.Data.SqlDbType.VarChar,
-                    Size = 200,
+                    SqlDbType = System.Data.SqlDbType.NVarChar,
+                    Size = 2000,
                     Value = notification.Message
                 };
                 var IsHighLevel = new SqlParameter
