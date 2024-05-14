@@ -271,6 +271,50 @@
             </script>
         }
     </td>
+    <td class="currency">
+        @if (ViewMode == ViewMode.Detail)
+        {
+            <div class="currency" name='ConvertTotalAmount' id="@nameof(detail.ConvertTotalAmount)_@(detail?.RowUniqueId)">
+                @((detail?.ConvertTotalAmount ?? 0).ToString("N0", CultureInfo.CurrentCulture))
+            </div>
+        }
+        else
+        {
+            <input type="text" class="form-control currency" onload="mask(this)"
+                form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")" readonly='true'
+                value="@(Convert.ToInt64(detail?.ConvertTotalAmount))" name="@nameof(detail.ConvertTotalAmount)"
+                id="@nameof(detail.ConvertTotalAmount)_@(detail?.RowUniqueId)" />
+            <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.ConvertTotalAmount)" />
+
+            <script>
+                mask(document.getElementById('@nameof(detail.ConvertTotalAmount)_@(detail?.RowUniqueId)'));
+            </script>
+        }
+    </td>
+    @if (Order?.CurrencyId == "USD")
+    {
+        <td class="currency">
+            @if (ViewMode == ViewMode.Detail)
+            {
+                <div class="currency" name='OriginalTotalAmount'
+                    id="@nameof(detail.OriginalTotalAmount)_@(detail?.RowUniqueId)">
+                    @((detail?.OriginalTotalAmount ?? 0).ToString("N0", CultureInfo.CurrentCulture))
+                </div>
+            }
+            else
+            {
+                <input type="text" class="form-control currency" onload="mask(this)" readonly='true'
+                    form="form_@(detail is not null? detail.RowUniqueId.ToString() : "new_row")"
+                    value="@(Convert.ToInt64(detail?.OriginalTotalAmount))" name="@nameof(detail.OriginalTotalAmount)"
+                    id="@nameof(detail.OriginalTotalAmount)_@(detail?.RowUniqueId)" />
+                <ErrorMember Errors="@Model.Errors" MemberName="@nameof(detail.OriginalTotalAmount)" />
+
+                <script>
+                    mask(document.getElementById('@nameof(detail.OriginalTotalAmount)_@(detail?.RowUniqueId)'));
+                </script>
+            }
+        </td>
+    }
     @if (Form.HasByTaxCode)
     {
         <td>

@@ -12,8 +12,8 @@ public class CustomerBalance
 {
 
     [DisplayName("Mã TK")]
-    public string AccountID { get; set; }
-    public string Address1 { get; set; }
+    public string AccountID { get; set; } = string.Empty;
+    public string Address1 { get; set; } = string.Empty;
     public decimal CnvAccumCredit { get; set; }
     public decimal CnvAccumDebit { get; set; }
 
@@ -28,10 +28,10 @@ public class CustomerBalance
     public decimal CnvEndCredit { get; set; }
     public decimal CnvEndDebit { get; set; }
 
-    public string CustomerID { get; set; }
-    public string CustomerName { get; set; }
-    public string GrpDebitID { get; set; }
-    public string GrpDebitName { get; set; }
+    public string CustomerID { get; set; } = string.Empty;
+    public string CustomerName { get; set; } = string.Empty;
+    public string GrpDebitID { get; set; } = string.Empty;
+    public string GrpDebitName { get; set; } = string.Empty;
 
     public decimal OrgAccumCredit { get; set; }
     public decimal OrgAccumDebit { get; set; }
@@ -48,9 +48,16 @@ public class CustomerBalance
 
     [DisplayName("STT")]
     public long RowNumber { get; set; }
-    public string SubCompanyID { get; set; }
-    public string TaxCode { get; set; }
+    public string SubCompanyID { get; set; } = string.Empty;
+    public string TaxCode { get; set; } = string.Empty;
     public int TranMonth { get; set; }
     public short TranYear { get; set; }
+
+    public Guid? OrderID { get; set; }
+    public string? OrderNo { get; set; }
+    public DateTime? OrderDate { get; set; }
+    public DateTime? OverDate { get; set; }
+    public int NumDaysDebit { get; set; }
+    public int NumDaysOverDate { get; set; }
 
 }

@@ -40,13 +40,14 @@ function calculatePrice(guid) {
     $(`#ConvertAmount_${guid}`).text(toCurrency(totalConvertPrice, "VND"));
     $(`#ConvertTaxAmount_${guid}`).text(toCurrency(totalConvertPrice * taxRate / 100, "VND"));
     $(`#ConvertDiscAmount_${guid}`).val(toCurrency(totalConvertPrice * discountRate / 100, "VND"));
-
+    $(`#ConvertTotalAmount_${guid}`).val(toCurrency(totalConvertPrice * (100 + taxRate - discountRate) / 100, "VND"));
     let currency = $('#CurrencyId').val();
     if (currency == 'USD') {
         var totalPrice = quantity * price;
         $(`#OriginalAmount_${guid}`).text(toCurrency(totalPrice, currency));
         $(`#OriginalTaxAmount_${guid}`).text(toCurrency(totalPrice * taxRate / 100, currency));
         $(`#OriginalDiscAmount_${guid}`).val(toCurrency(totalPrice * discountRate / 100, currency));
+        $(`#ConvertTotalAmount_${guid}`).val(toCurrency(totalPrice * (100 + taxRate - discountRate) / 100, currency));
     }
     calculateTotal();
 }

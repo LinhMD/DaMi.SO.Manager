@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace DaMi.SO.Manager
@@ -17,6 +18,11 @@ namespace DaMi.SO.Manager
         public static string? GetDisplayName(this PropertyInfo property)
         {
             return property.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
+        }
+
+        public static void Dump(this object? o, [CallerArgumentExpression("o")] string? name = "")
+        {
+            Console.WriteLine($"{name}: {o}");
         }
     }
 }

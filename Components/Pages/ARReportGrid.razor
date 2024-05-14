@@ -1,50 +1,101 @@
-@page "/Report/AccountRecievable_Grid"
-@using CrudApiTemplate.Repository
-@using DaMi.SO.Manager.Data
-@using DaMi.SO.Manager.Data.Models
-@using DaMi.SO.Manager.Reports
-@using DevExpress.Blazor.Reporting
-@using Microsoft.EntityFrameworkCore
+@page "/Report/AccountRecievable"
+@using Meziantou.AspNetCore.Components
 @rendermode InteractiveServer
 @inject DaMiSoManagerContext dbContext
+@inject IStringLocalizer<ShareResource> L
+
+<style>
+    .dxbl-grid-top-panel{
+        display: none !important;   
+    }
+</style>
+
+<div class="card">
+    <div class="card-header text-bold">
+        <div class=" container-fluid mx-0 my-0">
+            <div class="row">
+                <div class="col-sm-6 p-md-0 justify-content-sm-start mt-2 mt-sm-0 d-flex">
+                    <h4>@L["BÁO CÁO CÔNG NỢ"]</h4>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="basic-form">
+            <div class="form-row">
+                <div class=" col-4">
+                    <label for="FromDate" >@L["Từ Ngày"]</label>
+                    <div >
+                        <InputDate DisplayName="Từ Ngày" TValue="DateOnly" @bind-Value="@FromDate" id="FromDate" class="form-control"/>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label for="ToDate" >@L["Đến Ngày"]</label>
+                    <div >
+                        <InputDate DisplayName="Đến Ngày" TValue="DateOnly" @bind-Value="@ToDate" id="ToDate" class="form-control"/>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label for="submit" style="color: white;">&#10240;</label>
+                    <div >
+                        <button id="submit" class="btn btn-round btn-success"
+                        @onclick="Reload">@L["Duyệt"]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
 
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
             <div class="card-header">
-                <div class="card-title">BÁO CÁO CÔNG NỢ</div>
+                <div class="card-title"></div>
             </div>
             <div class="card-body">
                 <div class="overflow-auto">
-                    <DxGrid @ref="Grid" Data="@Data" ShowGroupPanel="true" SizeMode="SizeMode.Large" AllowSort="false" ShowAllRows="true"
-                        KeyboardNavigationEnabled="true">
+                    <DxGrid @ref="Grid" 
+                        Data="@Data" 
+                        ShowGroupPanel="true" 
+                        SizeMode="SizeMode.Large" 
+                        AllowColumnReorder='false' 
+                        AllowGroup='false' 
+                        ColumnResizeMode="GridColumnResizeMode.Disabled" 
+                        AllowSort="false" 
+                        ShowAllRows="true"
+                        KeyboardNavigationEnabled="true"
+                        >
                         <Columns>
                             <DxGridDataColumn FieldName="@nameof(CustomerBalance.RowNumber)" Width="40px" Caption="STT"/>
-                            <DxGridDataColumn FieldName="@nameof(CustomerBalance.AccountID)" Width="60px" Caption="Mã TK" GroupIndex="0"/>
-                            <DxGridDataColumn FieldName="@nameof(CustomerBalance.CustomerID)" Width="150px" Caption="Mã KH"/>
-                            <DxGridDataColumn FieldName="@nameof(CustomerBalance.CustomerName)" Width="40%" Caption="Tên Khách hàng"/>
-                            <DxGridDataColumn FieldName="@nameof(CustomerBalance.CnvBegDebit)" Caption="Nợ đầu kỳ"/>
-                            <DxGridDataColumn FieldName="@nameof(CustomerBalance.CnvBegCredit)" Caption="Có đầu kỳ"/>
-                            <DxGridDataColumn FieldName="@nameof(CustomerBalance.CnvDebit)" Caption="Nợ phát sinh"/>
-                            <DxGridDataColumn FieldName="@nameof(CustomerBalance.CnvCredit)" Caption="Có phát sinh"/>
-                            <DxGridDataColumn FieldName="@nameof(CustomerBalance.CnvEndDebit)" Caption="Nợ cuối kỳ"/>
-                            <DxGridDataColumn FieldName="@nameof(CustomerBalance.CnvEndCredit)" Caption="Có cuối kỳ"/>
+                            <DxGridDataColumn FieldName="@nameof(CustomerBalance.AccountID)" Width="60px" Caption="Mã TK" Visible='false' GroupIndex="0" />
+                            <DxGridDataColumn FieldName="@nameof(CustomerBalance.OrderNo)" Width="120px" Caption="Số đơn hàng"/>
+                            <DxGridDataColumn FieldName="@nameof(CustomerBalance.CustomerName)" Width="30%" Caption="Tên Khách hàng"/>
+                            <DxGridDataColumn FieldName="@nameof(CustomerBalance.CnvBegDebit)" Caption="Nợ đầu kỳ"  DisplayFormat="N0"/>
+                            <DxGridDataColumn FieldName="@nameof(CustomerBalance.CnvBegCredit)" Caption="Có đầu kỳ" DisplayFormat="N0"/>
+                            <DxGridDataColumn FieldName="@nameof(CustomerBalance.CnvDebit)" Caption="Nợ phát sinh"  DisplayFormat="N0"/>
+                            <DxGridDataColumn FieldName="@nameof(CustomerBalance.CnvCredit)" Caption="Có phát sinh" DisplayFormat="N0"/>
+                            <DxGridDataColumn FieldName="@nameof(CustomerBalance.CnvEndDebit)" Caption="Nợ cuối kỳ" DisplayFormat="N0"/>
+                            <DxGridDataColumn FieldName="@nameof(CustomerBalance.CnvEndCredit)" Caption="Có cuối kỳ"DisplayFormat="N0"/>
+                            <DxGridDataColumn FieldName="@nameof(CustomerBalance.CustomerID)" Width="130px" Caption="Mã KH"/>
                         </Columns>
                         <TotalSummary>
-                            <DxGridSummaryItem SummaryType="GridSummaryItemType.Sum" FieldName="@nameof(CustomerBalance.CnvBegDebit)" />
-                            <DxGridSummaryItem SummaryType="GridSummaryItemType.Sum" FieldName="@nameof(CustomerBalance.CnvBegCredit)" />
-                            <DxGridSummaryItem SummaryType="GridSummaryItemType.Sum" FieldName="@nameof(CustomerBalance.CnvDebit)" />
-                            <DxGridSummaryItem SummaryType="GridSummaryItemType.Sum" FieldName="@nameof(CustomerBalance.CnvCredit)" />
-                            <DxGridSummaryItem SummaryType="GridSummaryItemType.Sum" FieldName="@nameof(CustomerBalance.CnvEndDebit)" />
-                            <DxGridSummaryItem SummaryType="GridSummaryItemType.Sum" FieldName="@nameof(CustomerBalance.CnvEndCredit)" />
+                            <DxGridSummaryItem SummaryType="GridSummaryItemType.Sum" FieldName="@nameof(CustomerBalance.CnvBegDebit)" ValueDisplayFormat="N0"/>
+                            <DxGridSummaryItem SummaryType="GridSummaryItemType.Sum" FieldName="@nameof(CustomerBalance.CnvBegCredit)" ValueDisplayFormat="N0"/>
+                            <DxGridSummaryItem SummaryType="GridSummaryItemType.Sum" FieldName="@nameof(CustomerBalance.CnvDebit)" ValueDisplayFormat="N0"/>
+                            <DxGridSummaryItem SummaryType="GridSummaryItemType.Sum" FieldName="@nameof(CustomerBalance.CnvCredit)" ValueDisplayFormat="N0"/>
+                            <DxGridSummaryItem SummaryType="GridSummaryItemType.Sum" FieldName="@nameof(CustomerBalance.CnvEndDebit)" ValueDisplayFormat="N0"/>
+                            <DxGridSummaryItem SummaryType="GridSummaryItemType.Sum" FieldName="@nameof(CustomerBalance.CnvEndCredit)" ValueDisplayFormat="N0"/>
                         </TotalSummary>
-                        <GroupSummary>
-                            <DxGridSummaryItem SummaryType="GridSummaryItemType.Sum" FieldName="@nameof(CustomerBalance.CnvBegDebit)" />
-                            <DxGridSummaryItem SummaryType="GridSummaryItemType.Sum" FieldName="@nameof(CustomerBalance.CnvBegCredit)" />
-                            <DxGridSummaryItem SummaryType="GridSummaryItemType.Sum" FieldName="@nameof(CustomerBalance.CnvDebit)" />
-                            <DxGridSummaryItem SummaryType="GridSummaryItemType.Sum" FieldName="@nameof(CustomerBalance.CnvCredit)" />
-                            <DxGridSummaryItem SummaryType="GridSummaryItemType.Sum" FieldName="@nameof(CustomerBalance.CnvEndDebit)" />
-                            <DxGridSummaryItem SummaryType="GridSummaryItemType.Sum" FieldName="@nameof(CustomerBalance.CnvEndCredit)" />
+                        <GroupSummary >
+                            <DxGridSummaryItem SummaryType="GridSummaryItemType.Sum" FieldName="@nameof(CustomerBalance.CnvBegDebit)" ValueDisplayFormat="N0"/>
+                            <DxGridSummaryItem SummaryType="GridSummaryItemType.Sum" FieldName="@nameof(CustomerBalance.CnvBegCredit)" ValueDisplayFormat="N0"/>
+                            <DxGridSummaryItem SummaryType="GridSummaryItemType.Sum" FieldName="@nameof(CustomerBalance.CnvDebit)" ValueDisplayFormat="N0"/>
+                            <DxGridSummaryItem SummaryType="GridSummaryItemType.Sum" FieldName="@nameof(CustomerBalance.CnvCredit)" ValueDisplayFormat="N0"/>
+                            <DxGridSummaryItem SummaryType="GridSummaryItemType.Sum" FieldName="@nameof(CustomerBalance.CnvEndDebit)" ValueDisplayFormat="N0"/>
+                            <DxGridSummaryItem SummaryType="GridSummaryItemType.Sum" FieldName="@nameof(CustomerBalance.CnvEndCredit)"ValueDisplayFormat="N0" />
                         </GroupSummary>
                     </DxGrid>
                 </div>
@@ -52,13 +103,37 @@
         </div>
     </div>
 </div>
-
 @code {
-    object Data { get; set; }
-    IGrid Grid { get; set; }
+    private List<CustomerBalance> Data { get; set; } = [];
+    private IGrid Grid { get; set; } = null!;
+
+    public DateOnly FromDate { get; set; } = new DateOnly(DateTime.Today.Year, DateTime.Today.Month, 1);
+
+    public DateOnly ToDate { get; set; } = DateOnly.FromDateTime(DateTime.Today);
 
     protected override async Task OnInitializedAsync()
-    {
-        Data = await dbContext.CustomerBalances.FromSql($"EXEC [dbo].[SL_spRptCustomerBalancebyDate] @TranYear = 2024, @TranMonth = 1, @SubCompanyID = 'DAMI',@IsTotalCompany = 0,@AccountID = '',@BaseCurrID = 'VND', @FromDate = '2024/01/01',@ToDate = '2024/01/31'").ToListAsync();
+    { 
+        if(ToDate.Day < 10)
+        {
+            if(DateTime.Today.Month == 1)
+            {
+                FromDate = new DateOnly(DateTime.Today.Year - 1, 12, 1);
+            }
+            else
+            {
+                new DateOnly(DateTime.Today.Year, DateTime.Today.Month - 1, 1);
+            }
+        }
+        Data = await dbContext.CustomerBalances.FromSql($"EXEC [dbo].[SL_spRptCustomerOrdersBalanceByDate] @TranYear = {FromDate.Year}, @TranMonth = {FromDate.Month}, @SubCompanyID = 'DAMI',@IsTotalCompany = 0,@AccountID = '131',@BaseCurrID = 'VND', @FromDate = {FromDate},@ToDate = {ToDate}").ToListAsync();
+    }
+
+    public async Task Reload(){
+        Data = await dbContext.CustomerBalances.FromSql($"EXEC [dbo].[SL_spRptCustomerOrdersBalanceByDate]  @TranYear = {FromDate.Year}, @TranMonth = {FromDate.Month}, @SubCompanyID = 'DAMI',@IsTotalCompany = 0,@AccountID = '131',@BaseCurrID = 'VND', @FromDate = {FromDate},@ToDate = {ToDate}").ToListAsync();
+        Grid.Reload();
+        
+    }
+    protected override void OnAfterRender(bool firstRender) {
+        if(Data.Any())
+            Grid.ExpandGroupRow(0);
     }
 }

@@ -11,7 +11,6 @@ namespace DaMi.SO.Manager.Endpoints.OrderMasters.DTO;
 
 public class OrderMasterSimpleView : IView<OrderMaster>, IDto
 {
-
     [HiddenInput]
     public Guid RowUniqueId { get; set; }
 
@@ -32,6 +31,9 @@ public class OrderMasterSimpleView : IView<OrderMaster>, IDto
     [HiddenInput]
     public OrderStatusSView OrderStatus { get; set; } = null!;
 
+    [HiddenInput]
+    public string OrderStatusId { get; set; } = null!;
+
     [DisplayName("NV triển khai")]
     public string ExecutorName { get; set; } = null!;
 
@@ -41,33 +43,6 @@ public class OrderMasterSimpleView : IView<OrderMaster>, IDto
 
     [DisplayName("Kiểu đơn hàng")]
     public string OrderForm { get; set; } = string.Empty;
-    [HiddenInput]
-    [DisplayName("Tên sản phẩm")]
-    public string ItemNames { get; set; } = null!;
-
-    [HiddenInput]
-    [DisplayName("Số máy")]
-    public int NumOfPC { get; set; }
-
-    [HiddenInput]
-    [DisplayName("Số hệ thống")]
-    public int NumOfData { get; set; }
-
-    [HiddenInput]
-    [DisplayName("Số MST")]
-    public int NumOfTaxCode { get; set; }
-
-    [HiddenInput]
-    [DisplayName("Số hóa đơn")]
-    public int NumOfInv { get; set; }
-
-    [HiddenInput]
-    [DisplayName("Số User")]
-    public int NumOfUser { get; set; }
-
-    [HiddenInput]
-    [DisplayName("Số iCloudData")]
-    public int NoICloudData { get; set; }
 
     [DisplayName("Thành tiền thực")]
     [DataType(DataType.Currency)]
@@ -83,13 +58,42 @@ public class OrderMasterSimpleView : IView<OrderMaster>, IDto
     [DisplayName("Đã xuất HĐ")]
     public bool PublishedInvoice { get; set; }
 
+
+    // [HiddenInput]
+    // [DisplayName("Tên sản phẩm")]
+    // public string ItemNames { get; set; } = null!;
+
+    // [HiddenInput]
+    // [DisplayName("Số máy")]
+    // public int NumOfPC { get; set; }
+
+    // [HiddenInput]
+    // [DisplayName("Số hệ thống")]
+    // public int NumOfData { get; set; }
+
+    // [HiddenInput]
+    // [DisplayName("Số MST")]
+    // public int NumOfTaxCode { get; set; }
+
+    // [HiddenInput]
+    // [DisplayName("Số hóa đơn")]
+    // public int NumOfInv { get; set; }
+
+    // [HiddenInput]
+    // [DisplayName("Số User")]
+    // public int NumOfUser { get; set; }
+
+    // [HiddenInput]
+    // [DisplayName("Số iCloudData")]
+    // public int NoICloudData { get; set; }
+
     public static void InitMapper()
     {
         TypeAdapterConfig<OrderMaster, OrderMasterSimpleView>.NewConfig()
             .Map(view => view.ExecutorName, order => order.Executor != null ? order.Executor.EmployeeName : "")
             .Map(view => view.OrderStatusName, order => order.OrderStatus.OrderStatusName)
             .Map(view => view.OrderForm, order => order.OrderForm.OrderFormName);
-        // .Map(view => view.NumOfPC, order => order.OrderDetails.Sum(d => d.NumOfPc))
+        // .Map(view => view.NumOfPC, order => order.OrderDetails.Sum(d => d.NumOfPc))  
         // .Map(view => view.NumOfData, order => order.OrderDetails.Sum(d => d.NumOfData))
         // .Map(view => view.NumOfInv, order => order.OrderDetails.Sum(d => d.NumOfInv))
         // .Map(view => view.NumOfTaxCode, order => order.OrderDetails.Sum(d => d.NumOfTaxCodes))

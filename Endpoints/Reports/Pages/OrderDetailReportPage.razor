@@ -1,0 +1,87 @@
+@using DaMi.SO.Manager.Data.Models
+@layout _Layout
+@inject IStringLocalizer<ShareResource> L
+
+@inherits XComponent<OrderDetailReportModel>
+@using System.Text.Json
+@using DaMi.SO.Manager.Endpoints.OrderMasters.DTO
+
+<div class="row page-titles mx-0">
+    <div class="col-sm-6 p-md-0 justify-content-sm-start mt-2 mt-sm-0 d-flex">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/Report/OrderDetail">@L["Báo Cáo Chi Tiết Đơn Hàng"] </a></li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <div class=" container-fluid mx-0 my-0">
+                    <div class="row">
+                        <div class="col-sm-3 p-md-0 justify-content-sm-start mt-2 mt-sm-0 d-flex">
+                            <h4>@L["Đơn hàng chi tiết"]</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="overflow-auto">
+                    <table>
+                        <thead>
+                            <th style='min-width: 200px;'>@L["Số đơn hàng"]</th>
+                            <th style='min-width: 200px;'>@L["Kiểu đơn hàng"]</th>
+                            <th style='min-width: 200px;'>@L["Loại đơn hàng"]</th>
+                            <th>@L["Ngày đơn hàng"]</th>
+                            <th style='min-width: 200px;'>@L["Mã sản phẩm"]</th>
+                            <th style='min-width: 250px;'>@L["Tên sản phẩm"]</th>
+                            <th>@L["ĐVT"]</th>
+                            <th>@L["Số lượng"]</th>
+                            <th style='min-width: 120px;'>@L["Đơn giá"]</th>
+                            <th style='min-width: 120px;'>@L["Thành tiền"]</th>
+                            <th>@L["% VAT"]</th>
+                            <th style='min-width: 120px;'>@L["Tiền thuế VAT"]</th>
+                            <th>@L["% Chiết khấu"]</th>
+                            <th style='min-width: 120px;'>@L["Số tiền CK"]</th>
+                            <th>@L["Số MST"]</th>
+                            <th style='min-width: 120px;'>@L["MST sử dụng"]</th>
+                            <th>@L["Số máy"]</th>
+                            <th>@L["Số hệ thống"]</th>
+                            <th style='min-width: 100px;'>@L["Số lượng HĐ"]</th>
+                            <th>@L["Số User"]</th>
+                            <th>@L["Số Data (GB)"]</th>
+                            <th>@L["Số tháng SD"]</th>
+                            <th>@L["Ngày sử dụng"]</th>
+                        </thead>
+                        <tbody>
+                            <td>@L["Số đơn hàng"]</td>
+                            <td>@L["Kiểu đơn hàng"]</td>
+                            <td>@L["Loại đơn hàng"]</td>
+                            <td>@L["Ngày đơn hàng"]</td>
+                            <td>@L["Mã sản phẩm"]</td>
+                            <td>@L["Tên sản phẩm"]</td>
+                            <td>@L["ĐVT"]</td>
+                            <td>@L["Số lượng"]</td>
+                            <td>@L["Đơn giá"]</td>
+                            <td>@L["Thành tiền"]</td>
+                            <td>@L["% VAT"]</td>
+                            <td>@L["Tiền thuế VAT"]</td>
+                            <td>@L["% Chiết khấu"]</td>
+                            <td>@L["Số tiền CK"]</td>
+                            <td>@L["Số MST"]</td>
+                            <td>@L["MST sử dụng"]</td>
+                            <td>@L["Số máy"]</td>
+                            <td>@L["Số hệ thống"]</td>
+                            <td>@L["Số lượng HĐ"]</td>
+                            <td>@L["Số User"]</td>
+                            <td>@L["Số Data (GB)"]</td>
+                            <td>@L["Số tháng SD"]</td>
+                            <td>@L["Ngày sử dụng"]</td>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

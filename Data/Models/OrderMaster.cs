@@ -247,8 +247,6 @@ public partial class OrderMaster
     [InverseProperty("OrderMasterSalesMen")]
     public virtual Employee? SalesMan { get; set; }
 
-
-
     [InverseProperty("Order")]
     [UpdateIgnore]
     public virtual IEnumerable<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();

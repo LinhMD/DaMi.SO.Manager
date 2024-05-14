@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using BlazorMinimalApis.Lib.Helpers;
 using DaMi.SO.Manager.Endpoints.OrderMasters.Pages;
 using Mapster;
-using CrudApiTemplate.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using DaMi.SO.Manager.Endpoints.OrderDetails;
 using CrudApiTemplate.Services;
@@ -26,6 +25,8 @@ using System.Text;
 using Microsoft.AspNetCore.SignalR;
 using DaMi.SO.Manager.Hubs;
 using DaMi.SO.Manager.Endpoints.Notifications;
+using Htmx;
+using CrudApiTemplate.Utilities;
 
 namespace DaMi.SO.Manager.Endpoints.OrderMasters;
 
@@ -42,23 +43,50 @@ public class OrderMasterController
 {
     [Authorize(policy: "ViewOrder")]
     [HttpGet]
-    public async Task<IResult> GetAsync()
+    public async Task<IResult> GetAsync([FromQuery] DateOnly? FromDate, [FromQuery] DateOnly? ToDate)
     {
-        var orderMasters = await work.Get<OrderMaster>()
-                                .GetAll<OrderMasterSimpleView>()
+        var model = new OrderMasterTableModel()
+        {
+            OrderMasters = []
+        };
+        model.FromDate = FromDate ?? model.FromDate;
+        model.ToDate = ToDate ?? model.ToDate;
+        var orderMasters = (await context.OrderMasters.FromSql($"EXEC [dbo].[spGetOrderMasterByDate] @FromDate = {model.FromDate}, @ToDate = {model.ToDate}").ToListAsync())
                                 .OrderByDescending(f => f.OrderDate)
-                                .ThenByDescending(f => f.OrderNo)
-                                .ToListAsync();
-        var customer = await work.Get<ViwCustomer>()
+                                .ThenByDescending(f => f.OrderNo);
+
+        var customers = await work.Get<ViwCustomer>()
                                 .GetAll()
                                 .ToDictionaryAsync(f => f.CustomerId);
 
-        orderMasters.ForEach(m => m.CustomerId = customer[m.CustomerId].TradeName);
+        var orderForms = await work.Get<OrderForm>()
+                                .GetAll()
+                                .ToDictionaryAsync(f => f.OrderFormId);
 
-        return this.Page<IndexPage, OrderMasterTableModel>
-        (
-            new() { OrderMasters = orderMasters }
-        );
+        var orderStatuses = await work.Get<OrderStatus>()
+                                .GetAll()
+                                .ToDictionaryAsync(f => f.OrderStatusId);
+
+        var employees = await work.Get<Employee>()
+                                .GetAll()
+                                .ToDictionaryAsync(f => f.EmployeeId);
+
+        orderMasters.ToList().ForEach(m =>
+        {
+            try
+            {
+                m.CustomerId = customers[m.CustomerId].TradeName;
+                m.OrderForm = orderForms[m.OrderFormId];
+                m.OrderStatus = orderStatuses[m.OrderStatusId];
+                m.Executor = m.ExecutorId != null ? employees[m.ExecutorId] : null;
+            }
+            catch (Exception e)
+            {
+                e.Message.Dump();
+            }
+        });
+        model.OrderMasters = orderMasters.Select(m => m.Adapt<OrderMasterSimpleView>());
+        return this.Page<IndexPage, OrderMasterTableModel>(model);
     }
 
     [Authorize(policy: "ViewOrder")]
@@ -135,7 +163,7 @@ public class OrderMasterController
                 ParameterName = "SubCompanyID",
                 SqlDbType = System.Data.SqlDbType.VarChar,
                 Size = 20,
-                Value = "MAIN",
+                Value = "DAMI",
             };
             var OrderDate = new SqlParameter
             {
@@ -168,6 +196,7 @@ public class OrderMasterController
             orderMaster.OrderStatusId = "OS10";
             orderMaster.OrderNo = (string)OrderNo.Value;
             orderMaster.SeqInMonth = (long)SeqInMonth.Value;
+            Console.WriteLine($"Order Master: {JsonSerializer.Serialize(orderMaster)}");
             Validation.Validate(orderMaster);
             await work.Get<OrderMaster>().AddAsync(orderMaster);
             return Results.Redirect($"/OrderMaster/Edit/{orderMaster.RowUniqueId}");
@@ -520,5 +549,7 @@ public class OrderMasterEditModel
 public class OrderMasterTableModel
 {
     public IEnumerable<OrderMasterSimpleView> OrderMasters { get; set; } = [];
+    public DateOnly FromDate { get; set; } = DateOnly.FromDateTime(new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1).AddMonths(-3));
+    public DateOnly ToDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 }
 

@@ -29,7 +29,7 @@ public class ReportController(IUnitOfWork work) : ControllerBase
             .GroupBy(o => o.OrderNo)
             .ToDictionary(o => o.Key ?? "", o => o.ToList());
         var orderMasters = await work.Get<OrderMaster>().Find<OrderMasterSimpleView>(f => f.OrderNo != null && items.Keys.Contains(f.OrderNo)).ToDictionaryAsync(o => o.OrderNo ?? "");
-        return this.Page<OrderDetailReport, OrderDetailReportModel>(new OrderDetailReportModel
+        return this.Page<OrderDetailReportPage, OrderDetailReportModel>(new OrderDetailReportModel
         {
             OrderDetailMap = items,
             OrderMasterMap = orderMasters

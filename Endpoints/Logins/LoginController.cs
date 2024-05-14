@@ -10,7 +10,6 @@ using BlazorMinimalApis.Lib.Helpers;
 using BlazorMinimalApis.Lib.Validation;
 using CrudApiTemplate.CustomBinding;
 using CrudApiTemplate.Repository;
-using CrudApiTemplate.Utilities;
 using DaMi.SO.Manager.Data.Models;
 using DaMi.SO.Manager.Endpoints.Logins.Pages;
 using DaMi.SO.Manager.Endpoints.Share;

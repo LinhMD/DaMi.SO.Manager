@@ -31,6 +31,12 @@ public class NotificationService(IUnitOfWork work, IHubContext<NotificationHub> 
             {
 
                 await work.Get<Notification>().AddAsync(notification);
+                var OrderID = new SqlParameter
+                {
+                    ParameterName = "OrderID",
+                    SqlDbType = System.Data.SqlDbType.UniqueIdentifier,
+                    Value = orderMaster.RowUniqueId,
+                };
                 var FromUserID = new SqlParameter
                 {
                     ParameterName = "FromUserID",
@@ -61,7 +67,8 @@ public class NotificationService(IUnitOfWork work, IHubContext<NotificationHub> 
                 };
                 dbContext.Database.ExecuteSqlRaw
                 (
-                    "EXECUTE [dbo].[spSendSMSInbox] @FromUserID, @ToUserID, @NotifiMsg, @IsHighLevel",
+                    "EXECUTE [dbo].[spSendSMSInbox] @OrderID @FromUserID, @ToUserID, @NotifiMsg, @IsHighLevel",
+                    OrderID,
                     FromUserID,
                     ToUserID,
                     NotifiMsg,
